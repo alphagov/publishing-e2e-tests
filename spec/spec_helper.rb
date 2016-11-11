@@ -18,7 +18,8 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "capybara/rspec"
-require "capybara/webkit"
+# require "capybara/webkit"
+require "capybara/poltergeist"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -108,11 +109,11 @@ end
 
 Capybara.configure do |config|
   config.run_server = false
-  config.default_driver = :webkit
+  config.default_driver = :poltergeist
 end
 
-Capybara::Webkit.configure do |config|
-  config.allow_url("*.dev.gov.uk")
-  config.block_unknown_urls
-  config.skip_image_loading
-end
+# Capybara::Webkit.configure do |config|
+#   config.allow_url("*.dev.gov.uk")
+#   config.block_unknown_urls
+#   config.skip_image_loading
+# end
