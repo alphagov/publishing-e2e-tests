@@ -113,5 +113,6 @@ end
 
 Capybara::Webkit.configure do |config|
   config.allow_url("*.dev.gov.uk")
+  config.block_unknown_urls
   config.skip_image_loading
 end
