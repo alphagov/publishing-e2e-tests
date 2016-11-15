@@ -18,6 +18,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "capybara/rspec"
+require "capybara-screenshot/rspec"
 # require "capybara/webkit"
 require "capybara/poltergeist"
 
@@ -110,6 +111,7 @@ end
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :poltergeist
+  config.save_path = __dir__ + "/../tmp"
 end
 
 # Capybara::Webkit.configure do |config|
