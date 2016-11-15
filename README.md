@@ -7,8 +7,10 @@ just for Specialist Publisher.
 To use this you need to:
 
 - Install dependencies `bundle install`
-- Run [all the applications][apps] needed for publishing with Specialist 
+- Run [all the applications][apps] needed for publishing with Specialist
   Publisher
+- Ensure Specialist Publisher has finders seeded -
+  `bundle exec rake publishing_api:publish_finders`
 - `bundle exec rspec`
 
 [apps]: https://github.com/alphagov/govuk-puppet/blob/6b600aa2f7a00965a41ba58513965fe556f4be5f/end-to-end-vm/set-up-apps.sh
