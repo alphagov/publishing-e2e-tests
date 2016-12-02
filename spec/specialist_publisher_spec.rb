@@ -57,4 +57,13 @@ describe "specialist publisher", type: :feature do
       expect_change_note(change_note)
     end
   end
+
+  feature "Unpublish" do
+    scenario "successfully" do
+      visit_aaib_index
+      edit_first_published_document
+      unpublish
+      expect_unpublished
+    end
+  end
 end

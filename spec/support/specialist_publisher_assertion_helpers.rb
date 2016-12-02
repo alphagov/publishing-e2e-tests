@@ -24,5 +24,11 @@ module SpecialistPublisherAssertionHelpers
     end
   end
 
+  def expect_unpublished
+    within("dl") do
+      expect(page).to have_content("unpublished")
+    end
+  end
+
   RSpec.configuration.include SpecialistPublisherAssertionHelpers
 end

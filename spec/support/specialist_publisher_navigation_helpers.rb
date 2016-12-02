@@ -18,6 +18,12 @@ module SpecialistPublisherNavigationHelpers
     click_link("Edit document")
   end
 
+  def edit_first_published_document
+    all(".document-list span")
+      .select { |elem| elem.text.strip == "published" }.first
+      .find(:xpath, "../../..").first("a").click
+  end
+
   def save_and_publish
     click_button("Save as draft")
     click_button("Publish")
@@ -33,6 +39,12 @@ module SpecialistPublisherNavigationHelpers
 
   def set_major_update
     choose("Update type major")
+  end
+
+  def unpublish
+    page.accept_confirm do
+      click_button("Unpublish document")
+    end
   end
 
   RSpec.configuration.include SpecialistPublisherNavigationHelpers
