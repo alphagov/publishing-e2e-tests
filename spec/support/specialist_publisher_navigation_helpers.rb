@@ -24,13 +24,21 @@ module SpecialistPublisherNavigationHelpers
       .find(:xpath, "../../..").first("a").click
   end
 
-  def save_and_publish
+  def save_draft
     click_button("Save as draft")
+  end
+
+  def save_and_publish
+    save_draft
     click_button("Publish")
   end
 
   def view_frontend
     click_link("View on website")
+  end
+
+  def preview_draft
+    click_link("Preview draft")
   end
 
   def set_minor_update

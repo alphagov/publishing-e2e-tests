@@ -26,8 +26,24 @@ describe "specialist publisher", type: :feature do
       visit_aaib_create
       fill_in("Title", with: title)
       set_aaib_occurence_date(Date.today)
-      click_button("Save as draft")
+      save_draft
       expect_error("Summary can't be blank")
+    end
+  end
+
+  feature "Creates a draft of an AAIB Report" do
+    let(:title) { Faker::Book.title }
+    let(:summary) { "Aubergine crop has failed in Turkmenistan" }
+
+    scenario "successfully" do
+      visit_aaib_create
+      fill_in("Title", with: title)
+      fill_in("Summary", with: summary)
+      fill_in("Body", with: Faker::Lorem.paragraph)
+      set_aaib_occurence_date(Date.today)
+      save_draft
+      preview_draft
+      expect_title(title)
     end
   end
 
