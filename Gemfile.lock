@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.4.0)
+    byebug (9.0.6)
     capybara (2.7.1)
       addressable
       mime-types (>= 1.16)
@@ -58,6 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   capybara
   capybara-screenshot
   faker (~> 1.6)
@@ -66,4 +68,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.11.2
+   1.13.1
