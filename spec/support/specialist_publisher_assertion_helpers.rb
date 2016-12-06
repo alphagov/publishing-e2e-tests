@@ -25,9 +25,7 @@ module SpecialistPublisherAssertionHelpers
   end
 
   def expect_unpublished
-    within("dl") do
-      expect(page).to have_content("unpublished")
-    end
+    expect(find(".alert").text).to match(/^Unpublished/)
   end
 
   RSpec.configuration.include SpecialistPublisherAssertionHelpers
