@@ -18,10 +18,15 @@ module SpecialistPublisherNavigationHelpers
     click_link("Edit document")
   end
 
-  def edit_first_published_document
+  def visit_first_published_document
     all(".document-list span")
       .select { |elem| elem.text.strip == "published" }.first
       .find(:xpath, "../../..").first("a").click
+  end
+
+  def edit_first_published_document
+    visit_first_published_document
+    click_link("Edit document")
   end
 
   def save_draft
@@ -53,6 +58,19 @@ module SpecialistPublisherNavigationHelpers
     page.accept_confirm do
       click_button("Unpublish document")
     end
+  end
+
+  def ensure_published_aaib_report
+    create_aaib_report(Faker::Book.title, "Summary", "Body")
+    save_and_publish
+  end
+
+  def create_aaib_report(title, summary, body)
+    visit_aaib_create
+    fill_in("Title", with: title)
+    fill_in("Summary", with: summary)
+    fill_in("Body", with: body)
+    set_aaib_occurence_date(Date.today)
   end
 
   RSpec.configuration.include SpecialistPublisherNavigationHelpers

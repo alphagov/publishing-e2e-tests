@@ -10,11 +10,7 @@ describe "specialist publisher", type: :feature do
     let(:summary) { Faker::Lorem.sentence }
 
     scenario "successfully" do
-      visit_aaib_create
-      fill_in("Title", with: title)
-      fill_in("Summary", with: summary)
-      fill_in("Body", with: Faker::Lorem.paragraph)
-      set_aaib_occurence_date(Date.today)
+      create_aaib_report(title, summary, Faker::Lorem.paragraph)
       save_and_publish
       view_frontend
       expect_title(title)
@@ -23,9 +19,7 @@ describe "specialist publisher", type: :feature do
     end
 
     scenario "unsuccessfully" do
-      visit_aaib_create
-      fill_in("Title", with: title)
-      set_aaib_occurence_date(Date.today)
+      create_aaib_report(title, "", Faker::Lorem.paragraph)
       save_draft
       expect_error("Summary can't be blank")
     end
@@ -36,11 +30,7 @@ describe "specialist publisher", type: :feature do
     let(:summary) { "Aubergine crop has failed in Turkmenistan" }
 
     scenario "successfully" do
-      visit_aaib_create
-      fill_in("Title", with: title)
-      fill_in("Summary", with: summary)
-      fill_in("Body", with: Faker::Lorem.paragraph)
-      set_aaib_occurence_date(Date.today)
+      create_aaib_report(title, summary, Faker::Lorem.paragraph)
       save_draft
       preview_draft
       expect_title(title)
@@ -51,9 +41,13 @@ describe "specialist publisher", type: :feature do
     let(:title) { "Eat more falafel" }
     let(:change_note) { "Fixed title to have a clearer falafel orientation" }
 
+    before do
+      ensure_published_aaib_report
+    end
+
     scenario "Minor edit" do
       visit_aaib_index
-      edit_first_document
+      edit_first_published_document
       fill_in("Title", with: title)
       set_minor_update
       save_and_publish
@@ -63,7 +57,7 @@ describe "specialist publisher", type: :feature do
 
     scenario "Major edit" do
       visit_aaib_index
-      edit_first_document
+      edit_first_published_document
       fill_in("Title", with: title)
       set_major_update
       fill_in("Change note", with: change_note)
@@ -75,9 +69,13 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Unpublish" do
+    before do
+      ensure_published_aaib_report
+    end
+
     scenario "successfully" do
       visit_aaib_index
-      edit_first_published_document
+      visit_first_published_document
       unpublish
       expect_unpublished
     end
