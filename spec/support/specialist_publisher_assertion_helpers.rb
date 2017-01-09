@@ -6,6 +6,7 @@ module SpecialistPublisherAssertionHelpers
   end
 
   def expect_change_note(change_note)
+    click_link("+ full page history")
     within("#full-history") do
       expect(page).to have_content(change_note)
     end

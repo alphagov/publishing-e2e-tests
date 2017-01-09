@@ -4,7 +4,6 @@ require "faker"
 require "date"
 
 describe "specialist publisher", type: :feature do
-
   feature "Publishes an AAIB Report" do
     let(:title) { Faker::Book.title }
     let(:summary) { Faker::Lorem.sentence }
