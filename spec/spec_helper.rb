@@ -108,6 +108,8 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+
+  config.add_setting :reload_page_attempts, default: 5
 end
 
 Capybara.configure do |config|
