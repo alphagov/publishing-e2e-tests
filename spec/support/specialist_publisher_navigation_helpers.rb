@@ -1,16 +1,34 @@
 module SpecialistPublisherNavigationHelpers
   def visit_aaib_index
-    visit("#{Plek.new.find('specialist-publisher')}/aaib-reports")
+    specialist_publisher_url("/aaib-reports")
   end
 
   def visit_aaib_create
-    visit("#{Plek.new.find('specialist-publisher')}/aaib-reports/new")
+    specialist_publisher_url("/aaib-reports/new")
   end
 
-  def set_aaib_occurence_date(date)
+  def visit_esi_index
+    specialist_publisher_url("/esi-funds")
+  end
+
+  def visit_esi_create
+    specialist_publisher_url("/esi-funds/new")
+  end
+
+  def specialist_publisher_url(path)
+    visit(Plek.find("specialist-publisher") << path)
+  end
+
+  def aaib_occurence_date(date)
     fill_in("[aaib_report]date_of_occurrence(1i)", with: date.year)
     fill_in("[aaib_report]date_of_occurrence(2i)", with: date.month)
     fill_in("[aaib_report]date_of_occurrence(3i)", with: date.day)
+  end
+
+  def esi_fund_closing_date(date)
+    fill_in("[esi_fund]closing_date(1i)", with: date.year)
+    fill_in("[esi_fund]closing_date(2i)", with: date.month)
+    fill_in("[esi_fund]closing_date(3i)", with: date.day)
   end
 
   def edit_first_document
@@ -22,6 +40,41 @@ module SpecialistPublisherNavigationHelpers
     all(".document-list span")
       .select { |elem| elem.text.strip == "published" }.first
       .find(:xpath, "../../..").first("a").click
+  rescue NoMethodError
+    raise "Published document not found"
+  end
+
+  def visit_first_unpublished_document
+    all(".document-list span")
+      .select { |elem| elem.text.strip == "unpublished" }.first
+      .find(:xpath, "../../..").first("a").click
+  rescue NoMethodError
+    raise "Unpublished document not found"
+  end
+
+  def select_drafted_content
+    all(".document-list span")
+      .select { |elem| elem.text.strip == "draft" }.first
+      .find(:xpath, "../../..").first("a").click
+  rescue NoMethodError
+    raise "Draft document not found"
+  end
+
+  def select_published_with_new_draft
+    all(".document-list span")
+      .select { |elem| elem.text.strip == "published with new draft" }.first
+      .find(:xpath, "../../..").first("a").click
+  rescue NoMethodError
+    raise "Published-with-new-draft document not found"
+  end
+
+  def edit_first_unpublished_document
+    visit_first_unpublished_document
+    click_link("Edit document")
+  end
+
+  def edit_unpublished_document
+    click_link("Edit document")
   end
 
   def edit_first_published_document
@@ -31,6 +84,12 @@ module SpecialistPublisherNavigationHelpers
 
   def save_draft
     click_button("Save as draft")
+  end
+
+  def publish_unpublished
+    page.accept_confirm do
+      click_button("Publish")
+    end
   end
 
   def save_and_publish
@@ -61,7 +120,12 @@ module SpecialistPublisherNavigationHelpers
   end
 
   def ensure_published_aaib_report
-    create_aaib_report(Faker::Book.title, "Summary", "Body")
+    create_aaib_report(Faker::Book.author, "Summary", "Body")
+    save_and_publish
+  end
+
+  def ensure_published_esi_fund
+    create_esi_fund(title, summary, Faker::Lorem.paragraph)
     save_and_publish
   end
 
@@ -70,7 +134,21 @@ module SpecialistPublisherNavigationHelpers
     fill_in("Title", with: title)
     fill_in("Summary", with: summary)
     fill_in("Body", with: body)
-    set_aaib_occurence_date(Date.today)
+    aaib_occurence_date(Date.today)
+  end
+
+  def create_esi_fund(title, summary, body)
+    visit_esi_create
+    fill_in("Title", with: title)
+    fill_in("Summary", with: summary)
+    fill_in("Body", with: body)
+    esi_fund_closing_date(Date.today)
+  end
+
+  def discard_draft
+    page.accept_confirm do
+      click_button("Discard draft")
+    end
   end
 
   RSpec.configuration.include SpecialistPublisherNavigationHelpers

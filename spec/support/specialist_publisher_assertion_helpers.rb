@@ -31,8 +31,30 @@ module SpecialistPublisherAssertionHelpers
     end
   end
 
+  def expect_preview_draft_link
+    expect(page).to have_link("Preview draft")
+  end
+
+  def expect_view_on_website_link
+    expect(page).to have_link("View on website")
+  end
+
   def expect_unpublished
     expect(find(".alert").text).to match(/^Unpublished/)
+  end
+
+  def expect_discarded_draft
+    expect(find(".alert").text).to match(/^Discarded/)
+  end
+
+  def expect_published_document
+    expect(page).to have_content("There are no changes to publish.")
+    expect_view_on_website_link
+  end
+
+  def expect_unpublished_document
+    expect(page).not_to have_button("Publish")
+    expect(page).to have_content("The document is already unpublished.")
   end
 
   RSpec.configuration.include SpecialistPublisherAssertionHelpers

@@ -5,10 +5,10 @@ require "date"
 
 describe "specialist publisher", type: :feature do
   feature "Publishes an AAIB Report" do
-    let(:title) { Faker::Book.title }
+    let(:title) { Faker::Book.author }
     let(:summary) { Faker::Lorem.sentence }
 
-    scenario "successfully" do
+    scenario "successfully publishing an AAIB report" do
       create_aaib_report(title, summary, Faker::Lorem.paragraph)
       save_and_publish
       view_frontend
@@ -17,7 +17,7 @@ describe "specialist publisher", type: :feature do
       expect(page).to have_current_path(%r{^/aaib-reports})
     end
 
-    scenario "unsuccessfully" do
+    scenario "unsuccessfully creating a draft" do
       create_aaib_report(title, "", Faker::Lorem.paragraph)
       save_draft
       expect_error("Summary can't be blank")
@@ -25,10 +25,10 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Creates a draft of an AAIB Report" do
-    let(:title) { Faker::Book.title }
+    let(:title) { Faker::Book.author }
     let(:summary) { "Aubergine crop has failed in Turkmenistan" }
 
-    scenario "successfully" do
+    scenario "successfully creating an AAIB report" do
       create_aaib_report(title, summary, Faker::Lorem.paragraph)
       save_draft
       preview_draft
@@ -42,10 +42,10 @@ describe "specialist publisher", type: :feature do
 
     before do
       ensure_published_aaib_report
+      visit_aaib_index
     end
 
-    scenario "Minor edit" do
-      visit_aaib_index
+    scenario "Minor editing published documents" do
       edit_first_published_document
       fill_in("Title", with: title)
       set_minor_update
@@ -54,8 +54,22 @@ describe "specialist publisher", type: :feature do
       expect_title(title)
     end
 
-    scenario "Major edit" do
+    scenario "publishing - unpublished document with new draft" do
+      visit_first_published_document
+      unpublish
+      expect_unpublished
       visit_aaib_index
+      edit_first_unpublished_document
+      fill_in("Title", with: title)
+      set_minor_update
+      save_draft
+      expect_preview_draft_link
+      publish_unpublished
+      view_frontend
+      expect_title(title)
+    end
+
+    scenario "Major editing published docucments" do
       edit_first_published_document
       fill_in("Title", with: title)
       set_major_update
@@ -72,11 +86,61 @@ describe "specialist publisher", type: :feature do
       ensure_published_aaib_report
     end
 
-    scenario "successfully" do
+    scenario "Unpublish a document successfully" do
       visit_aaib_index
       visit_first_published_document
       unpublish
       expect_unpublished
+    end
+  end
+
+  feature "Discarding drafts" do
+    let(:title) { Faker::Book.author }
+    let(:summary) { "Draft which will be discarded" }
+
+    scenario "Discarding drafts that are not published" do
+      create_esi_fund(title, summary, Faker::Lorem.paragraph)
+      save_draft
+      preview_draft
+      expect_title(title)
+      visit_esi_index
+      select_drafted_content
+      discard_draft
+      expect_discarded_draft
+    end
+
+    before do
+      ensure_published_esi_fund
+    end
+
+    scenario "Discarding published document with new draft" do
+      visit_esi_index
+      edit_first_published_document
+      fill_in("Title", with: title)
+      set_minor_update
+      save_draft
+      preview_draft
+      expect_title(title)
+      visit_esi_index
+      select_published_with_new_draft
+      discard_draft
+      expect_discarded_draft
+      visit_first_published_document
+      expect_published_document
+    end
+
+    scenario "Discarding unpublished document with new draft" do
+      unpublish
+      visit_esi_index
+      edit_first_unpublished_document
+      fill_in("Title", with: title)
+      set_minor_update
+      save_draft
+      expect_preview_draft_link
+      discard_draft
+      expect_discarded_draft
+      visit_first_unpublished_document
+      expect_unpublished_document
     end
   end
 end
