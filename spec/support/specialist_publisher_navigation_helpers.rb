@@ -86,7 +86,7 @@ module SpecialistPublisherNavigationHelpers
     click_button("Save as draft")
   end
 
-  def publish_unpublished
+  def publish_draft
     page.accept_confirm do
       click_button("Publish")
     end
@@ -95,6 +95,11 @@ module SpecialistPublisherNavigationHelpers
   def save_and_publish
     save_draft
     click_button("Publish")
+  end
+
+  def save_and_edit_draft
+    save_draft
+    click_link("Edit document")
   end
 
   def view_frontend
@@ -127,6 +132,31 @@ module SpecialistPublisherNavigationHelpers
   def ensure_published_esi_fund
     create_esi_fund(title, summary, Faker::Lorem.paragraph)
     save_and_publish
+  end
+
+  def select_delete_attachment
+    page.accept_confirm do
+      click_button("delete")
+    end
+  end
+
+  def select_add_attachment
+    click_link("Add attachment")
+    expect_add_attachment
+    fill_in("Title", with: "Charities and corporation tax returns doc")
+    attach_file("attachment_file", file)
+    click_button("Save attachment")
+    fill_in("Body", with: "[InlineAttachment:Charities_and_corporation_tax_returns.pdf]")
+  end
+
+  def remove_attachment_and_save_draft
+    select_delete_attachment
+    expect_attachment_removed
+    fill_in("Summary", with: "Removing the attachment")
+    fill_in("Body", with: "Removed attached document")
+    set_minor_update
+    save_draft
+    expect_attached_file_removed
   end
 
   def create_aaib_report(title, summary, body)

@@ -64,7 +64,7 @@ describe "specialist publisher", type: :feature do
       set_minor_update
       save_draft
       expect_preview_draft_link
-      publish_unpublished
+      publish_draft
       view_frontend
       expect_title(title)
     end
@@ -141,6 +141,38 @@ describe "specialist publisher", type: :feature do
       expect_discarded_draft
       visit_first_unpublished_document
       expect_unpublished_document
+    end
+  end
+
+  feature "Documents with attachment" do
+    let(:title) { Faker::Book.author }
+    let(:summary) { "Documents with attachment" }
+    let(:file) { File.expand_path("./fixtures/Charities_and_corporation_tax_returns.pdf", File.dirname(__FILE__)) }
+
+    before do
+      create_aaib_report(title, summary, Faker::Lorem.paragraph)
+      save_and_edit_draft
+      select_add_attachment
+      save_draft
+    end
+
+    scenario "Publishing documents with attachment" do
+      expect_attached_file
+      publish_draft
+      view_frontend
+      expect_attached_file_frontend
+    end
+
+    scenario "Removing attachments and publishing draft" do
+      expect_attached_file
+      publish_draft
+      visit_aaib_index
+      edit_first_published_document
+      remove_attachment_and_save_draft
+      expect_preview_draft_link
+      publish_draft
+      view_frontend
+      expect_removed_file_frontend
     end
   end
 end
