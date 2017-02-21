@@ -1,0 +1,242 @@
+version: "2"
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock"
+      - "./docker/nginx.tmpl:/app/nginx.tmpl"
+
+  db:
+    image: postgres:9.6
+
+  mongo:
+    image: mongo
+
+  redis:
+    image: redis
+
+  rabbitmq:
+    image: rabbitmq
+
+  router: &router
+    build:
+      context: ./apps/router
+    environment:
+      VIRTUAL_HOST: www.dev.gov.uk
+      VIRTUAL_PORT: 3054
+    links:
+      - mongo
+      - nginx-proxy:specialist-frontend.dev.gov.uk
+    ports:
+      - "3054:3054"
+      - "3055:3055"
+
+  draft-router:
+    << : *router
+    environment:
+      PLEK_HOSTNAME_PREFIX: draft-
+      ROUTER_PUBADDR: ":3154"
+      ROUTER_APIADDR: ":3155"
+      ROUTER_MONGO_DB: draft-router
+      VIRTUAL_HOST: draft-origin.dev.gov.uk
+      VIRTUAL_PORT: 3154
+    links:
+      - mongo
+      - nginx-proxy:draft-specialist-frontend.dev.gov.uk
+    ports:
+      - "3154:3154"
+      - "3155:3155"
+
+  router-api: &router-api
+    build:
+      context: ./apps/router-api
+    environment:
+      VIRTUAL_HOST: router-api.dev.gov.uk
+    links:
+      - mongo
+      - router
+    ports:
+      - "3056:3056"
+
+  draft-router-api:
+    << : *router-api
+    environment:
+      MONGODB_URI: mongodb://mongo/draft-router
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3156
+      ROUTER_NODES: "draft-router:3155"
+      TEST_MONGODB_URI: mongodb://mongo/draft-router-test
+      VIRTUAL_HOST: draft-router-api.dev.gov.uk
+    links:
+      - mongo
+      - draft-router
+    ports:
+      - "3156:3156"
+
+  content-store: &content-store
+    build:
+      context: ./apps/content-store
+    depends_on:
+      - router-api
+    environment:
+      VIRTUAL_HOST: content-store.dev.gov.uk
+    links:
+      - mongo
+      - nginx-proxy:router-api.dev.gov.uk
+    ports:
+      - "3068:3068"
+    volumes:
+      - ./apps/govuk-content-schemas:/govuk-content-schemas
+
+  draft-content-store:
+    << : *content-store
+    depends_on:
+      - draft-router-api
+    environment:
+      MONGODB_URI: mongodb://mongo/draft-content-store
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3100
+      VIRTUAL_HOST: draft-content-store.dev.gov.uk
+    links:
+      - mongo
+      - nginx-proxy:draft-router-api.dev.gov.uk
+    ports:
+      - "3100:3100"
+
+  publishing-api:
+    build:
+      context: ./apps/publishing-api
+    depends_on:
+      - publishing-api-worker
+    environment:
+      VIRTUAL_HOST: publishing-api.dev.gov.uk
+    links:
+      - db
+      - redis
+      - rabbitmq
+    ports:
+      - "3093:3093"
+    volumes:
+      - ./apps/govuk-content-schemas:/govuk-content-schemas
+
+  publishing-api-worker:
+    build:
+      context: ./apps/publishing-api
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - content-store
+      - draft-content-store
+    links:
+      - db
+      - redis
+      - rabbitmq
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:draft-content-store.dev.gov.uk
+    volumes:
+      - ./apps/govuk-content-schemas:/govuk-content-schemas
+
+  specialist-publisher:
+    build:
+      context: ./apps/specialist-publisher
+    depends_on:
+      - publishing-api
+      - asset-manager
+    environment:
+      VIRTUAL_HOST: specialist-publisher.dev.gov.uk
+    links:
+      - mongo
+      - redis
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:asset-manager.dev.gov.uk
+    ports:
+      - "3064:3064"
+
+  asset-manager: &asset-manager
+    build:
+      context: ./apps/asset-manager
+    depends_on:
+      - asset-manager-worker
+    links:
+      - mongo
+    environment:
+      VIRTUAL_HOST: asset-manager.dev.gov.uk
+    ports:
+      - "3037:3037"
+    volumes:
+      - ./tmp/asset-manager/uploads:/app/uploads
+
+  asset-manager-worker:
+    << : *asset-manager
+    command: bundle exec rake jobs:work
+    depends_on: []
+    ports: []
+
+  static: &static
+    build:
+      context: ./apps/static
+    environment:
+      VIRTUAL_HOST: static.dev.gov.uk
+    ports:
+      - "3013:3013"
+
+  draft-static:
+    << : *static
+    environment:
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3113
+      VIRTUAL_HOST: draft-static.dev.gov.uk
+    ports:
+      - "3113:3113"
+
+  # I think we might need these finder apps running to publish finders
+  # finder-frontend:
+  # draft-finder-frontend:
+
+  specialist-frontend: &specialist-frontend
+    build:
+      context: ./apps/specialist-frontend
+    depends_on:
+      - content-store
+      - static
+    environment:
+      VIRTUAL_HOST: specialist-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+    ports:
+      - "3065:3065"
+
+  draft-specialist-frontend:
+    << : *specialist-frontend
+    depends_on:
+      - draft-content-store
+      - draft-static
+    environment:
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3165
+      VIRTUAL_HOST: draft-specialist-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+    ports:
+      - "3165:3165"
+
+  publishing-e2e-tests:
+    build:
+      context: ./
+    depends_on:
+      - specialist-frontend
+      - specialist-publisher
+    links:
+      - nginx-proxy:www.dev.gov.uk
+      - nginx-proxy:assets-origin.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:draft-origin.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:specialist-publisher.dev.gov.uk
+    volumes:
+      - ./tmp:/app/tmp
