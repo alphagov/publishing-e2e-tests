@@ -55,16 +55,20 @@ services:
     build:
       context: ./apps/router-api
     environment:
+      LOG_PATH: log/live.log
       VIRTUAL_HOST: router-api.dev.gov.uk
     links:
       - mongo
       - router
     ports:
       - "3056:3056"
+    volumes:
+      - ./apps/router-api/log:/app/log
 
   draft-router-api:
     << : *router-api
     environment:
+      LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3156
@@ -83,6 +87,7 @@ services:
     depends_on:
       - router-api
     environment:
+      LOG_PATH: log/live.log
       VIRTUAL_HOST: content-store.dev.gov.uk
     links:
       - mongo
@@ -90,6 +95,7 @@ services:
     ports:
       - "3068:3068"
     volumes:
+      - ./apps/content-store/log:/app/log
       - ./apps/govuk-content-schemas:/govuk-content-schemas
 
   draft-content-store:
@@ -97,6 +103,7 @@ services:
     depends_on:
       - draft-router-api
     environment:
+      LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3100
@@ -122,6 +129,7 @@ services:
       - "3093:3093"
     volumes:
       - ./apps/govuk-content-schemas:/govuk-content-schemas
+      - ./apps/publishing-api/log:/app/log
 
   publishing-api-worker:
     build:
@@ -138,6 +146,7 @@ services:
       - nginx-proxy:draft-content-store.dev.gov.uk
     volumes:
       - ./apps/govuk-content-schemas:/govuk-content-schemas
+      - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
     build:
@@ -154,6 +163,8 @@ services:
       - nginx-proxy:asset-manager.dev.gov.uk
     ports:
       - "3064:3064"
+    volumes:
+      - ./apps/specialist-publisher/log:/app/log
 
   asset-manager: &asset-manager
     build:
@@ -167,6 +178,7 @@ services:
     ports:
       - "3037:3037"
     volumes:
+      - ./apps/asset-manager/log:/app/log
       - ./tmp/asset-manager/uploads:/app/uploads
 
   asset-manager-worker:
@@ -179,13 +191,17 @@ services:
     build:
       context: ./apps/static
     environment:
+      LOG_PATH: log/live.log
       VIRTUAL_HOST: static.dev.gov.uk
     ports:
       - "3013:3013"
+    volumes:
+      - ./apps/static/log:/app/log
 
   draft-static:
     << : *static
     environment:
+      LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3113
       VIRTUAL_HOST: draft-static.dev.gov.uk
@@ -203,12 +219,15 @@ services:
       - content-store
       - static
     environment:
+      LOG_PATH: log/live.log
       VIRTUAL_HOST: specialist-frontend.dev.gov.uk
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
     ports:
       - "3065:3065"
+    volumes:
+      - ./apps/specialist-frontend/log:/app/log
 
   draft-specialist-frontend:
     << : *specialist-frontend
@@ -216,6 +235,7 @@ services:
       - draft-content-store
       - draft-static
     environment:
+      LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3165
       VIRTUAL_HOST: draft-specialist-frontend.dev.gov.uk
