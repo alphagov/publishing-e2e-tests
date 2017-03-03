@@ -125,7 +125,7 @@ module SpecialistPublisherNavigationHelpers
   end
 
   def ensure_published_aaib_report
-    create_aaib_report(Faker::Book.author, "Summary", "Body")
+    create_aaib_report(title_timestamp, "Summary", "Body")
     save_and_publish
   end
 
@@ -173,6 +173,10 @@ module SpecialistPublisherNavigationHelpers
     fill_in("Summary", with: summary)
     fill_in("Body", with: body)
     esi_fund_closing_date(Date.today)
+  end
+
+  def title_timestamp
+    Faker::Book.author << " #{Time.now.to_i}"
   end
 
   def discard_draft

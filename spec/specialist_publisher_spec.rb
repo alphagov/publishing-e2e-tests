@@ -5,7 +5,7 @@ require "date"
 
 describe "specialist publisher", type: :feature do
   feature "Publishes an AAIB Report" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { Faker::Lorem.sentence }
 
     scenario "successfully publishing an AAIB report" do
@@ -19,7 +19,7 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Creates a draft of an AAIB Report" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Aubergine crop has failed in Turkmenistan" }
 
     scenario "successfully creating an AAIB report" do
@@ -89,7 +89,7 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Discarding drafts" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Draft which will be discarded" }
 
     scenario "Discarding drafts that are not published" do
@@ -139,7 +139,7 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Documents with attachment" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Documents with attachment" }
     let(:file) { File.expand_path("./fixtures/Charities_and_corporation_tax_returns.pdf", File.dirname(__FILE__)) }
 
