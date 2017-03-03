@@ -149,21 +149,19 @@ describe "specialist publisher", type: :feature do
       select_add_attachment
       save_draft
       expect_attached_file
-      publish_draft
     end
 
     scenario "Publishing documents with attachment" do
-      view_frontend
+      preview_draft
       expect_attached_file_frontend
     end
 
     scenario "Removing attachments and publishing draft" do
       visit_aaib_index
-      edit_first_published_document
+      edit_first_draft_document
       remove_attachment_and_save_draft
-      expect_preview_draft_link
-      publish_draft
-      view_frontend
+      expect_attached_file_removed
+      preview_draft
       expect_removed_file_frontend
     end
   end

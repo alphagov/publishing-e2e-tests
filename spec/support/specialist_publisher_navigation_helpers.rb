@@ -68,6 +68,11 @@ module SpecialistPublisherNavigationHelpers
     raise "Published-with-new-draft document not found"
   end
 
+  def edit_first_published_document
+    visit_first_published_document
+    click_link("Edit document")
+  end
+
   def edit_first_unpublished_document
     visit_first_unpublished_document
     click_link("Edit document")
@@ -77,8 +82,8 @@ module SpecialistPublisherNavigationHelpers
     click_link("Edit document")
   end
 
-  def edit_first_published_document
-    visit_first_published_document
+  def edit_first_draft_document
+    select_drafted_content
     click_link("Edit document")
   end
 
@@ -94,7 +99,9 @@ module SpecialistPublisherNavigationHelpers
 
   def save_and_publish
     save_draft
-    click_button("Publish")
+    page.accept_confirm do
+      click_button("Publish")
+    end
   end
 
   def save_and_edit_draft
@@ -154,9 +161,7 @@ module SpecialistPublisherNavigationHelpers
     expect_attachment_removed
     fill_in("Summary", with: "Removing the attachment")
     fill_in("Body", with: "Removed attached document")
-    set_minor_update
     save_draft
-    expect_attached_file_removed
   end
 
   def create_aaib_report(title, summary, body)
