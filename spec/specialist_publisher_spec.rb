@@ -5,7 +5,7 @@ require "date"
 
 describe "specialist publisher", type: :feature do
   feature "Publishes an AAIB Report" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { Faker::Lorem.sentence }
 
     scenario "successfully publishing an AAIB report" do
@@ -16,16 +16,10 @@ describe "specialist publisher", type: :feature do
       expect_rendering_app_meta
       expect(page).to have_current_path(%r{^/aaib-reports})
     end
-
-    scenario "unsuccessfully creating a draft" do
-      create_aaib_report(title, "", Faker::Lorem.paragraph)
-      save_draft
-      expect_error("Summary can't be blank")
-    end
   end
 
   feature "Creates a draft of an AAIB Report" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Aubergine crop has failed in Turkmenistan" }
 
     scenario "successfully creating an AAIB report" do
@@ -95,7 +89,7 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Discarding drafts" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Draft which will be discarded" }
 
     scenario "Discarding drafts that are not published" do
@@ -145,7 +139,7 @@ describe "specialist publisher", type: :feature do
   end
 
   feature "Documents with attachment" do
-    let(:title) { Faker::Book.author }
+    let(:title) { title_timestamp }
     let(:summary) { "Documents with attachment" }
     let(:file) { File.expand_path("./fixtures/Charities_and_corporation_tax_returns.pdf", File.dirname(__FILE__)) }
 
@@ -154,24 +148,20 @@ describe "specialist publisher", type: :feature do
       save_and_edit_draft
       select_add_attachment
       save_draft
+      expect_attached_file
     end
 
     scenario "Publishing documents with attachment" do
-      expect_attached_file
-      publish_draft
-      view_frontend
+      preview_draft
       expect_attached_file_frontend
     end
 
     scenario "Removing attachments and publishing draft" do
-      expect_attached_file
-      publish_draft
       visit_aaib_index
-      edit_first_published_document
+      edit_first_draft_document
       remove_attachment_and_save_draft
-      expect_preview_draft_link
-      publish_draft
-      view_frontend
+      expect_attached_file_removed
+      preview_draft
       expect_removed_file_frontend
     end
   end

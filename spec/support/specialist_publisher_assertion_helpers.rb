@@ -25,12 +25,6 @@ module SpecialistPublisherAssertionHelpers
     end
   end
 
-  def expect_error(message)
-    within(".elements-error-summary") do
-      expect(page).to have_content(message)
-    end
-  end
-
   def expect_preview_draft_link
     expect(page).to have_link("Preview draft")
   end
