@@ -22,5 +22,6 @@ docker-compose run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
 docker-compose run publishing-api-worker bundle exec rails runner 'channel = Bunny.new.start.create_channel;Bunny::Exchange.new(channel, :topic, "test")'
 docker-compose run specialist-publisher bundle exec rake db:seed
 docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
+docker-compose run travel-advice-publisher bundle exec rake db:seed
 docker-compose run asset-manager bundle exec rake db:purge
 docker-compose up -d

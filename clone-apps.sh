@@ -37,4 +37,6 @@ clone_or_update asset-manager https://github.com/alphagov/asset-manager.git ${AS
 clone_or_update static https://github.com/alphagov/static.git ${STATIC_BRANCH:-"master"}
 clone_or_update specialist-frontend https://github.com/alphagov/specialist-frontend.git ${SPECIALIST_FRONTEND_BRANCH:-"master"}
 clone_or_update router https://github.com/alphagov/router.git ${ROUTER_BRANCH:-"master"}
+clone_or_update travel-advice-publisher https://github.com/alphagov/travel-advice-publisher.git ${TRAVEL_ADVICE_PUBLISHER_BRANCH:-"master"}
+clone_or_update multipage-frontend https://github.com/alphagov/multipage-frontend.git ${MULTIPAGE_FRONTEND_BRANCH:-"master"}
 clone_or_update rummager https://github.com/alphagov/rummager.git ${RUMMAGER_BRANCH:-"master"}
