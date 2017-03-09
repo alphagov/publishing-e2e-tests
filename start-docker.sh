@@ -12,6 +12,7 @@ set +e
 wget --retry-connrefused --tries=10 -q --wait=3 --spider http://localhost:9200
 set -e
 
+docker-compose run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:migrate_index
 docker-compose run router-api bundle exec rake db:purge
 docker-compose run draft-router-api bundle exec rake db:purge
 docker-compose run content-store bundle exec rake db:purge

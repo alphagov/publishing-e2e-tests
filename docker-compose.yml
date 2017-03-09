@@ -29,6 +29,20 @@ services:
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
 
+  rummager:
+    build:
+      context: ./apps/rummager
+    environment:
+      VIRTUAL_HOST: rummager.dev.gov.uk
+      LOG_PATH: log/live.log
+    links:
+      - elasticsearch
+      - redis
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./apps/rummager/log:/app/log
+
   router: &router
     build:
       context: ./apps/router
