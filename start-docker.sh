@@ -3,6 +3,15 @@ set -e
 
 docker-compose down
 docker-compose build
+
+# Elastic Search takes about 10 seconds to be available after the container has
+# started. When HEALTHCHECK (https://docs.docker.com/engine/reference/builder/#healthcheck)
+# is available on ElasticSearch we can use that instead.
+docker-compose up -d elasticsearch
+set +e
+wget --retry-connrefused --tries=10 -q --wait=3 --spider http://localhost:9200
+set -e
+
 docker-compose run router-api bundle exec rake db:purge
 docker-compose run draft-router-api bundle exec rake db:purge
 docker-compose run content-store bundle exec rake db:purge
