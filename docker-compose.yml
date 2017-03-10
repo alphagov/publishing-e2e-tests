@@ -1,4 +1,5 @@
-version: "2"
+version: '2'
+
 services:
 
   nginx-proxy:
@@ -7,8 +8,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock"
-      - "./docker/nginx.tmpl:/app/nginx.tmpl"
+      - /var/run/docker.sock:/tmp/docker.sock
+      - ./docker/nginx.tmpl:/app/nginx.tmpl
 
   db:
     image: postgres:9.6
@@ -30,8 +31,7 @@ services:
       - xpack.security.enabled=false
 
   rummager:
-    build:
-      context: ./apps/rummager
+    build: apps/rummager
     environment:
       VIRTUAL_HOST: rummager.dev.gov.uk
       LOG_PATH: log/live.log
@@ -44,8 +44,7 @@ services:
       - ./apps/rummager/log:/app/log
 
   router: &router
-    build:
-      context: ./apps/router
+    build: apps/router
     environment:
       VIRTUAL_HOST: www.dev.gov.uk
       VIRTUAL_PORT: 3054
@@ -75,8 +74,7 @@ services:
       - "3155:3155"
 
   router-api: &router-api
-    build:
-      context: ./apps/router-api
+    build: apps/router-api
     environment:
       LOG_PATH: log/live.log
       VIRTUAL_HOST: router-api.dev.gov.uk
@@ -105,8 +103,7 @@ services:
       - "3156:3156"
 
   content-store: &content-store
-    build:
-      context: ./apps/content-store
+    build: apps/content-store
     depends_on:
       - router-api
     environment:
@@ -138,8 +135,7 @@ services:
       - "3100:3100"
 
   publishing-api:
-    build:
-      context: ./apps/publishing-api
+    build: apps/publishing-api
     depends_on:
       - publishing-api-worker
     environment:
@@ -155,8 +151,7 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   publishing-api-worker:
-    build:
-      context: ./apps/publishing-api
+    build: apps/publishing-api
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - content-store
@@ -172,8 +167,7 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
-    build:
-      context: ./apps/specialist-publisher
+    build: apps/specialist-publisher
     depends_on:
       - publishing-api
       - asset-manager
@@ -190,8 +184,7 @@ services:
       - ./apps/specialist-publisher/log:/app/log
 
   travel-advice-publisher: &travel-advice-publisher
-    build:
-      context: ./apps/travel-advice-publisher
+    build: apps/travel-advice-publisher
     depends_on:
       - publishing-api
       - asset-manager
@@ -218,8 +211,7 @@ services:
     ports: []
 
   asset-manager: &asset-manager
-    build:
-      context: ./apps/asset-manager
+    build: apps/asset-manager
     depends_on:
       - asset-manager-worker
     links:
@@ -239,8 +231,7 @@ services:
     ports: []
 
   static: &static
-    build:
-      context: ./apps/static
+    build: apps/static
     environment:
       LOG_PATH: log/live.log
       VIRTUAL_HOST: static.dev.gov.uk
@@ -264,8 +255,7 @@ services:
   # draft-finder-frontend:
 
   specialist-frontend: &specialist-frontend
-    build:
-      context: ./apps/specialist-frontend
+    build: apps/specialist-frontend
     depends_on:
       - content-store
       - static
@@ -297,8 +287,7 @@ services:
       - "3165:3165"
 
   multipage-frontend: &multipage-frontend
-    build:
-      context: ./apps/multipage-frontend
+    build: apps/multipage-frontend
     depends_on:
       - content-store
       - static
@@ -331,8 +320,7 @@ services:
       - "3218:3218"
 
   publishing-e2e-tests:
-    build:
-      context: ./
+    build: .
     depends_on:
       - specialist-frontend
       - specialist-publisher
