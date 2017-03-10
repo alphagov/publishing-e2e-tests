@@ -22,6 +22,27 @@ services:
   rabbitmq:
     image: rabbitmq
 
+  elasticsearch:
+    image: elasticsearch:1.7.6
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - xpack.security.enabled=false
+
+  rummager:
+    build:
+      context: ./apps/rummager
+    environment:
+      VIRTUAL_HOST: rummager.dev.gov.uk
+      LOG_PATH: log/live.log
+    links:
+      - elasticsearch
+      - redis
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./apps/rummager/log:/app/log
+
   router: &router
     build:
       context: ./apps/router
@@ -31,6 +52,7 @@ services:
     links:
       - mongo
       - nginx-proxy:specialist-frontend.dev.gov.uk
+      - nginx-proxy:multipage-frontend.dev.gov.uk
     ports:
       - "3054:3054"
       - "3055:3055"
@@ -47,6 +69,7 @@ services:
     links:
       - mongo
       - nginx-proxy:draft-specialist-frontend.dev.gov.uk
+      - nginx-proxy:draft-multipage-frontend.dev.gov.uk
     ports:
       - "3154:3154"
       - "3155:3155"
@@ -166,6 +189,34 @@ services:
     volumes:
       - ./apps/specialist-publisher/log:/app/log
 
+  travel-advice-publisher: &travel-advice-publisher
+    build:
+      context: ./apps/travel-advice-publisher
+    depends_on:
+      - publishing-api
+      - asset-manager
+      - static
+      - rummager
+    environment:
+      VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
+    links:
+      - mongo
+      - redis
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:asset-manager.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+    ports:
+      - "3035:3035"
+    volumes:
+      - ./apps/travel-advice-publisher/log:/app/log
+
+  travel-advice-publisher-worker:
+    << : *travel-advice-publisher
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on: []
+    ports: []
+
   asset-manager: &asset-manager
     build:
       context: ./apps/asset-manager
@@ -245,12 +296,48 @@ services:
     ports:
       - "3165:3165"
 
+  multipage-frontend: &multipage-frontend
+    build:
+      context: ./apps/multipage-frontend
+    depends_on:
+      - content-store
+      - static
+    environment:
+      LOG_PATH: log/live.log
+      VIRTUAL_HOST: multipage-frontend.dev.gov.uk
+      VIRTUAL_PORT: 3118
+    links:
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+    ports:
+      - "3118:3118"
+    volumes:
+      - ./apps/multipage-frontend/log:/app/log
+
+  draft-multipage-frontend:
+    << : *multipage-frontend
+    depends_on:
+      - draft-content-store
+      - draft-static
+    environment:
+      LOG_PATH: log/draft.log
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3218
+      VIRTUAL_HOST: draft-multipage-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+    ports:
+      - "3218:3218"
+
   publishing-e2e-tests:
     build:
       context: ./
     depends_on:
       - specialist-frontend
       - specialist-publisher
+      - multipage-frontend
+      - travel-advice-publisher
     links:
       - nginx-proxy:www.dev.gov.uk
       - nginx-proxy:assets-origin.dev.gov.uk
@@ -258,5 +345,6 @@ services:
       - nginx-proxy:draft-origin.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
       - nginx-proxy:specialist-publisher.dev.gov.uk
+      - nginx-proxy:travel-advice-publisher.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
