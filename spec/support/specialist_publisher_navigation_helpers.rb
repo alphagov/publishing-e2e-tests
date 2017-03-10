@@ -16,7 +16,7 @@ module SpecialistPublisherNavigationHelpers
   end
 
   def specialist_publisher_url(path)
-    visit(Plek.find("specialist-publisher") << path)
+    visit(Plek.find("specialist-publisher") + path)
   end
 
   def aaib_occurence_date(date)
