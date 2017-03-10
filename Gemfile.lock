@@ -27,7 +27,7 @@ GEM
     multi_json (1.12.1)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-    plek (1.12.0)
+    plek (2.0.0)
     poltergeist (1.8.1)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -63,7 +63,7 @@ DEPENDENCIES
   capybara
   capybara-screenshot
   faker (~> 1.6)
-  plek (~> 1.12)
+  plek (~> 2.0)
   poltergeist
   rspec
 
