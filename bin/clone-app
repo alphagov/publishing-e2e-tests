@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+
+class App
+  def initialize(name)
+    @name = name
+  end
+
+  def prepare
+    Dir.chdir("apps") do
+      File.directory?(name) ? update : clone
+    end
+  end
+
+private
+
+  attr_reader :name
+
+  def clone
+    unless system "git clone -b #{branch} #{git_url}"
+      raise "git clone failed for #{git_url}"
+    end
+  end
+
+  def has_local_changes?
+    !system("git diff --quiet --ignore-submodules --no-ext-diff")
+  end
+
+  def checkout
+    unless system "git checkout #{branch}"
+      raise "git failed to checkout #{branch}"
+    end
+  end
+
+  def fetch_origin
+    unless system "git fetch origin"
+      raise "git fetch failed for #{name}"
+    end
+  end
+
+  def merge
+    unless system "git merge --ff-only origin/#{branch}"
+      raise "update #{name} failed"
+    end
+  end
+
+  def update
+    Dir.chdir(name) do
+      if has_local_changes?
+        puts "skipped updating #{name} due to local changes"
+      else
+        checkout
+        fetch_origin
+        merge
+      end
+    end
+  end
+
+  def git_url
+    "https://github.com/alphagov/#{name}.git"
+  end
+
+  def upper_name
+    name.gsub(/\-/, "_").upcase
+  end
+
+  def branch
+    ENV.fetch("#{upper_name}_BRANCH", "master")
+  end
+end
+
+ARGV.each do |name|
+  App.new(name).prepare
+end
