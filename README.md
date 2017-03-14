@@ -22,7 +22,7 @@ Once you have installed [docker-engine][docker-engine] and
 [Thoughtbot][install-docker]) you can build and run the test suite with:
 
 ```
-./build-and-run-tests.sh
+make
 ```
 
 ### Without Docker
