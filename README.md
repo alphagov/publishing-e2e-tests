@@ -22,8 +22,11 @@ Once you have installed [docker-engine][docker-engine] and
 [Thoughtbot][install-docker]) you can build and run the test suite with:
 
 ```
-make
+make -j4
 ```
+
+Running `make` on its own completes the following targets: `clone`, `build`,
+`start`, `test` and `stop`.
 
 ### Without Docker
 

@@ -1,16 +1,19 @@
-.PHONY: all clone build start test stop
+APPS = asset-manager content-store govuk-content-schemas multipage-frontend \
+	publishing-api router router-api rummager specialist-frontend \
+	specialist-publisher static travel-advice-publisher
 
-all: test
-	docker-compose down
+all: clone build start test stop
 
-clone:
-	./clone-apps.sh
+$(APPS):
+	bin/clone-app $@
 
-build: clone
+clone: $(APPS)
+
+build:
 	docker-compose down
 	docker-compose build
 
-start: build
+start:
 	docker-compose up -d elasticsearch
 	docker-compose run router-api bundle exec rake db:purge
 	docker-compose run draft-router-api bundle exec rake db:purge
@@ -26,5 +29,7 @@ start: build
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
 	docker-compose up -d
 
-test: start
+test:
 	docker-compose run publishing-e2e-tests bundle exec rspec --format d
+
+.PHONY: all clone build start test $(APPS)
