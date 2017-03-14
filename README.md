@@ -8,7 +8,8 @@ are browser tests (written in [RSpec](http://rspec.info/), using
 [Capybara](https://github.com/teamcapybara/capybara)) that mimic the behaviour
 of content editors.
 
-Currently we only have tests for Specialist Publisher (which require the
+Currently we have tests for [Specialist Publisher][specialist-publisher] and
+[Travel Advice Publisher][travel-advice-publisher] (which require the
 supporting applications and infrastructure, including Publishing API,
 Content Store, Content Schemas, Router, Frontend, Static, MongoDB, Postgres,
 Redis, RabbitMQ).
@@ -17,16 +18,20 @@ Redis, RabbitMQ).
 
 ### With Docker
 
-Once you have installed [docker-engine][docker-engine] and
-[docker-compose][docker-compose] (some useful hints on that over at
-[Thoughtbot][install-docker]) you can build and run the test suite with:
+Once you have [installed Docker][install-docker] you can build and run the test
+suite with:
 
 ```
-make -j4
+$ make
 ```
 
-Running `make` on its own completes the following targets: `clone`, `build`,
-`start`, `test` and `stop`.
+Running this command executes the following targets in order, which you can choose to run separately to speed up development: `clone`, `build`, `start`, `test` and `stop`.
+
+#### Configuring Docker
+
+We recommend that you configure Docker to use at least 4 CPUs with 4 GB of memory, otherwise you may find the apps struggle to run well enough to pass the tests.
+
+<img src="docs/docker-configuration.png" width="300" />
 
 ### Without Docker
 
@@ -88,8 +93,6 @@ docker images
 docker rmi -f <image-id>
 ```
 
-
-
-[docker-compose]: https://docs.docker.com/compose/
-[docker-engine]: https://www.docker.com/products/docker-engine
-[install-docker]: https://robots.thoughtbot.com/rails-on-docker
+[install-docker]: https://www.docker.com/community-edition
+[specialist-publisher]: https://github.com/alphagov/specialist-publisher
+[travel-advice-publisher]: https://github.com/alphagov/travel-advice-publisher
