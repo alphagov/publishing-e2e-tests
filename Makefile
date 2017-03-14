@@ -32,4 +32,7 @@ start:
 test:
 	docker-compose run publishing-e2e-tests bundle exec rspec --format d
 
+stop:
+	docker-compose down
+
 .PHONY: all clone build start test $(APPS)
