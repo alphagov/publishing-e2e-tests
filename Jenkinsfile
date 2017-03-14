@@ -20,7 +20,13 @@ node("docker") {
 
     stage("Build") {
       withEnv(["PUBLISHING_API_BRANCH=${params.PUBLISHING_API_BRANCH}"]) {
-        sh "${WORKSPACE}/build-and-run-tests.sh"
+        dir("${WORKSPACE}") {
+          sh "make clone -j4"
+          sh "make build"
+          sh "make start"
+          sh "make test"
+          sh "make stop"
+        }
       }
     }
   } catch (e) {
@@ -31,6 +37,8 @@ node("docker") {
           sendToIndividuals: true])
     throw e
   } finally {
-    sh "${WORKSPACE}/stop-docker.sh"
+    dir("${WORKSPACE}") {
+      sh "make stop"
+    }
   }
 }
