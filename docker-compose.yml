@@ -52,6 +52,7 @@ services:
       - mongo
       - nginx-proxy:specialist-frontend.dev.gov.uk
       - nginx-proxy:multipage-frontend.dev.gov.uk
+      - nginx-proxy:government-frontend.dev.gov.uk
     ports:
       - "3054:3054"
       - "3055:3055"
@@ -69,6 +70,7 @@ services:
       - mongo
       - nginx-proxy:draft-specialist-frontend.dev.gov.uk
       - nginx-proxy:draft-multipage-frontend.dev.gov.uk
+      - nginx-proxy:draft-government-frontend.dev.gov.uk
     ports:
       - "3154:3154"
       - "3155:3155"
@@ -319,12 +321,46 @@ services:
     ports:
       - "3218:3218"
 
+  government-frontend: &government-frontend
+    build: apps/government-frontend
+    depends_on:
+      - content-store
+      - static
+    environment:
+      LOG_PATH: log/live.log
+      VIRTUAL_HOST: government-frontend.dev.gov.uk
+      VIRTUAL_PORT: 3090
+    links:
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+    ports:
+      - "3090:3090"
+    volumes:
+      - ./apps/government-frontend/log:/app/log
+
+  draft-government-frontend:
+    << : *government-frontend
+    depends_on:
+      - draft-content-store
+      - draft-static
+    environment:
+      LOG_PATH: log/draft.log
+      PLEK_HOSTNAME_PREFIX: draft-
+      PORT: 3190
+      VIRTUAL_HOST: draft-government-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+    ports:
+      - "3190:3190"
+
   publishing-e2e-tests:
     build: .
     depends_on:
       - specialist-frontend
       - specialist-publisher
       - multipage-frontend
+      - government-frontend
       - travel-advice-publisher
     links:
       - nginx-proxy:www.dev.gov.uk
