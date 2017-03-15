@@ -1,6 +1,6 @@
-APPS = asset-manager content-store govuk-content-schemas multipage-frontend \
+APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager specialist-frontend \
-	specialist-publisher static travel-advice-publisher government-frontend
+	specialist-publisher static travel-advice-publisher
 
 all: clone build start test stop
 
