@@ -1,5 +1,5 @@
 module TravelAdvicePublisherNavigationHelpers
-  def visit_travel_advice_homepage
+  def visit_travel_advice_publisher_homepage
     travel_advice_publisher_url("/admin")
   end
 
@@ -16,9 +16,9 @@ module TravelAdvicePublisherNavigationHelpers
   end
 
   def create_new_edition_draft(title, summary, part_title, part_body)
-    visit_travel_advice_homepage
+    visit_travel_advice_publisher_homepage
     click_link("Argentina")
-    expect_creation_new_edition
+    expect_create_new_edition
     click_button("Create new edition")
     fill_in("edition_change_description", with: title)
     fill_in("edition_summary", with: summary)
@@ -28,9 +28,14 @@ module TravelAdvicePublisherNavigationHelpers
   def add_new_part(part_title, part_body)
     click_button("Add new part")
     within(".panel-body") do
-      find(".title").set part_title
-      find("textarea").set part_body
+      find(".title").set(part_title)
+      find("textarea").set(part_body)
     end
+  end
+
+  def attach_a_files
+    attach_file("edition_image", image)
+    attach_file("edition_document", file)
   end
 
   def select_draft_edition
@@ -45,6 +50,11 @@ module TravelAdvicePublisherNavigationHelpers
   def preview_edition
     click_link("Preview saved version")
     view_draft_frontend
+  end
+
+  def delete_draft
+    click_link("edit")
+    click_link("Delete")
   end
 
   def view_new_part(part_title)
