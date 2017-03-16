@@ -5,7 +5,9 @@ module TravelAdvicePublisherAssertionHelpers
 
   def expect_new_edition(summary)
     reload_page_while_failing do
-      expect(page).to have_content(summary)
+      within(".govuk-govspeak") do
+        expect(page).to have_content(summary)
+      end
     end
   end
 

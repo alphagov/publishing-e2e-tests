@@ -3,7 +3,7 @@ require "plek"
 require "faker"
 require "date"
 
-describe "travel advice publisher", type: :feature do
+describe "travel advice publisher", type: :feature, travel_advice_publisher: true do
   feature "Creating and deleting new editions" do
     let(:title) { title_timestamp }
     let(:summary) { Faker::Lorem.paragraph }

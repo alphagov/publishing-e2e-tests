@@ -3,7 +3,7 @@ require "plek"
 require "faker"
 require "date"
 
-describe "specialist publisher", type: :feature do
+describe "specialist publisher", type: :feature, specialist_publisher: true do
   feature "Publishes an AAIB Report" do
     let(:title) { title_timestamp }
     let(:summary) { Faker::Lorem.sentence }
