@@ -29,8 +29,20 @@ start:
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
 	docker-compose up -d
 
+
+# `make test` will run just the test command
+#
+# whereas if you run `make test tags=<comma separated list of test tags>` you
+# can run particularly tagged tests
+#
+TEST_COMMAND = docker-compose run publishing-e2e-tests bundle exec rspec --format d
+comma = ,
 test:
-	docker-compose run publishing-e2e-tests bundle exec rspec --format d
+ifdef tags
+	$(TEST_COMMAND) --tag $(subst $(comma), --tag ,$(tags))
+else
+	$(TEST_COMMAND)
+endif
 
 stop:
 	docker-compose down
