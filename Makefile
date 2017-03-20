@@ -9,8 +9,10 @@ $(APPS):
 
 clone: $(APPS)
 
-build:
+down:
 	docker-compose down
+
+build: down
 	docker-compose build
 
 start:
@@ -32,7 +34,6 @@ start:
 test:
 	docker-compose run publishing-e2e-tests bundle exec rspec --format d
 
-stop:
-	docker-compose down
+stop: down
 
 .PHONY: all clone build start test $(APPS)
