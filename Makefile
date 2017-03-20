@@ -2,7 +2,9 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager specialist-frontend \
 	specialist-publisher static travel-advice-publisher
 
-all: clone build start test stop
+TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec --format d
+
+all: clone build setup start test stop
 
 $(APPS):
 	bin/clone-app $@
@@ -32,7 +34,7 @@ start:
 	docker-compose up -d
 
 test:
-	docker-compose run publishing-e2e-tests bundle exec rspec --format d
+	$(TEST_CMD)
 
 stop: down
 
