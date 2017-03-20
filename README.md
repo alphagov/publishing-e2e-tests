@@ -27,6 +27,13 @@ $ make
 
 Running this command executes the following targets in order, which you can choose to run separately to speed up development: `clone`, `build`, `start`, `test` and `stop`.
 
+For example, to run only the tests for the specialist publisher, you need only do:
+
+```bash
+$ make -j4 clone
+$ make build start test-specialist-publisher stop
+```
+
 #### Configuring Docker
 
 We recommend that you configure Docker to use at least 4 CPUs with 4 GB of memory, otherwise you may find the apps struggle to run well enough to pass the tests.
