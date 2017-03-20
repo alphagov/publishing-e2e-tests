@@ -4,7 +4,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 
 TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec --format d
 
-all: clone build setup start test stop
+all: clone build start test stop
 
 $(APPS):
 	bin/clone-app $@
@@ -17,7 +17,7 @@ down:
 build: down
 	docker-compose build
 
-start:
+setup:
 	docker-compose up -d elasticsearch
 	docker-compose run router-api bundle exec rake db:purge
 	docker-compose run draft-router-api bundle exec rake db:purge
@@ -31,11 +31,22 @@ start:
 	docker-compose run specialist-publisher bundle exec rake db:seed
 	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
+
+up:
 	docker-compose up -d
+
+start: setup up
 
 test:
 	$(TEST_CMD)
 
+test-specialist-publisher:
+	$(TEST_CMD) --tag specialist_publisher
+
+test-travel-advice-publisher:
+	$(TEST_CMD) --tag travel_advice_publisher
+
 stop: down
 
-.PHONY: all clone build start test $(APPS)
+.PHONY: all $(APPS) clone down build setup start up test stop \
+	test-specialist-publisher test-travel-advice-publisher
