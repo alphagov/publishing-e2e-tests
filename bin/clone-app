@@ -37,9 +37,10 @@ private
     end
   end
 
-  def reset
-    unless system "git reset --hard HEAD"
-      raise "reset failed for #{name}"
+  def merge
+    return if detached?
+    unless system "git merge --ff-only origin/#{commitish}"
+      raise "merge failed for #{commitish}"
     end
   end
 
@@ -50,7 +51,7 @@ private
       else
         fetch_origin
         checkout
-        reset
+        merge
       end
     end
   end
@@ -65,6 +66,10 @@ private
 
   def commitish
     ENV.fetch("#{upper_name}_COMMITISH", "master")
+  end
+
+  def detached?
+    `git rev-parse --abbrev-ref HEAD` == "HEAD\n"
   end
 end
 
