@@ -7,7 +7,7 @@ class App
 
   def prepare
     Dir.chdir("apps") do
-      File.directory?(name) ? update : clone
+      File.directory?(name) ? update : (clone && checkout)
     end
   end
 
