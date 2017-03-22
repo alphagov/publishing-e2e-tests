@@ -7,8 +7,8 @@ node("docker") {
     parameters([
       stringParam(
         defaultValue: "master",
-        description: "Which branch/commit/tag of publishing-api to clone",
-        name: "PUBLISHING_API_BRANCH"
+        description: "Which commit/branch/tag of publishing-api to clone",
+        name: "PUBLISHING_API_COMMITISH"
       )
     ])
   ])
@@ -19,7 +19,7 @@ node("docker") {
     }
 
     stage("Build") {
-      withEnv(["PUBLISHING_API_BRANCH=${params.PUBLISHING_API_BRANCH}"]) {
+      withEnv(["PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}"]) {
         dir("${WORKSPACE}") {
           sh "make clone -j4"
           sh "make build"

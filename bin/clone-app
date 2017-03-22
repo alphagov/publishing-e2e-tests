@@ -64,7 +64,7 @@ private
   end
 
   def commitish
-    ENV.fetch("#{upper_name}_BRANCH", "master")
+    ENV.fetch("#{upper_name}_COMMITISH", "master")
   end
 end
 
