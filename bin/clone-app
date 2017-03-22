@@ -26,7 +26,7 @@ private
   end
 
   def checkout
-    unless system "git checkout #{commitish}"
+    unless system "git checkout -f #{commitish}"
       raise "git failed to checkout #{commitish}"
     end
   end
