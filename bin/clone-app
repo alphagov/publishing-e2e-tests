@@ -16,7 +16,7 @@ private
   attr_reader :name
 
   def clone
-    unless system "git clone -b #{branch} #{git_url}"
+    unless system "git clone #{git_url}"
       raise "git clone failed for #{git_url}"
     end
   end
@@ -26,8 +26,8 @@ private
   end
 
   def checkout
-    unless system "git checkout #{branch}"
-      raise "git failed to checkout #{branch}"
+    unless system "git checkout #{commitish}"
+      raise "git failed to checkout #{commitish}"
     end
   end
 
@@ -37,9 +37,9 @@ private
     end
   end
 
-  def merge
-    unless system "git merge --ff-only origin/#{branch}"
-      raise "update #{name} failed"
+  def reset
+    unless system "git reset --hard HEAD"
+      raise "reset failed for #{name}"
     end
   end
 
@@ -48,9 +48,9 @@ private
       if has_local_changes?
         puts "skipped updating #{name} due to local changes"
       else
-        checkout
         fetch_origin
-        merge
+        checkout
+        reset
       end
     end
   end
@@ -63,8 +63,8 @@ private
     name.gsub(/\-/, "_").upcase
   end
 
-  def branch
-    ENV.fetch("#{upper_name}_BRANCH", "master")
+  def commitish
+    ENV.fetch("#{upper_name}_COMMITISH", "master")
   end
 end
 
