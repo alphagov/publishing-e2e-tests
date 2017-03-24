@@ -59,6 +59,7 @@ services:
   draft-router:
     << : *router
     environment:
+      GOVUK_APP_NAME: draft-router
       PLEK_HOSTNAME_PREFIX: draft-
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
@@ -89,6 +90,7 @@ services:
   draft-router-api:
     << : *router-api
     environment:
+      GOVUK_APP_NAME: draft-router-api
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
       PLEK_HOSTNAME_PREFIX: draft-
@@ -123,6 +125,7 @@ services:
     depends_on:
       - draft-router-api
     environment:
+      GOVUK_APP_NAME: draft-content-store
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
       PLEK_HOSTNAME_PREFIX: draft-
@@ -243,6 +246,7 @@ services:
   draft-static:
     << : *static
     environment:
+      GOVUK_APP_NAME: draft-static
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3113
@@ -276,6 +280,7 @@ services:
       - draft-content-store
       - draft-static
     environment:
+      GOVUK_APP_NAME: draft-specialist-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3165
@@ -309,6 +314,7 @@ services:
       - draft-content-store
       - draft-static
     environment:
+      GOVUK_APP_NAME: draft-government-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3190
