@@ -54,14 +54,26 @@ node("docker") {
         checkout(scm)
       }
 
-      stage("Build") {
+      stage("Clone applications") {
         withEnv(["PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}"]) {
           sh("make clone -j4")
-          sh("make build")
-          sh("make start")
-          sh("make test")
-          sh("make stop")
         }
+      }
+
+      stage("Build docker environment") {
+        sh("make build")
+      }
+
+      stage("Start docker apps") {
+        sh("make start")
+      }
+
+      stage("Run tests") {
+        sh("make test")
+      }
+
+      stage("Stop docker") {
+        sh("make stop")
       }
 
       originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
