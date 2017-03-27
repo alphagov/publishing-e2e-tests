@@ -20,8 +20,9 @@ services:
   redis:
     image: redis
 
-  rabbitmq:
-    image: rabbitmq
+  # commented out as not used currently
+  # rabbitmq:
+  #   image: rabbitmq
 
   elasticsearch:
     image: elasticsearch:1.7.6
@@ -169,13 +170,14 @@ services:
       - publishing-api-worker
       - diet-errbit
     environment:
+      DISABLE_QUEUE_PUBLISHER: 1
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
       - db
       - redis
-      - rabbitmq
+      # - rabbitmq
       - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3093:3093"
@@ -191,12 +193,13 @@ services:
       - draft-content-store
       - diet-errbit
     environment:
+      DISABLE_QUEUE_PUBLISHER: 1
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: publishing-api-worker
     links:
       - db
       - redis
-      - rabbitmq
+      # - rabbitmq
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
