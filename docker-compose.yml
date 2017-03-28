@@ -31,15 +31,20 @@ services:
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
 
-  # TODO: update rummager for errbit compatibility
   rummager:
     build: apps/rummager
+    depends_on:
+      - diet-errbit
     environment:
-      VIRTUAL_HOST: rummager.dev.gov.uk
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: rummager
+      GOVUK_APP_NAME: rummager
       LOG_PATH: log/live.log
+      VIRTUAL_HOST: rummager.dev.gov.uk
     links:
       - elasticsearch
       - redis
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3009:3009"
     volumes:
