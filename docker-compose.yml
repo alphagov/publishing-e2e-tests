@@ -72,6 +72,7 @@ services:
     environment:
       GOVUK_APP_NAME: draft-router
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
       ROUTER_MONGO_DB: draft-router
@@ -112,6 +113,7 @@ services:
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       TEST_MONGODB_URI: mongodb://mongo/draft-router-test
@@ -155,6 +157,7 @@ services:
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3100
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
     links:
@@ -315,6 +318,7 @@ services:
       GOVUK_APP_NAME: draft-static
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3113
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
@@ -356,6 +360,7 @@ services:
       GOVUK_APP_NAME: draft-specialist-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3165
       VIRTUAL_HOST: draft-specialist-frontend.dev.gov.uk
     links:
@@ -398,6 +403,7 @@ services:
       GOVUK_APP_NAME: draft-government-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3190
       VIRTUAL_HOST: draft-government-frontend.dev.gov.uk
     links:
