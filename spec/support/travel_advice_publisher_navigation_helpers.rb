@@ -1,6 +1,6 @@
 module TravelAdvicePublisherNavigationHelpers
   def visit_travel_advice_publisher_homepage
-    travel_advice_publisher_url("/admin")
+    visit_travel_advice_publisher_url("/admin")
   end
 
   def visit_draft_origin_url(path)
@@ -11,7 +11,7 @@ module TravelAdvicePublisherNavigationHelpers
     visit(Plek.find("www") + path)
   end
 
-  def travel_advice_publisher_url(path)
+  def visit_travel_advice_publisher_url(path)
     visit(Plek.find("travel-advice-publisher") + path)
   end
 
@@ -68,6 +68,10 @@ module TravelAdvicePublisherNavigationHelpers
   def view_published_frontend
     click_link("view")
     visit_published_url("/foreign-travel-advice/argentina")
+  end
+
+  def download_example_pdf
+    click_link("Download map (PDF)")
   end
 
   def save_new_edition

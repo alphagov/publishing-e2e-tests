@@ -5,17 +5,13 @@ module TravelAdvicePublisherAssertionHelpers
 
   def expect_new_edition(summary)
     reload_page_while_failing do
-      within(".govuk-govspeak") do
-        expect(page).to have_content(summary)
-      end
+      expect(page).to have_content(summary)
     end
   end
 
   def expect_published_edition(summary)
     reload_page_while_failing do
-      within(".govuk-govspeak") do
-        expect(page).to have_content(summary)
-      end
+      expect(page).to have_content(summary)
     end
   end
 
@@ -25,10 +21,16 @@ module TravelAdvicePublisherAssertionHelpers
     end
   end
 
-  def expect_file_attached
+  def expect_attachment_on_frontend
     reload_page_while_failing do
       expect(page).to have_link("Download map (PDF)")
-      expect(page).to have_xpath("//img[contains(@src,'world_map.png')]")
+      expect(page).to have_xpath("//img[contains(@src,'Example_map.jpg')]")
+    end
+  end
+
+  def expect_example_file_downloaded
+    reload_page_while_failing do
+      expect(page).to have_current_path(/Example_map.pdf/)
     end
   end
 
