@@ -422,8 +422,10 @@ services:
     build: .
     depends_on:
       - specialist-frontend
+      - draft-specialist-frontend
       - specialist-publisher
       - government-frontend
+      - draft-government-frontend
       - travel-advice-publisher
     links:
       - nginx-proxy:www.dev.gov.uk
