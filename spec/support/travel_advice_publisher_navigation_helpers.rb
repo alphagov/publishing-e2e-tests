@@ -15,9 +15,9 @@ module TravelAdvicePublisherNavigationHelpers
     visit(Plek.find("travel-advice-publisher") + path)
   end
 
-  def create_new_edition_draft(title, summary, part_title, part_body)
+  def create_new_edition_draft(title, summary, part_title, part_body, country)
     visit_travel_advice_publisher_homepage
-    click_link("Argentina")
+    click_link(country)
     expect_create_new_edition
     click_button("Create new edition")
     fill_in("edition_change_description", with: title)
@@ -42,14 +42,14 @@ module TravelAdvicePublisherNavigationHelpers
     visit_travel_advice_homepage
   end
 
-  def delete_existing_draft
-    travel_advice_publisher_url("/admin/countries/argentina")
+  def delete_existing_draft(country)
+    visit_travel_advice_publisher_url("/admin/countries/#{country.downcase}")
     delete_draft unless page.has_button?("Create new edition")
   end
 
-  def preview_edition
+  def preview_edition(country)
     click_link("Preview saved version")
-    view_draft_frontend
+    view_draft_frontend(country)
   end
 
   def delete_draft
@@ -61,13 +61,17 @@ module TravelAdvicePublisherNavigationHelpers
     click_link(part_title)
   end
 
-  def view_draft_frontend
-    visit_draft_origin_url("/foreign-travel-advice/argentina")
+  def view_draft_frontend(country)
+    visit_draft_origin_url(country_path(country))
   end
 
-  def view_published_frontend
+  def view_published_frontend(country)
     click_link("view")
-    visit_published_url("/foreign-travel-advice/argentina")
+    visit_published_url(country_path(country))
+  end
+
+  def country_path(country)
+    "/foreign-travel-advice/#{country.downcase}"
   end
 
   def download_example_pdf

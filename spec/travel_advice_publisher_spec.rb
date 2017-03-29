@@ -9,24 +9,25 @@ describe "travel advice publisher", type: :feature, travel_advice_publisher: tru
     let(:summary) { Faker::Lorem.paragraph }
     let(:part_title) { Faker::Book.title }
     let(:part_body) { Faker::Lorem.sentence }
+    let(:country) { "Mexico" }
 
     after do
-      delete_existing_draft
+      delete_existing_draft(country)
     end
 
     scenario "creating a new edition (Draft)" do
-      create_new_edition_draft(title, summary, part_title, part_body)
+      create_new_edition_draft(title, summary, part_title, part_body, country)
       save_new_edition
-      preview_edition
+      preview_edition(country)
       expect_new_edition(summary)
       view_new_part(part_title)
       expect_new_part(part_body)
     end
 
     scenario "creating a new edition (Published)" do
-      create_new_edition_draft(title, summary, part_title, part_body)
+      create_new_edition_draft(title, summary, part_title, part_body, country)
       save_draft_publish
-      view_published_frontend
+      view_published_frontend(country)
       expect_published_edition(summary)
     end
   end
@@ -36,20 +37,21 @@ describe "travel advice publisher", type: :feature, travel_advice_publisher: tru
     let(:summary) { Faker::Lorem.paragraph }
     let(:part_title) { Faker::Book.title }
     let(:part_body) { Faker::Lorem.sentence }
+    let(:country) { "Barbados" }
     let(:image) { File.expand_path("./fixtures/Example_map.jpg", File.dirname(__FILE__)) }
     let(:file) { File.expand_path("./fixtures/Example_map.pdf", File.dirname(__FILE__)) }
 
     after do
-      delete_existing_draft
+      delete_existing_draft(country)
     end
 
     scenario "attaching an image and pdf file" do
-      create_new_edition_draft(title, summary, part_title, part_body)
+      create_new_edition_draft(title, summary, part_title, part_body, country)
       attach_a_files
       save_new_edition
-      preview_edition
-      expect_published_edition(summary)
-      expect_file_attached
+      preview_edition(country)
+      expect_new_edition(summary)
+      expect_attachment_on_frontend
       download_example_pdf
       expect_example_file_downloaded
     end
