@@ -110,6 +110,7 @@ RSpec.configure do |config|
 =end
 
   config.add_setting :reload_page_attempts, default: 5
+  config.add_setting :reload_page_wait_time, default: 30
 end
 
 Capybara.configure do |config|
