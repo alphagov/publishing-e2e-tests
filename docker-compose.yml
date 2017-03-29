@@ -20,8 +20,9 @@ services:
   redis:
     image: redis
 
-  rabbitmq:
-    image: rabbitmq
+  # commented out as not used currently
+  # rabbitmq:
+  #   image: rabbitmq
 
   elasticsearch:
     image: elasticsearch:1.7.6
@@ -32,16 +33,31 @@ services:
 
   rummager:
     build: apps/rummager
+    depends_on:
+      - diet-errbit
     environment:
-      VIRTUAL_HOST: rummager.dev.gov.uk
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: rummager
+      GOVUK_APP_NAME: rummager
       LOG_PATH: log/live.log
+      VIRTUAL_HOST: rummager.dev.gov.uk
     links:
       - elasticsearch
       - redis
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3009:3009"
     volumes:
       - ./apps/rummager/log:/app/log
+
+  diet-errbit:
+    build: diet-errbit
+    environment:
+      VIRTUAL_HOST: errbit.dev.gov.uk
+    ports:
+      - "3129:3129"
+    volumes:
+      - ./tmp:/app/tmp
 
   router: &router
     build: apps/router
@@ -61,6 +77,7 @@ services:
     environment:
       GOVUK_APP_NAME: draft-router
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
       ROUTER_MONGO_DB: draft-router
@@ -76,12 +93,17 @@ services:
 
   router-api: &router-api
     build: apps/router-api
+    depends_on:
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: router-api
       LOG_PATH: log/live.log
       VIRTUAL_HOST: router-api.dev.gov.uk
     links:
       - mongo
       - router
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3056:3056"
     volumes:
@@ -90,10 +112,13 @@ services:
   draft-router-api:
     << : *router-api
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: draft-router-api
       GOVUK_APP_NAME: draft-router-api
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       TEST_MONGODB_URI: mongodb://mongo/draft-router-test
@@ -101,6 +126,7 @@ services:
     links:
       - mongo
       - draft-router
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3156:3156"
 
@@ -108,12 +134,16 @@ services:
     build: apps/content-store
     depends_on:
       - router-api
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: content-store
       LOG_PATH: log/live.log
       VIRTUAL_HOST: content-store.dev.gov.uk
     links:
       - mongo
       - nginx-proxy:router-api.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3068:3068"
     volumes:
@@ -124,16 +154,21 @@ services:
     << : *content-store
     depends_on:
       - draft-router-api
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: draft-content-store
       GOVUK_APP_NAME: draft-content-store
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3100
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
     links:
       - mongo
       - nginx-proxy:draft-router-api.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3100:3100"
 
@@ -141,12 +176,17 @@ services:
     build: apps/publishing-api
     depends_on:
       - publishing-api-worker
+      - diet-errbit
     environment:
+      DISABLE_QUEUE_PUBLISHER: 1
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
       - db
       - redis
-      - rabbitmq
+      # - rabbitmq
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3093:3093"
     volumes:
@@ -159,12 +199,18 @@ services:
     depends_on:
       - content-store
       - draft-content-store
+      - diet-errbit
+    environment:
+      DISABLE_QUEUE_PUBLISHER: 1
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: publishing-api-worker
     links:
       - db
       - redis
-      - rabbitmq
+      # - rabbitmq
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     volumes:
       - ./apps/govuk-content-schemas:/govuk-content-schemas
       - ./apps/publishing-api/log:/app/log
@@ -174,13 +220,17 @@ services:
     depends_on:
       - publishing-api
       - asset-manager
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
     links:
       - mongo
       - redis
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3064:3064"
     volumes:
@@ -193,7 +243,10 @@ services:
       - asset-manager
       - static
       - rummager
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: travel-advice-publisher
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
     links:
       - mongo
@@ -202,6 +255,7 @@ services:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3035:3035"
     volumes:
@@ -210,34 +264,52 @@ services:
   travel-advice-publisher-worker:
     << : *travel-advice-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
-    depends_on: []
+    depends_on:
+      - diet-errbit
+    environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: travel-advice-publisher
     ports: []
 
   asset-manager: &asset-manager
     build: apps/asset-manager
     depends_on:
       - asset-manager-worker
+      - diet-errbit
     links:
       - mongo
+      - nginx-proxy:errbit.dev.gov.uk
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: asset-manager
       VIRTUAL_HOST: asset-manager.dev.gov.uk
     ports:
       - "3037:3037"
     volumes:
       - ./apps/asset-manager/log:/app/log
-      - ./tmp/asset-manager/uploads:/app/uploads
+      - ./tmp:/app/uploads
 
   asset-manager-worker:
     << : *asset-manager
     command: bundle exec rake jobs:work
-    depends_on: []
+    depends_on:
+      - diet-errbit
+    environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
     ports: []
 
   static: &static
     build: apps/static
+    depends_on:
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: static
       LOG_PATH: log/live.log
       VIRTUAL_HOST: static.dev.gov.uk
+    links:
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3013:3013"
     volumes:
@@ -246,9 +318,12 @@ services:
   draft-static:
     << : *static
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: draft-static
       GOVUK_APP_NAME: draft-static
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3113
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
@@ -263,12 +338,16 @@ services:
     depends_on:
       - content-store
       - static
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: specialist-frontend
       LOG_PATH: log/live.log
       VIRTUAL_HOST: specialist-frontend.dev.gov.uk
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3065:3065"
     volumes:
@@ -279,15 +358,20 @@ services:
     depends_on:
       - draft-content-store
       - draft-static
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: draft-specialist-frontend
       GOVUK_APP_NAME: draft-specialist-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3165
       VIRTUAL_HOST: draft-specialist-frontend.dev.gov.uk
     links:
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3165:3165"
 
@@ -296,13 +380,17 @@ services:
     depends_on:
       - content-store
       - static
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: government-frontend
       LOG_PATH: log/live.log
       VIRTUAL_HOST: government-frontend.dev.gov.uk
       VIRTUAL_PORT: 3090
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3090:3090"
     volumes:
@@ -313,15 +401,20 @@ services:
     depends_on:
       - draft-content-store
       - draft-static
+      - diet-errbit
     environment:
+      ERRBIT_API_KEY: 1
+      ERRBIT_ENVIRONMENT_NAME: draft-government-frontend
       GOVUK_APP_NAME: draft-government-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3190
       VIRTUAL_HOST: draft-government-frontend.dev.gov.uk
     links:
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:errbit.dev.gov.uk
     ports:
       - "3190:3190"
 

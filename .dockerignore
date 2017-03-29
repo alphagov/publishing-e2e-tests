@@ -2,3 +2,7 @@
 .gitignore
 README.md
 apps
+bin
+diet-errbit
+docker
+docs
