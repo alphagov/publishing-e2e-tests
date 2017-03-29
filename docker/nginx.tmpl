@@ -260,6 +260,7 @@ server {
 server {
   server_name assets-origin.dev.gov.uk;
   listen 80;
+	access_log /var/log/nginx/access.log vhost;
 
   {{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
   {{ $upstream_name := sha1 $host }}
