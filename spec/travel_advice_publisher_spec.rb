@@ -40,8 +40,8 @@ describe "travel advice publisher", type: :feature, travel_advice_publisher: tru
     let(:part_title) { Faker::Book.title }
     let(:part_body) { Faker::Lorem.sentence }
     let(:country) { "Barbados" }
-    let(:image) { File.expand_path("./fixtures/Example_map.jpg", File.dirname(__FILE__)) }
-    let(:file) { File.expand_path("./fixtures/Example_map.pdf", File.dirname(__FILE__)) }
+    let(:image) { path_to_fixture("example-image.jpg") }
+    let(:file) { path_to_fixture("example-document.pdf") }
 
     after do
       delete_existing_draft(country)

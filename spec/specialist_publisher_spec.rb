@@ -141,7 +141,7 @@ describe "specialist publisher", type: :feature, specialist_publisher: true do
   feature "Documents with attachment" do
     let(:title) { title_timestamp }
     let(:summary) { "Documents with attachment" }
-    let(:file) { File.expand_path("./fixtures/Charities_and_corporation_tax_returns.pdf", File.dirname(__FILE__)) }
+    let(:file) { path_to_fixture("example-document.pdf") }
 
     before do
       create_aaib_report(title, summary, Faker::Lorem.paragraph)

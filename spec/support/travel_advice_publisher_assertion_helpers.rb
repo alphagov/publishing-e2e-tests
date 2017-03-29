@@ -24,13 +24,13 @@ module TravelAdvicePublisherAssertionHelpers
   def expect_attachment_on_frontend
     reload_page_while_failing do
       expect(page).to have_link("Download map (PDF)")
-      expect(page).to have_xpath("//img[contains(@src,'Example_map.jpg')]")
+      expect(page).to have_xpath("//img[contains(@src, 'example-image.jpg')]")
     end
   end
 
   def expect_example_file_downloaded
     reload_page_while_failing do
-      expect(page).to have_current_path(/Example_map.pdf/)
+      expect(page).to have_current_path(/example-document.pdf/)
     end
   end
 

@@ -150,10 +150,10 @@ module SpecialistPublisherNavigationHelpers
   def select_add_attachment
     click_link("Add attachment")
     expect_add_attachment
-    fill_in("Title", with: "Charities and corporation tax returns doc")
+    fill_in("Title", with: "Example Attachment Document")
     attach_file("attachment_file", file)
     click_button("Save attachment")
-    fill_in("Body", with: "[InlineAttachment:Charities_and_corporation_tax_returns.pdf]")
+    fill_in("Body", with: "[InlineAttachment:example-document.pdf]")
   end
 
   def remove_attachment_and_save_draft
