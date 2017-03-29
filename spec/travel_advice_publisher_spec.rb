@@ -18,17 +18,19 @@ describe "travel advice publisher", type: :feature, travel_advice_publisher: tru
     scenario "creating a new edition (Draft)" do
       create_new_edition_draft(title, summary, part_title, part_body, country)
       save_new_edition
-      preview_edition(country)
-      expect_new_edition(summary)
-      view_new_part(part_title)
-      expect_new_part(part_body)
+      within_window(preview_edition(country)) do
+        expect_new_edition(summary)
+        view_new_part(part_title)
+        expect_new_part(part_body)
+      end
     end
 
     scenario "creating a new edition (Published)" do
       create_new_edition_draft(title, summary, part_title, part_body, country)
       save_draft_publish
-      view_published_frontend(country)
-      expect_published_edition(summary)
+      within_window(view_published_frontend(country)) do
+        expect_published_edition(summary)
+      end
     end
   end
 
@@ -49,11 +51,12 @@ describe "travel advice publisher", type: :feature, travel_advice_publisher: tru
       create_new_edition_draft(title, summary, part_title, part_body, country)
       attach_a_files
       save_new_edition
-      preview_edition(country)
-      expect_new_edition(summary)
-      expect_attachment_on_frontend
-      download_example_pdf
-      expect_example_file_downloaded
+      within_window(preview_edition(country)) do
+        expect_new_edition(summary)
+        expect_attachment_on_frontend
+        download_example_pdf
+        expect_example_file_downloaded
+      end
     end
   end
 end

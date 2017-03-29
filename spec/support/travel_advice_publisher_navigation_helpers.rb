@@ -3,14 +3,6 @@ module TravelAdvicePublisherNavigationHelpers
     visit_travel_advice_publisher_url("/admin")
   end
 
-  def visit_draft_origin_url(path)
-    visit(Plek.find("draft-origin") + path)
-  end
-
-  def visit_published_url(path)
-    visit(Plek.find("www") + path)
-  end
-
   def visit_travel_advice_publisher_url(path)
     visit(Plek.find("travel-advice-publisher") + path)
   end
@@ -38,18 +30,15 @@ module TravelAdvicePublisherNavigationHelpers
     attach_file("edition_document", file)
   end
 
-  def select_draft_edition
-    visit_travel_advice_homepage
-  end
-
   def delete_existing_draft(country)
     visit_travel_advice_publisher_url("/admin/countries/#{country.downcase}")
     delete_draft unless page.has_button?("Create new edition")
   end
 
   def preview_edition(country)
-    click_link("Preview saved version")
-    view_draft_frontend(country)
+    window_opened_by do
+      click_link("Preview saved version")
+    end
   end
 
   def delete_draft
@@ -61,17 +50,10 @@ module TravelAdvicePublisherNavigationHelpers
     click_link(part_title)
   end
 
-  def view_draft_frontend(country)
-    visit_draft_origin_url(country_path(country))
-  end
-
   def view_published_frontend(country)
-    click_link("view")
-    visit_published_url(country_path(country))
-  end
-
-  def country_path(country)
-    "/foreign-travel-advice/#{country.downcase}"
+    window_opened_by do
+      click_link("view")
+    end
   end
 
   def download_example_pdf
