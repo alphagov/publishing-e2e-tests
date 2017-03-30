@@ -59,7 +59,7 @@ module SpecialistPublisherAssertionHelpers
   def expect_attached_file_frontend
     reload_page_while_failing do
       within(".govuk-govspeak")do
-        expect(page).to have_link("Charities and corporation tax returns doc")
+        expect(page).to have_link("Example Attachment Document")
       end
     end
   end
