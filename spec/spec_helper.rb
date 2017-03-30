@@ -21,6 +21,8 @@ require "capybara/rspec"
 require "capybara-screenshot/rspec"
 # require "capybara/webkit"
 require "capybara/poltergeist"
+require "faker"
+require "plek"
 
 Dir["./spec/support/*.rb"].each { |f| require f }
 
