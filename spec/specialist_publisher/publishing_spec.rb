@@ -32,6 +32,6 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true do
     reload_page_until_status_code(200)
 
     expect_rendering_application("specialist-frontend")
-    expect(page).to have_content(title)
+    expect(page).to have_content(ignore_quotes(title))
   end
 end

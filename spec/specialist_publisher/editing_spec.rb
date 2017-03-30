@@ -37,6 +37,6 @@ feature "Editing with Specialist Publisher", specialist_publisher: true do
     reload_page_until_status_code(200)
 
     expect_rendering_application("draft-specialist-frontend")
-    expect(page).to have_content(new_title)
+    expect(page).to have_content(ignore_quotes(new_title))
   end
 end

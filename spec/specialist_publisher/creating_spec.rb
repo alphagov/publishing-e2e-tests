@@ -26,6 +26,6 @@ feature "Creating a draft on Specialist Publisher", specialist_publisher: true d
     reload_page_until_status_code(200)
 
     expect_rendering_application("draft-specialist-frontend")
-    expect(page).to have_content(title)
+    expect(page).to have_content(igonore_quotes(title))
   end
 end

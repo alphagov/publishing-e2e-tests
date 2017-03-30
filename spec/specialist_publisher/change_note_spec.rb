@@ -50,7 +50,7 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true do
 
   def then_i_can_view_the_change_note_on_gov_uk
     click_link("View on website")
-    reload_page_until(:has_text?, new_body)
+    reload_page_until(:has_text?, ignore_quotes(new_body))
 
     click_link("+ full page history")
     within("#full-history") do
