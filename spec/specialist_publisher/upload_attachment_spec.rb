@@ -6,7 +6,7 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
 
   let(:title) { title_with_timestamp }
   let(:attachment_title) { Faker::Book.title }
-  let(:file) { File.expand_path("../fixtures/Charities_and_corporation_tax_returns.pdf", __dir__) }
+  let(:file) { File.expand_path("../fixtures/specialist_publisher/tax_returns.pdf", __dir__) }
 
   scenario "Uploading an attachment to a EAT decision" do
     given_there_is_a_draft_eat_decision
