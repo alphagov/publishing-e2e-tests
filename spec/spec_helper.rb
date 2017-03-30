@@ -111,15 +111,14 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 
-  config.add_setting :reload_page_attempts, default: 5
-  config.add_setting :reload_page_wait_time, default: 30
+  config.add_setting :reload_page_wait_time, default: 60
 end
 
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :poltergeist
   config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
-  config.default_max_wait_time = 3
+  config.default_max_wait_time = 4
 end
 
 # Capybara::Webkit.configure do |config|
