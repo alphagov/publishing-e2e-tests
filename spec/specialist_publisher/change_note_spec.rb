@@ -49,12 +49,15 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true do
   end
 
   def then_i_can_view_the_change_note_on_gov_uk
-    click_link("View on website")
-    reload_page_until(:has_text?, ignore_quotes(new_body))
+    url = find_link("View on website")[:href]
 
+    reload_url_until_status_code(url, 200)
+    reload_url_until_match(url, :has_text?, ignore_quotes_regex(new_body))
+
+    visit(url)
     click_link("+ full page history")
     within("#full-history") do
-      expect(page).to have_content(change_note)
+      expect(page).to have_content(ignore_quotes_regex(change_note))
     end
   end
 end

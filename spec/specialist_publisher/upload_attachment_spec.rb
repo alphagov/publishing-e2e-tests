@@ -5,7 +5,7 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
   include SpecialistPublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:attachment_title) { Faker::Book.title }
+  let(:attachment_title) { title_with_timestamp }
   let(:file) { File.expand_path("../fixtures/specialist_publisher/tax_returns.pdf", __dir__) }
 
   scenario "Uploading an attachment to a EAT decision" do
@@ -44,8 +44,10 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
   end
 
   def then_i_can_access_the_attachment_through_the_draft
-    click_link("Preview draft")
-    reload_page_until(:has_link?, attachment_title)
+    url = find_link("Preview draft")[:href]
+
+    reload_url_until_status_code(url, 200)
+    reload_url_until_match(url, :has_link?, attachment_title)
 
     attachment_link = find_link(attachment_title)[:href]
     reload_url_until_status_code(attachment_link, 200)

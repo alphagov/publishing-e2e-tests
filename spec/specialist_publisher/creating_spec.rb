@@ -22,10 +22,11 @@ feature "Creating a draft on Specialist Publisher", specialist_publisher: true d
   end
 
   def then_i_can_preview_it_on_draft_gov_uk
-    click_link("Preview draft")
-    reload_page_until_status_code(200)
+    url = find_link("Preview draft")[:href]
+    reload_url_until_status_code(url, 200)
 
+    visit(url)
     expect_rendering_application("draft-specialist-frontend")
-    expect(page).to have_content(igonore_quotes(title))
+    expect(page).to have_content(title)
   end
 end

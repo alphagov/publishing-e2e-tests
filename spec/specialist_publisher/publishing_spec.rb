@@ -28,10 +28,11 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true do
   end
 
   def then_i_can_view_it_on_gov_uk
-    click_link("View on website")
-    reload_page_until_status_code(200)
+    url = find_link("View on website")[:href]
+    reload_url_until_status_code(url, 200)
 
+    visit(url)
     expect_rendering_application("specialist-frontend")
-    expect(page).to have_content(ignore_quotes(title))
+    expect(page).to have_content(title)
   end
 end

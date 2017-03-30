@@ -33,10 +33,11 @@ feature "Editing with Specialist Publisher", specialist_publisher: true do
   end
 
   def then_i_can_see_the_edits_on_draft_gov_uk
-    click_link("Preview draft")
-    reload_page_until_status_code(200)
+    url = find_link("Preview draft")[:href]
+    reload_url_until_status_code(url, 200)
 
+    visit(url)
     expect_rendering_application("draft-specialist-frontend")
-    expect(page).to have_content(ignore_quotes(new_title))
+    expect(page).to have_content(new_title)
   end
 end
