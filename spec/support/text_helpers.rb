@@ -7,6 +7,11 @@ module TextHelpers
     "#{Faker::Book.title.gsub(/'/, '')} #{Time.now.to_i}"
   end
 
+
+  def paragraph_with_timestamp
+    "#{Faker::Lorem.paragraph} #{Time.now.to_i}"
+  end
+
   def ignore_quotes_regex(text)
     escaped = Regexp.escape(text).gsub(/["']/, %{["“”'‘’]})
     /#{escaped}/
