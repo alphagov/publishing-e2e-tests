@@ -23,7 +23,7 @@ feature "Creating a draft on Specialist Publisher", specialist_publisher: true d
     url = find_link("Preview draft")[:href]
     reload_url_until_status_code(url, 200)
 
-    visit(url)
+    click_link("Preview draft")
     expect_rendering_application("draft-specialist-frontend")
     expect(page).to have_content(title)
   end

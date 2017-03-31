@@ -29,7 +29,7 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true do
     url = find_link("View on website")[:href]
     reload_url_until_status_code(url, 200)
 
-    visit(url)
+    click_link("View on website")
     expect_rendering_application("specialist-frontend")
     expect(page).to have_content(title)
   end

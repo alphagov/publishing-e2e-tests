@@ -48,6 +48,8 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
     reload_url_until_status_code(url, 200)
     reload_url_until_match(url, :has_link?, attachment_title)
 
+    click_link("Preview draft")
+
     attachment_link = find_link(attachment_title)[:href]
     reload_url_until_status_code(attachment_link, 200)
 

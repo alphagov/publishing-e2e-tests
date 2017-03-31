@@ -34,7 +34,7 @@ feature "Editing with Specialist Publisher", specialist_publisher: true do
     url = find_link("Preview draft")[:href]
     reload_url_until_status_code(url, 200)
 
-    visit(url)
+    click_link("Preview draft")
     expect_rendering_application("draft-specialist-frontend")
     expect(page).to have_content(new_title)
   end
