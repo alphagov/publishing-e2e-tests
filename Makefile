@@ -32,6 +32,7 @@ setup:
 	docker-compose run specialist-publisher bundle exec rake db:seed
 	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
+	docker-compose run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
 	docker-compose up -d

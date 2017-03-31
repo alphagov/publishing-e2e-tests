@@ -1,4 +1,5 @@
 require "httparty"
+require_relative "../../lib/retry_while_false"
 
 module RetryHelpers
   class TimeoutError < RuntimeError; end
@@ -65,18 +66,12 @@ module RetryHelpers
     end
   end
 
-  ## Inspired by (/copied from) https://github.com/natritmeyer/site_prism/blob/master/lib/site_prism/waiter.rb
-  def retry_while_false(fail_reason: nil, reload_seconds: nil, interval_seconds: nil)
-    start_time = Time.now
-    wait_time_seconds = reload_seconds || RSpec.configuration.reload_page_wait_time
+  def retry_while_false(fail_reason: nil, reload_seconds: nil, interval_seconds: nil, &block)
+    reload_seconds = reload_seconds || RSpec.configuration.reload_page_wait_time
     interval_seconds = interval_seconds || 0.5
-    loop do
-      return true if yield
-      break unless Time.now - start_time <= wait_time_seconds
-      sleep(interval_seconds)
-    end
+    success = RetryWhileFalse.(reload_seconds: reload_seconds, interval_seconds: interval_seconds, &block)
     fail_reason ||= "the expectation was not met"
-    raise TimeoutError, "After #{wait_time_seconds} seconds, #{fail_reason}"
+    raise TimeoutError, "After #{reload_seconds} seconds, #{fail_reason}" unless success
   end
 
   RSpec.configuration.include RetryHelpers
