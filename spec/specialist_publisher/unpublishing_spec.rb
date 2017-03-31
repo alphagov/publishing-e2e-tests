@@ -1,5 +1,3 @@
-require "spec_helper"
-
 feature "Unpublishing with Specialist Publisher", specialist_publisher: true do
   include SpecialistPublisherHelpers
 

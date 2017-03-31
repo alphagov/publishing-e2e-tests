@@ -1,4 +1,3 @@
-require "spec_helper"
 require "httparty"
 
 feature "Uploading an attachment on Specialist Publisher", specialist_publisher: true do

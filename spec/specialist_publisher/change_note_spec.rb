@@ -1,5 +1,3 @@
-require "spec_helper"
-
 feature "Change notes on Specialist Publisher", specialist_publisher: true do
   include SpecialistPublisherHelpers
 
