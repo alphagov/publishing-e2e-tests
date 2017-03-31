@@ -29,7 +29,7 @@ feature "Discarding a draft on Specialist Publisher", specialist_publisher: true
   end
 
   def then_i_get_a_404_on_draft_gov_uk
-    reload_url_until_status_code(@url, 404, keep_retrying_while: [200, 503])
+    reload_url_until_status_code(@url, 404, keep_retrying_while: 200)
 
     visit(@url)
     expect(page).to have_text("not found")

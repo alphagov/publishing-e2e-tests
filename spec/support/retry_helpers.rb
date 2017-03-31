@@ -44,7 +44,7 @@ module RetryHelpers
   def reload_url_until_status_code(
     url,
     status_code,
-    keep_retrying_while: [404, 503],
+    keep_retrying_while: [404],
     reload_seconds: nil,
     interval_seconds: nil
   )

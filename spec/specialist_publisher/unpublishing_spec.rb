@@ -35,7 +35,7 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true do
   end
 
   def then_i_receive_a_410_on_gov_uk
-    reload_url_until_status_code(@url, 410, keep_retrying_while: [200, 503])
+    reload_url_until_status_code(@url, 410, keep_retrying_while: 200)
 
     visit(@url)
     expect(page).to have_content("gone")
