@@ -26,14 +26,16 @@ module RetryHelpers
       raise "#{url} returned a status code of #{code}"
     end
 
+    session = Capybara::Session.new(Capybara.default_driver)
+
     retry_while_false(reload_options) do
-      visit(url)
+      session.visit(url)
       if within_selector
-        witin(within_selector, wait: capybara_options[:wait]) do
-          page.public_send(capybara_method, value, capybara_options)
+        session.witin(within_selector, wait: capybara_options[:wait]) do
+          session.public_send(capybara_method, value, capybara_options)
         end
       else
-        page.public_send(capybara_method, value, capybara_options)
+        session.public_send(capybara_method, value, capybara_options)
       end
     end
   end
