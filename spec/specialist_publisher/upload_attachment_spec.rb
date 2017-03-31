@@ -51,8 +51,6 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
     attachment_link = find_link(attachment_title)[:href]
     reload_url_until_status_code(attachment_link, 200)
 
-    uploaded_file = HTTParty.get(attachment_link)
-    file_contents = File.read(file, encoding: uploaded_file.body.encoding)
-    expect(uploaded_file.body).to eq file_contents
+    expect_matching_uploaded_file(attachment_link, file)
   end
 end
