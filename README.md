@@ -14,6 +14,12 @@ supporting applications and infrastructure, including Publishing API,
 Content Store, Content Schemas, Router, Frontend, Static, MongoDB, Postgres,
 Redis, RabbitMQ).
 
+## Contents
+
+- [How to run the tests](#how-to-run-tests)
+- [What belongs in these tests](#what-belongs-in-these-tests)
+- [Todo](#todo)
+
 ## How to run the tests
 
 ### With Docker
@@ -25,9 +31,12 @@ suite with:
 $ make
 ```
 
-Running this command executes the following targets in order, which you can choose to run separately to speed up development: `clone`, `build`, `start`, `test` and `stop`.
+Running this command executes the following targets in order, which you can
+choose to run separately to speed up development: `clone`, `build`, `start`,
+`test` and `stop`.
 
-For example, to run only the tests for the specialist publisher, you need only do:
+For example, to run only the tests for the specialist publisher, you need only
+do:
 
 ```bash
 $ make -j4 clone
@@ -36,9 +45,16 @@ $ make build start test-specialist-publisher stop
 
 #### Configuring Docker
 
-We recommend that you configure Docker to use at least 4 CPUs with 4 GB of memory, otherwise you may find the apps struggle to run well enough to pass the tests.
+We recommend that you configure Docker to use at least 4 CPUs with 4 GB of
+memory, otherwise you may find the apps struggle to run well enough to pass the
+tests.
 
 <img src="docs/docker-configuration.png" width="300" />
+
+#### More Docker help
+
+There's further docker documentation for this project available in
+[doc/docker.md](doc/docker.md).
 
 ### Without Docker
 
@@ -49,57 +65,62 @@ on `*.dev.gov.uk`. The tests can then be run with:
 ```
 bundle exec rspec
 ```
+## What belongs in these tests
 
-## Docker
+These tests are for the purpose of testing that multiple applications speak to
+each other, they are done from the user perspective and, in comparison to most
+forms of testing, very slow and brittle.
 
-### Usage
+Thus tests should be added here to test scenarios that cannot be tested under
+other means. We want this to be the tip of of the
+[testing pyramid][testing-pyramid] and not an example of a
+[testing ice cream cone][testing-ice-cream-cone].
 
-- Run programs within containers using `docker-compose`:
-  `docker-compose run publishing-e2e-tests bundle exec rspec`
-- Get shell access to a given container: `docker-compose run specialist-frontend bash`
-- Kill the containers and move on with your life: `docker-compose down`
+Rough guidelines for our testing approach is as follows:
 
-### Adding containers
+- A component within an application: should be unit tested
+- Multiple components within an application: should be integration tested
+- Applications speaking directly to each: should be
+  [contract tested][contract-tested], we've used [pact][pact]
+- Multiple applications communicating together: contender for end-to-end tests
 
-- Create a `Dockerfile` in the repository of the app you want to add.
-- Edit `clone-apps.sh` to include the repository for the app.
-- Define the service and its relationship to other services in
-  `docker-compose.yml`
+eg A test here is whether Specialist Publisher can publish a document, which
+involves the following apps: Specialist Publisher, Publishing API,
+Content Store, Router, and Specialist Frontend. Which could not be tested under
+other means.
 
-### Local apps
+The approach to writing tests for here is:
 
-If you want to use a local version of an application, symlink your
-directory into `./apps`. For example:
-```
-rm -rf apps/publishing-api
-ln -s path/to/publishing-api apps/publishing-api
-```
+- Follow the conventions of existing tests here
+- Aim for one scenario per file
+- Only test the "happy path" behaviour, not exceptional behaviour.
+- Only describe things that should *happen*, not things that shouldn't.
+- Write steps to be independent, not relying on the user being on a certain
+  page.
+- Avoid testing negatives; these are better tested in functional/unit tests.
+- Avoid testing incidental behaviour (e.g. flash messages); these are better
+  tested in functional/unit tests.
 
-### Quirks
+This list has been adapted from
+[whitehall testing guide][whitehall-testing-guide] which is worth reading
+for more testing insights.
 
-Docker limits the amount of disk space it uses. This sometimes results in
-rather opaque errors when you try and run tasks - generally related to
-errors installing Mongo or Postres. One example is
-`Moped::Errors::ConnectionFailure: Could not connect to a primary node for
-replica set`.
+## Todo
 
-The most reliable way to fix this is to find and remove unnecessary Docker
-containers and images.
+- Can we run the tests in parallel?
+- Run the applications in rails production - requires mocking sign-on, and
+  various env var changes
+- Disable the virus scanner in asset-manager - perhaps with env var
+- Explore and utilise [Docker healthcheck][docker-healthcheck]
+- Reduce setup steps - can Specialist Publisher work without finders for instance?
 
-```
-# Find containers
-docker ps -a
-
-# Delete containers (command accepts multiple container IDs)
-docker rm -f <container-id>
-
-# Find images
-docker images
-
-# Delete images (command accepts multiple images)
-docker rmi -f <image-id>
-```
 
 [install-docker]: https://www.docker.com/community-edition
 [specialist-publisher]: https://github.com/alphagov/specialist-publisher
 [travel-advice-publisher]: https://github.com/alphagov/travel-advice-publisher
+[docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
+[testing-pyramid]: https://martinfowler.com/bliki/TestPyramid.html
+[testing-ice-cream-cone]: http://saeedgatson.com/the-software-testing-ice-cream-cone/
+[contract-tested]: https://martinfowler.com/articles/consumerDrivenContracts.html
+[pact]: https://docs.pact.io/
+[whitehall-testing-guide]: https://github.com/alphagov/whitehall/blob/master/docs/testing.md
