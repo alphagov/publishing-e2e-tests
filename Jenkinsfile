@@ -65,7 +65,12 @@ node("docker") {
       }
 
       stage("Start docker apps") {
-        sh("make start")
+        try {
+          sh("make start")
+        } catch(e) {
+          echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
+          throw e
+        }
       }
 
       stage("Run tests") {

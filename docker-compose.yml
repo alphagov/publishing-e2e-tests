@@ -243,6 +243,7 @@ services:
       - asset-manager
       - static
       - rummager
+      - travel-advice-publisher-worker
       - diet-errbit
     environment:
       ERRBIT_API_KEY: 1
@@ -265,6 +266,7 @@ services:
     << : *travel-advice-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - publishing-api
       - diet-errbit
     environment:
       ERRBIT_API_KEY: 1

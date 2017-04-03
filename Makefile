@@ -2,7 +2,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager specialist-frontend \
 	specialist-publisher static travel-advice-publisher
 
-TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec --format d
+TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec
 
 all: clone build start test stop
 
@@ -32,6 +32,7 @@ setup:
 	docker-compose run specialist-publisher bundle exec rake db:seed
 	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
+	docker-compose run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
 	docker-compose up -d
