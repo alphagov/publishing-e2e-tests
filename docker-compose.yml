@@ -327,6 +327,7 @@ services:
       PLEK_HOSTNAME_PREFIX: draft-
       PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
       PORT: 3113
+      REDIS_URL: redis://redis/1
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
       - "3113:3113"
