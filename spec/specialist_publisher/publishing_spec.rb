@@ -30,7 +30,7 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true do
     reload_url_until_status_code(url, 200)
 
     click_link("View on website")
-    expect_rendering_application("specialist-frontend")
+    expect_rendering_application("government-frontend")
     expect(page).to have_content(title)
   end
 end

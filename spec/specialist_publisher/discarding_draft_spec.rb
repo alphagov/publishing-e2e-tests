@@ -32,6 +32,6 @@ feature "Discarding a draft on Specialist Publisher", specialist_publisher: true
     reload_url_until_status_code(@url, 404, keep_retrying_while: 200)
 
     visit(@url)
-    expect(page).to have_text("not found")
+    expect(page).to have_text("Not found")
   end
 end
