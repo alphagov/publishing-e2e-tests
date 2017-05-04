@@ -1,5 +1,5 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
-	publishing-api router router-api rummager specialist-frontend \
+	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher
 
 TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec

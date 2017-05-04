@@ -66,7 +66,6 @@ services:
       VIRTUAL_PORT: 3054
     links:
       - mongo
-      - nginx-proxy:specialist-frontend.dev.gov.uk
       - nginx-proxy:government-frontend.dev.gov.uk
     ports:
       - "3054:3054"
@@ -85,7 +84,6 @@ services:
       VIRTUAL_PORT: 3154
     links:
       - mongo
-      - nginx-proxy:draft-specialist-frontend.dev.gov.uk
       - nginx-proxy:draft-government-frontend.dev.gov.uk
     ports:
       - "3154:3154"
@@ -336,48 +334,6 @@ services:
   # finder-frontend:
   # draft-finder-frontend:
 
-  specialist-frontend: &specialist-frontend
-    build: apps/specialist-frontend
-    depends_on:
-      - content-store
-      - static
-      - diet-errbit
-    environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: specialist-frontend
-      LOG_PATH: log/live.log
-      VIRTUAL_HOST: specialist-frontend.dev.gov.uk
-    links:
-      - nginx-proxy:content-store.dev.gov.uk
-      - nginx-proxy:static.dev.gov.uk
-      - nginx-proxy:errbit.dev.gov.uk
-    ports:
-      - "3065:3065"
-    volumes:
-      - ./apps/specialist-frontend/log:/app/log
-
-  draft-specialist-frontend:
-    << : *specialist-frontend
-    depends_on:
-      - draft-content-store
-      - draft-static
-      - diet-errbit
-    environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-specialist-frontend
-      GOVUK_APP_NAME: draft-specialist-frontend
-      LOG_PATH: log/draft.log
-      PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://errbit.dev.gov.uk
-      PORT: 3165
-      VIRTUAL_HOST: draft-specialist-frontend.dev.gov.uk
-    links:
-      - nginx-proxy:draft-content-store.dev.gov.uk
-      - nginx-proxy:draft-static.dev.gov.uk
-      - nginx-proxy:errbit.dev.gov.uk
-    ports:
-      - "3165:3165"
-
   government-frontend: &government-frontend
     build: apps/government-frontend
     depends_on:
@@ -424,8 +380,6 @@ services:
   publishing-e2e-tests:
     build: .
     depends_on:
-      - specialist-frontend
-      - draft-specialist-frontend
       - specialist-publisher
       - government-frontend
       - draft-government-frontend
