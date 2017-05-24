@@ -54,7 +54,7 @@ tests.
 #### More Docker help
 
 There's further docker documentation for this project available in
-[doc/docker.md](doc/docker.md).
+[docs/docker.md](docs/docker.md).
 
 ### Without Docker
 
