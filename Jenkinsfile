@@ -2,6 +2,7 @@
 
 REPOSITORY = "publishing-e2e-tests"
 DEFAULT_PUBLISHING_API_COMMITISH = "master"
+DEFAULT_CONTENT_STORE_COMMITISH = "master"
 
 node {
 
@@ -23,6 +24,11 @@ node {
         defaultValue: DEFAULT_PUBLISHING_API_COMMITISH,
         description: "Which commit/branch/tag of publishing-api to clone",
         name: "PUBLISHING_API_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_CONTENT_STORE_COMMITISH,
+        description: "Which commit/branch/tag of content-store to clone",
+        name: "CONTENT_STORE_COMMITISH"
       )
     ])
   ])
@@ -31,6 +37,7 @@ node {
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
     "PUBLISHING_API_COMMITISH": DEFAULT_PUBLISHING_API_COMMITISH,
+    "CONTENT_STORE_COMMITISH": DEFAULT_CONTENT_STORE_COMMITISH,
   ])
 
   def originBuildStatus = { message, status ->
@@ -55,7 +62,10 @@ node {
       }
 
       stage("Clone applications") {
-        withEnv(["PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}"]) {
+        withEnv([
+          "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
+          "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
+        ]) {
           sh("make clone -j4")
         }
       }
