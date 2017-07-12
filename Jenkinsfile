@@ -77,6 +77,13 @@ node {
         sh("make test")
       }
 
+      if (env.BRANCH_NAME == "master") {
+        echo 'Pushing to test-against branch'
+        sshagent(['govuk-ci-ssh-key']) {
+          sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
+        }
+      }
+
       originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
 
     } catch (e) {
