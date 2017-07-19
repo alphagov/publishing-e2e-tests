@@ -3,6 +3,7 @@
 REPOSITORY = "publishing-e2e-tests"
 DEFAULT_PUBLISHING_API_COMMITISH = "master"
 DEFAULT_CONTENT_STORE_COMMITISH = "master"
+DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH = "master"
 
 node {
 
@@ -29,6 +30,11 @@ node {
         defaultValue: DEFAULT_CONTENT_STORE_COMMITISH,
         description: "Which commit/branch/tag of content-store to clone",
         name: "CONTENT_STORE_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH,
+        description: "Which commit/branch/tag of travel-advice-publisher to clone",
+        name: "TRAVEL_ADVICE_PUBLISHER_COMMITISH"
       )
     ])
   ])
@@ -38,6 +44,7 @@ node {
     "ORIGIN_COMMIT": "",
     "PUBLISHING_API_COMMITISH": DEFAULT_PUBLISHING_API_COMMITISH,
     "CONTENT_STORE_COMMITISH": DEFAULT_CONTENT_STORE_COMMITISH,
+    "TRAVEL_ADVICE_PUBLISHER_COMMITISH": "DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH"
   ])
 
   def originBuildStatus = { message, status ->
@@ -65,6 +72,7 @@ node {
         withEnv([
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
+          "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
         ]) {
           sh("make clone -j4")
         }
