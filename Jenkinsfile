@@ -1,9 +1,9 @@
 #!/usr/bin/env groovy
 
 REPOSITORY = "publishing-e2e-tests"
-DEFAULT_PUBLISHING_API_COMMITISH = "master"
-DEFAULT_CONTENT_STORE_COMMITISH = "master"
-DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH = "master"
+DEFAULT_PUBLISHING_API_COMMITISH = "deployed-to-production"
+DEFAULT_CONTENT_STORE_COMMITISH = "deployed-to-production"
+DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH = "deployed-to-production"
 
 node {
 
