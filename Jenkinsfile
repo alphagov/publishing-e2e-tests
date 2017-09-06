@@ -1,9 +1,7 @@
 #!/usr/bin/env groovy
 
 REPOSITORY = "publishing-e2e-tests"
-DEFAULT_PUBLISHING_API_COMMITISH = "deployed-to-production"
-DEFAULT_CONTENT_STORE_COMMITISH = "deployed-to-production"
-DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH = "deployed-to-production"
+DEFAULT_COMMITISH = "deployed-to-production"
 
 node {
 
@@ -22,19 +20,24 @@ node {
         name: "ORIGIN_COMMIT"
       ),
       stringParam(
-        defaultValue: DEFAULT_PUBLISHING_API_COMMITISH,
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of publishing-api to clone",
         name: "PUBLISHING_API_COMMITISH"
       ),
       stringParam(
-        defaultValue: DEFAULT_CONTENT_STORE_COMMITISH,
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of content-store to clone",
         name: "CONTENT_STORE_COMMITISH"
       ),
       stringParam(
-        defaultValue: DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH,
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of travel-advice-publisher to clone",
         name: "TRAVEL_ADVICE_PUBLISHER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of router-api to clone",
+        name: "ROUTER_API_COMMITISH"
       )
     ])
   ])
@@ -42,9 +45,10 @@ node {
   govuk.initializeParameters([
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
-    "PUBLISHING_API_COMMITISH": DEFAULT_PUBLISHING_API_COMMITISH,
-    "CONTENT_STORE_COMMITISH": DEFAULT_CONTENT_STORE_COMMITISH,
-    "TRAVEL_ADVICE_PUBLISHER_COMMITISH": "DEFAULT_TRAVEL_ADVICE_PUBLISHER_COMMITISH"
+    "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
+    "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
+    "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "ROUTER_API_COMMITISH": DEFAULT_COMMITISH
   ])
 
   def originBuildStatus = { message, status ->
@@ -73,6 +77,7 @@ node {
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
           "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
+          "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
         ]) {
           sh("make clone -j4")
         }
