@@ -15,7 +15,7 @@ services:
     image: postgres:9.6
 
   mongo:
-    image: mongo
+    image: mongo:2.4
 
   redis:
     image: redis
