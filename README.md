@@ -19,6 +19,7 @@ Redis, RabbitMQ).
 - [How to run the tests](#how-to-run-tests)
 - [What belongs in these tests](#what-belongs-in-these-tests)
 - [Todo](#todo)
+- [Gotchas](#gotchas)
 
 ## How to run the tests
 
@@ -114,6 +115,16 @@ for more testing insights.
 - Explore and utilise [Docker healthcheck][docker-healthcheck]
 - Reduce setup steps - can Specialist Publisher work without finders for instance?
 
+## Gotchas
+
+### WEBrick server seems to stop responding
+
+We had a nasty bug with Router API where the web server seemed to stop
+responding to any requests. This issue was experienced once the application
+was upgraded to Rails 5.1 and Mongoid 6.1. The symptom was that any requests
+to the server seemed to hang and never respond. The way this was resolved was
+to switch from using WEBrick on Router API and instead
+[use unicorn server][use-unicorn-pr].
 
 [install-docker]: https://www.docker.com/community-edition
 [specialist-publisher]: https://github.com/alphagov/specialist-publisher
@@ -124,3 +135,4 @@ for more testing insights.
 [contract-tested]: https://martinfowler.com/articles/consumerDrivenContracts.html
 [pact]: https://docs.pact.io/
 [whitehall-testing-guide]: https://github.com/alphagov/whitehall/blob/master/docs/testing.md
+[use-unicorn-pr]: https://github.com/alphagov/router-api/pull/113
