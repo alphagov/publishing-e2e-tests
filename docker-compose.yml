@@ -46,7 +46,7 @@ services:
       - redis
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3009:3009"
+      - "33009:3009"
     volumes:
       - ./apps/rummager/log:/app/log
 
@@ -55,7 +55,7 @@ services:
     environment:
       VIRTUAL_HOST: errbit.dev.gov.uk
     ports:
-      - "3129:3129"
+      - "33129:3129"
     volumes:
       - ./tmp:/app/tmp
 
@@ -69,8 +69,8 @@ services:
       - mongo
       - nginx-proxy:government-frontend.dev.gov.uk
     ports:
-      - "3054:3054"
-      - "3055:3055"
+      - "33054:3054"
+      - "33055:3055"
 
   draft-router:
     << : *router
@@ -88,8 +88,8 @@ services:
       - mongo
       - nginx-proxy:draft-government-frontend.dev.gov.uk
     ports:
-      - "3154:3154"
-      - "3155:3155"
+      - "33154:3154"
+      - "33155:3155"
 
   router-api: &router-api
     build: apps/router-api
@@ -105,7 +105,7 @@ services:
       - router
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3056:3056"
+      - "33056:3056"
     volumes:
       - ./apps/router-api/log:/app/log
 
@@ -128,7 +128,7 @@ services:
       - draft-router
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3156:3156"
+      - "33156:3156"
 
   content-store: &content-store
     build: apps/content-store
@@ -145,7 +145,7 @@ services:
       - nginx-proxy:router-api.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3068:3068"
+      - "33068:3068"
     volumes:
       - ./apps/content-store/log:/app/log
       - ./apps/govuk-content-schemas:/govuk-content-schemas
@@ -170,7 +170,7 @@ services:
       - nginx-proxy:draft-router-api.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3100:3100"
+      - "33100:3100"
 
   publishing-api:
     build: apps/publishing-api
@@ -188,7 +188,7 @@ services:
       # - rabbitmq
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3093:3093"
+      - "33093:3093"
     volumes:
       - ./apps/govuk-content-schemas:/govuk-content-schemas
       - ./apps/publishing-api/log:/app/log
@@ -232,7 +232,7 @@ services:
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3064:3064"
+      - "33064:3064"
     volumes:
       - ./apps/specialist-publisher/log:/app/log
 
@@ -258,7 +258,7 @@ services:
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3035:3035"
+      - "33035:3035"
     volumes:
       - ./apps/travel-advice-publisher/log:/app/log
 
@@ -286,7 +286,7 @@ services:
       ERRBIT_ENVIRONMENT_NAME: asset-manager
       VIRTUAL_HOST: asset-manager.dev.gov.uk
     ports:
-      - "3037:3037"
+      - "33037:3037"
     volumes:
       - ./apps/asset-manager/log:/app/log
       - ./tmp:/app/uploads
@@ -313,7 +313,7 @@ services:
     links:
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3013:3013"
+      - "33013:3013"
     volumes:
       - ./apps/static/log:/app/log
 
@@ -330,7 +330,7 @@ services:
       REDIS_URL: redis://redis/1
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
-      - "3113:3113"
+      - "33113:3113"
 
   # I think we might need these finder apps running to publish finders
   # finder-frontend:
@@ -353,7 +353,7 @@ services:
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3090:3090"
+      - "33090:3090"
     volumes:
       - ./apps/government-frontend/log:/app/log
 
@@ -377,7 +377,7 @@ services:
       - nginx-proxy:draft-static.dev.gov.uk
       - nginx-proxy:errbit.dev.gov.uk
     ports:
-      - "3190:3190"
+      - "33190:3190"
 
   publishing-e2e-tests:
     build: .
