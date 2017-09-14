@@ -20,6 +20,11 @@ node {
         name: "ORIGIN_COMMIT"
       ),
       stringParam(
+        defaultValue: "test",
+        description: "The command used to initiate tests, defaults to 'test' which tests all apps",
+        name: "TEST_COMMAND"
+      ),
+      stringParam(
         defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of content-store to clone",
         name: "CONTENT_STORE_COMMITISH"
@@ -50,6 +55,7 @@ node {
   govuk.initializeParameters([
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
+    "TEST_COMMAND": "test",
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
     "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
@@ -104,7 +110,8 @@ node {
       }
 
       stage("Run tests") {
-        sh("make test")
+        echo "Running tests with `make ${params.TEST_COMMAND}`"
+        sh("make ${params.TEST_COMMAND}")
       }
 
       if (env.BRANCH_NAME == "master") {
