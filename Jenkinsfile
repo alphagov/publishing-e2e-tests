@@ -137,10 +137,10 @@ node {
       stage("Make logs available") {
         errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
         if (errors == 0) {
-          echo("The following errors were logged with errbit:")
+          echo("The following errors were logged with sentry/errbit:")
           sh("cat tmp/errors.log")
         } else {
-          echo("No errors were sent to errbit")
+          echo("No errors were sent to sentry/errbit")
         }
 
         echo("dumping docker log")
