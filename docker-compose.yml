@@ -280,10 +280,12 @@ services:
       - diet-error-handler
     links:
       - mongo
+      - redis
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager
+      REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: asset-manager.dev.gov.uk
@@ -295,12 +297,13 @@ services:
 
   asset-manager-worker:
     << : *asset-manager
-    command: bundle exec rake jobs:work
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - diet-error-handler
     environment:
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
+      REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     ports: []
