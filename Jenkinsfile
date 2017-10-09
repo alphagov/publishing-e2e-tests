@@ -26,6 +26,11 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of asset-manager to clone",
+        name: "ASSET_MANAGER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of content-store to clone",
         name: "CONTENT_STORE_COMMITISH"
       ),
@@ -56,6 +61,7 @@ node {
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
     "TEST_COMMAND": "test",
+    "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
     "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
@@ -86,6 +92,7 @@ node {
 
       stage("Clone applications") {
         withEnv([
+          "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
