@@ -56,6 +56,11 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of static to clone",
+        name: "STATIC_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of travel-advice-publisher to clone",
         name: "TRAVEL_ADVICE_PUBLISHER_COMMITISH"
       ),
@@ -72,6 +77,7 @@ node {
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
     "RUMMAGER_COMMITISH": DEFAULT_COMMITISH,
     "SPECIALIST_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "STATIC_COMMITISH": DEFAULT_COMMITISH,
     "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
   ])
 
@@ -104,6 +110,7 @@ node {
           "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
           "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
           "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
+          "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
           "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
         ]) {
           sh("make clone -j4")
