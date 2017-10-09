@@ -36,6 +36,11 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of government-frontend to clone",
+        name: "GOVERNMENT_FRONTEND_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of publishing-api to clone",
         name: "PUBLISHING_API_COMMITISH"
       ),
@@ -73,6 +78,7 @@ node {
     "TEST_COMMAND": "test",
     "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
+    "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
     "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
     "RUMMAGER_COMMITISH": DEFAULT_COMMITISH,
@@ -106,6 +112,7 @@ node {
         withEnv([
           "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
+          "GOVERNMENT_FRONTEND_COMMITISH=${params.GOVERNMENT_FRONTEND_COMMITISH}",
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
           "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
