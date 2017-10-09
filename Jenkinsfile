@@ -46,6 +46,11 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of rummager to clone",
+        name: "RUMMAGER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of specialist-publisher to clone",
         name: "SPECIALIST_PUBLISHER_COMMITISH"
       ),
@@ -65,6 +70,7 @@ node {
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
     "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
+    "RUMMAGER_COMMITISH": DEFAULT_COMMITISH,
     "SPECIALIST_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
     "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
   ])
@@ -96,6 +102,7 @@ node {
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
+          "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
           "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
           "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
         ]) {
