@@ -26,8 +26,18 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of asset-manager to clone",
+        name: "ASSET_MANAGER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of content-store to clone",
         name: "CONTENT_STORE_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of government-frontend to clone",
+        name: "GOVERNMENT_FRONTEND_COMMITISH"
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
@@ -41,8 +51,18 @@ node {
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of rummager to clone",
+        name: "RUMMAGER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of specialist-publisher to clone",
         name: "SPECIALIST_PUBLISHER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of static to clone",
+        name: "STATIC_COMMITISH"
       ),
       stringParam(
         defaultValue: DEFAULT_COMMITISH,
@@ -56,10 +76,14 @@ node {
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
     "TEST_COMMAND": "test",
+    "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
+    "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
     "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
     "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
+    "RUMMAGER_COMMITISH": DEFAULT_COMMITISH,
     "SPECIALIST_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "STATIC_COMMITISH": DEFAULT_COMMITISH,
     "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
   ])
 
@@ -86,10 +110,14 @@ node {
 
       stage("Clone applications") {
         withEnv([
+          "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
           "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
+          "GOVERNMENT_FRONTEND_COMMITISH=${params.GOVERNMENT_FRONTEND_COMMITISH}",
           "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
           "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
+          "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
           "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
+          "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
           "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
         ]) {
           sh("make clone -j4")
