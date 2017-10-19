@@ -7,7 +7,7 @@ require "zlib"
 require_relative "lib/notice"
 
 ERROR_LOG = ENV.fetch("ERROR_LOG", "./tmp/errors.log")
-VERBOSE_ERROR_LOG = ENV.fetch("ERROR_LOG", "./tmp/errors-verbose.log")
+VERBOSE_ERROR_LOG = ENV.fetch("VERBOSE_ERROR_LOG", "./tmp/errors-verbose.log")
 
 get "/" do
   json greeting: "Hello, this is a quick lo-fi alternative to sentry/errbit for logging errors to a file."
