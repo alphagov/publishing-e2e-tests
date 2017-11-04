@@ -153,4 +153,18 @@ module SpecialistPublisherHelpers
   def visit_specialist_publisher(path = "/")
     visit(Plek.find("specialist-publisher") + path)
   end
+
+  def self.included(base)
+    if SignonHelpers::use_signon?
+      default_permissions = %w[editor gds_editor]
+
+      base.before(:each) do |example|
+        @user = get_next_user(
+          'Specialist Publisher' =>
+          example.metadata.fetch(:permissions, default_permissions)
+        )
+        signin_with_user(@user)
+      end
+    end
+  end
 end
