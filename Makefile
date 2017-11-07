@@ -1,6 +1,7 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
-	specialist-publisher static travel-advice-publisher
+	specialist-publisher static travel-advice-publisher collections-publisher \
+	collections
 
 TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec
 
@@ -20,6 +21,7 @@ build: down
 setup:
 	docker-compose run publishing-e2e-tests bash -c 'rm -rf /app/tmp/*'
 	docker-compose up -d elasticsearch
+	docker-compose up -d mysql
 	docker-compose run router-api bundle exec rake db:purge
 	docker-compose run draft-router-api bundle exec rake db:purge
 	docker-compose run content-store bundle exec rake db:purge
@@ -32,6 +34,7 @@ setup:
 	docker-compose run specialist-publisher bundle exec rake db:seed
 	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
+	docker-compose run collections-publisher bundle exec rake db:setup
 	docker-compose run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
