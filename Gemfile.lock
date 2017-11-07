@@ -40,6 +40,7 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     rake (12.0.0)
+    rotp (3.3.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -71,6 +72,7 @@ DEPENDENCIES
   plek (~> 2.0)
   poltergeist
   rake
+  rotp
   rspec
 
 BUNDLED WITH
