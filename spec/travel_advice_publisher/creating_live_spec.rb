@@ -31,8 +31,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
 
   def then_i_can_view_it_on_gov_uk
     url = find_link("view")[:href]
-    reload_url_until_status_code(url, 200)
-    reload_url_until_match(url, :has_text?, ignore_quotes_regex(summary))
+    reload_until_travel_advice_summary_displayed(url, summary)
 
     @window = window_opened_by { click_link("view") }
     within_window(@window) do
