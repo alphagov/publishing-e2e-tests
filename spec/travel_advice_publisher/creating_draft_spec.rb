@@ -34,6 +34,7 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
   def then_i_can_preview_it_on_draft_gov_uk
     url = find_link("Preview saved version")[:href]
     reload_url_until_status_code(url, 200)
+    reload_url_until_match(url, :has_text?, ignore_quotes_regex(summary))
 
     @window = window_opened_by { click_link("Preview saved version") }
     within_window(@window) do
