@@ -14,6 +14,11 @@ services:
   db:
     image: postgres:9.6
 
+  mysql:
+    image: mysql:5.5.58
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
   mongo:
     image: mongo:2.4
 
@@ -68,6 +73,7 @@ services:
     links:
       - mongo
       - nginx-proxy:government-frontend.dev.gov.uk
+      - nginx-proxy:collections.dev.gov.uk
     ports:
       - "33054:3054"
       - "33055:3055"
@@ -272,6 +278,69 @@ services:
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     ports: []
+
+  collections-publisher: &collections-publisher
+      build: apps/collections-publisher
+      depends_on:
+        - publishing-api
+        - mysql
+        - asset-manager
+        - static
+        - rummager
+        - collections-publisher-worker
+        - diet-error-handler
+      environment:
+        SENTRY_CURRENT_ENV: collections-publisher
+        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+        VIRTUAL_HOST: collections-publisher.dev.gov.uk
+      links:
+        - mongo
+        - mysql
+        - redis
+        - nginx-proxy:rummager.dev.gov.uk
+        - nginx-proxy:publishing-api.dev.gov.uk
+        - nginx-proxy:asset-manager.dev.gov.uk
+        - nginx-proxy:static.dev.gov.uk
+        - nginx-proxy:error-handler.dev.gov.uk
+      ports:
+        - "33071:3071"
+      volumes:
+        - ./apps/collections-publisher/log:/app/log
+
+  collections-publisher-worker:
+    << : *collections-publisher
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - publishing-api
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: collections-publisher-worker
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    ports: []
+
+  collections: &collections
+      build: apps/collections
+      depends_on:
+        - content-store
+        - static
+        - rummager
+        - diet-error-handler
+      environment:
+        PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+        SENTRY_CURRENT_ENV: collections
+        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+        VIRTUAL_HOST: collections.dev.gov.uk
+      links:
+        - mongo
+        - redis
+        - nginx-proxy:rummager.dev.gov.uk
+        - nginx-proxy:content-store.dev.gov.uk
+        - nginx-proxy:static.dev.gov.uk
+        - nginx-proxy:error-handler.dev.gov.uk
+      ports:
+        - "33070:3070"
+      volumes:
+        - ./apps/collections/log:/app/log
 
   asset-manager: &asset-manager
     build: apps/asset-manager
