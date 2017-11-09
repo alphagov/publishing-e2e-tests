@@ -4,11 +4,11 @@ module TextHelpers
   def title_with_timestamp
     # As quotes are changed to curly quotes by govspeak they are a pain to
     # match, so we strip them here
-    "#{Faker::Book.title.gsub(/'/, '')} #{Time.now.to_i}"
+    "#{Faker::Book.title.delete("'")} #{Time.now.to_i}"
   end
 
   def slug_with_timestamp
-    "#{Faker::Internet.slug(nil, "-")}-#{Time.now.to_i}"
+    "#{Faker::Internet.slug(nil, '-')}-#{Time.now.to_i}"
   end
 
   def paragraph_with_timestamp
