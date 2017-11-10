@@ -33,7 +33,7 @@ feature "Upload attachments on Travel Advice Publisher", feature: true, travel_a
 
   def then_i_can_view_these_files_on_draft_gov_uk
     url = find_link("Preview saved version")[:href]
-    reload_url_until_status_code(url, 200)
+    reload_until_travel_advice_summary_displayed(url, summary)
 
     window = window_opened_by { click_link("Preview saved version") }
     within_window(window) do

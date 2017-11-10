@@ -66,6 +66,11 @@ module TravelAdvicePublisherHelpers
     visit(Plek.find("travel-advice-publisher") + path)
   end
 
+  def reload_until_travel_advice_summary_displayed(url, summary)
+    reload_url_until_status_code(url, 200)
+    reload_url_until_match(url, :has_text?, ignore_quotes_regex(summary))
+  end
+
   def self.included(base)
     if SignonHelpers::use_signon?
       default_permissions = %w[gds_editor]
