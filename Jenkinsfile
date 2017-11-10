@@ -108,6 +108,10 @@ node {
         checkout(scm)
       }
 
+      stage("Linting") {
+        rubyLinter("spec lib")
+      }
+
       stage("Clone applications") {
         withEnv([
           "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
