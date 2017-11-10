@@ -7,6 +7,9 @@ module TextHelpers
     "#{Faker::Book.title.gsub(/'/, '')} #{Time.now.to_i}"
   end
 
+  def slug_with_timestamp
+    "#{Faker::Internet.slug(nil, "-")}-#{Time.now.to_i}"
+  end
 
   def paragraph_with_timestamp
     "#{Faker::Lorem.paragraph} #{Time.now.to_i}"
