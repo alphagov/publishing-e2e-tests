@@ -108,6 +108,14 @@ node {
         checkout(scm)
       }
 
+      stage("Bundle Gems") {
+        govuk.bundleApp()
+      }
+
+      stage("Ruby Lint") {
+        govuk.rubyLinter("spec lib")
+      }
+
       stage("Clone applications") {
         withEnv([
           "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
