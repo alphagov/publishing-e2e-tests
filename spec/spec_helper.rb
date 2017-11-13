@@ -21,6 +21,7 @@ require "capybara/rspec"
 require "capybara-screenshot/rspec"
 # require "capybara/webkit"
 require "capybara/poltergeist"
+require "capybara-select2"
 require "faker"
 require "plek"
 
