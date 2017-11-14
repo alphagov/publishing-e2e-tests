@@ -68,8 +68,8 @@ module SignonHelpers
       first(:link, 'Sign out').click
     end
 
-    fill_in('Email', :with => user.email)
-    fill_in('Passphrase', :with => user.passphrase)
+    fill_in('Email', with: user.email)
+    fill_in('Passphrase', with: user.passphrase)
     click_button('Sign in')
 
     if current_path == '/users/two_step_verification/prompt'
@@ -84,14 +84,14 @@ module SignonHelpers
 
       fill_in(
         'Code from your phone',
-        :with => user.two_step_verification_code
+        with: user.two_step_verification_code
       )
 
       click_button('submit_code')
     elsif current_path == '/users/two_step_verification/session/new'
       fill_in(
         'Verification code',
-        :with => user.two_step_verification_code
+        with: user.two_step_verification_code
       )
 
       click_button('Sign in')
@@ -108,7 +108,7 @@ module SignonHelpers
     return if app_permissions.empty?
 
     visit_signon('/users')
-    fill_in('Name or email', :with => email)
+    fill_in('Name or email', with: email)
     click_button('Search')
 
     within('td', text: email) do

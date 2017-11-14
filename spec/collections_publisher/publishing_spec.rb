@@ -1,5 +1,4 @@
 feature "Publishing a topic on Collections Publisher", collections_publisher: true do
-
   let(:title) { title_with_timestamp }
   let(:slug) { slug_with_timestamp }
   let(:link) { "/topic/" + slug }

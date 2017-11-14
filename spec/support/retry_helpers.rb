@@ -6,7 +6,7 @@ module RetryHelpers
 
   def reload_url_until_match(url, capybara_method, value, options = {})
     reload_options = {
-      fail_reason: "#{url} didn't match #{value} for #{capybara_method.to_s}",
+      fail_reason: "#{url} didn't match #{value} for #{capybara_method}",
       reload_seconds: options[:reload_seconds] || nil,
       interval_seconds: options[:interval_seconds] || nil,
     }
@@ -23,7 +23,7 @@ module RetryHelpers
     end
 
     code = HTTParty.head(url).code
-    unless (status_codes).include?(code)
+    unless status_codes.include?(code)
       raise "#{url} returned a status code of #{code}"
     end
 
