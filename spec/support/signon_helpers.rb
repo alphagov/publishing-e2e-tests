@@ -7,13 +7,13 @@ module SignonHelpers
     attr_reader :email, :passphrase, :number
     attr_accessor :two_step_verification_secret
 
-    @@next_user_number = 1
+    @next_user_number = 1
 
     def initialize(superuser: false)
-      @number = superuser ? 0 : User::get_next_user_number
+      @number = superuser ? 0 : User.get_next_user_number
 
-      if @number >= User::available_user_count
-        raise "Only #{User::available_user_count} available"
+      if @number >= User.available_user_count
+        raise "Only #{User.available_user_count} available"
       end
 
       @email = ENV.fetch("SIGNON_USER_#{@number}_EMAIL")
@@ -25,29 +25,29 @@ module SignonHelpers
     end
 
     def self.get_next_user_number
-      number = @@next_user_number
-      @@next_user_number += 1
+      number = @next_user_number
+      @next_user_number += 1
       number
     end
 
     def self.reset_next_user_number
-      @@next_user_number = 1
+      @next_user_number = 1
     end
 
     def self.available_user_count
       count = ENV['SIGNON_USER_COUNT']
       count.nil? ? nil : count.to_i
     end
-  end
 
-  def get_superuser
-    @@_superuser ||= User.new(superuser: true)
+    def self.superuser
+      @_superuser ||= User.new(superuser: true)
+    end
   end
 
   def get_next_user(permissions = {})
     user = User.new
 
-    signin_with_user(get_superuser)
+    signin_with_user(User.superuser)
     set_user_permissions(user.email, permissions)
 
     user
@@ -68,8 +68,8 @@ module SignonHelpers
       first(:link, 'Sign out').click
     end
 
-    fill_in('Email', :with => user.email)
-    fill_in('Passphrase', :with => user.passphrase)
+    fill_in('Email', with: user.email)
+    fill_in('Passphrase', with: user.passphrase)
     click_button('Sign in')
 
     if current_path == '/users/two_step_verification/prompt'
@@ -84,14 +84,14 @@ module SignonHelpers
 
       fill_in(
         'Code from your phone',
-        :with => user.two_step_verification_code
+        with: user.two_step_verification_code
       )
 
       click_button('submit_code')
     elsif current_path == '/users/two_step_verification/session/new'
       fill_in(
         'Verification code',
-        :with => user.two_step_verification_code
+        with: user.two_step_verification_code
       )
 
       click_button('Sign in')
@@ -108,7 +108,7 @@ module SignonHelpers
     return if app_permissions.empty?
 
     visit_signon('/users')
-    fill_in('Name or email', :with => email)
+    fill_in('Name or email', with: email)
     click_button('Search')
 
     within('td', text: email) do
