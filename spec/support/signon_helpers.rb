@@ -7,13 +7,13 @@ module SignonHelpers
     attr_reader :email, :passphrase, :number
     attr_accessor :two_step_verification_secret
 
-    @@next_user_number = 1
+    @next_user_number = 1
 
     def initialize(superuser: false)
-      @number = superuser ? 0 : User::get_next_user_number
+      @number = superuser ? 0 : User.get_next_user_number
 
-      if @number >= User::available_user_count
-        raise "Only #{User::available_user_count} available"
+      if @number >= User.available_user_count
+        raise "Only #{User.available_user_count} available"
       end
 
       @email = ENV.fetch("SIGNON_USER_#{@number}_EMAIL")
@@ -25,29 +25,29 @@ module SignonHelpers
     end
 
     def self.get_next_user_number
-      number = @@next_user_number
-      @@next_user_number += 1
+      number = @next_user_number
+      @next_user_number += 1
       number
     end
 
     def self.reset_next_user_number
-      @@next_user_number = 1
+      @next_user_number = 1
     end
 
     def self.available_user_count
       count = ENV['SIGNON_USER_COUNT']
       count.nil? ? nil : count.to_i
     end
-  end
 
-  def get_superuser
-    @@_superuser ||= User.new(superuser: true)
+    def self.superuser
+      @_superuser ||= User.new(superuser: true)
+    end
   end
 
   def get_next_user(permissions = {})
     user = User.new
 
-    signin_with_user(get_superuser)
+    signin_with_user(User.superuser)
     set_user_permissions(user.email, permissions)
 
     user
