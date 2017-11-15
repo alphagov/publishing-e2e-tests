@@ -57,7 +57,7 @@ module RetryHelpers
     }
 
     retry_while_false(reload_options) do
-      code = HTTParty.head(url).code
+      code = HTTParty.head(url, follow_redirects: false).code
       unless (keep_retrying_while + status_codes).include?(code)
         raise "Aborting reloading #{url} as a #{code} was returned"
       end
