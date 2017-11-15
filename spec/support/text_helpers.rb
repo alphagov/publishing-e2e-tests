@@ -15,6 +15,10 @@ module TextHelpers
     "#{Faker::Lorem.paragraph} #{Time.now.to_i}"
   end
 
+  def sentence
+    Faker::Lorem.sentence
+  end
+
   def ignore_quotes_regex(text)
     escaped = Regexp.escape(text).gsub(/["']/, %{["“”'‘’]})
     /#{escaped}/
