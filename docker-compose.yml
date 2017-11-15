@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -13,17 +13,25 @@ services:
 
   postgres:
     image: postgres:9.6
+    healthcheck:
+      test: ["CMD", "psql --username 'postgres' -c 'SELECT 1'"]
 
   mysql:
     image: mysql:5.5.58
     environment:
       MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysql --user=root --password=root -e 'SELECT 1'"]
 
   mongo:
     image: mongo:2.4
+    healthcheck:
+      test: ["CMD", "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"]
 
   redis:
     image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli ping"]
 
   # commented out as not used currently
   # rabbitmq:
@@ -35,6 +43,8 @@ services:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
 
   rummager:
     build: apps/rummager
