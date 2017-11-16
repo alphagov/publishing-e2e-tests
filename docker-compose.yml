@@ -74,6 +74,8 @@ services:
       - mongo
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
+      - nginx-proxy:frontend.dev.gov.uk
+      - nginx-proxy:calendars.dev.gov.uk
     ports:
       - "33054:3054"
       - "33055:3055"
@@ -93,6 +95,7 @@ services:
     links:
       - mongo
       - nginx-proxy:draft-government-frontend.dev.gov.uk
+      - nginx-proxy:draft-frontend.dev.gov.uk
     ports:
       - "33154:3154"
       - "33155:3155"
@@ -336,6 +339,111 @@ services:
       volumes:
         - ./apps/collections/log:/app/log
 
+  publisher: &publisher
+      build: apps/publisher
+      depends_on:
+        - publishing-api
+        - publisher-worker
+        - diet-error-handler
+        - calendars
+      environment:
+        SENTRY_CURRENT_ENV: publisher
+        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+        VIRTUAL_HOST: publisher.dev.gov.uk
+        GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
+      volumes:
+        - apps/govuk-content-schemas/:/govuk-content-schemas/
+      links:
+        - redis
+        - mongo
+        - nginx-proxy:publishing-api.dev.gov.uk
+        - nginx-proxy:error-handler.dev.gov.uk
+        - nginx-proxy:calendars.dev.gov.uk
+      ports:
+        - "33000:3000"
+      volumes:
+        - ./apps/publisher/log:/app/log
+
+  publisher-worker:
+    << : *publisher
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - publishing-api
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: publisher-worker
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    ports: []
+
+  frontend: &frontend
+    build: apps/frontend
+    depends_on:
+      - content-store
+      - static
+      - rummager
+      - diet-error-handler
+      - publishing-api
+    environment:
+      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+      SENTRY_CURRENT_ENV: frontend
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: frontend.dev.gov.uk
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+    ports:
+      - "33005:3005"
+    volumes:
+      - ./apps/frontend/log:/app/log
+
+  draft-frontend:
+    << : *frontend
+    depends_on:
+      - draft-content-store
+      - draft-static
+      - rummager
+      - diet-error-handler
+    environment:
+      PORT: 3105
+      PLEK_HOSTNAME_PREFIX: draft-
+      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+      SENTRY_CURRENT_ENV: draft-frontend
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: draft-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33105:3105"
+
+  calendars: &calendars
+    build: apps/calendars
+    depends_on:
+      - rummager
+      - content-store
+      - static
+      - publishing-api
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: calendars
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: calendars.dev.gov.uk
+    links:
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33011:3011"
+    volumes:
+      - ./apps/calendars/log:/app/log
+
   asset-manager: &asset-manager
     build: apps/asset-manager
     depends_on:
@@ -466,6 +574,9 @@ services:
       - travel-advice-publisher
       - collections-publisher
       - collections
+      - publisher
+      - frontend
+      - draft-frontend
     links:
       - nginx-proxy:www.dev.gov.uk
       - nginx-proxy:assets-origin.dev.gov.uk
@@ -476,5 +587,6 @@ services:
       - nginx-proxy:travel-advice-publisher.dev.gov.uk
       - nginx-proxy:collections-publisher.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
+      - nginx-proxy:publisher.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
