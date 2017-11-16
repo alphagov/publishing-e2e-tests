@@ -8,6 +8,12 @@ node {
   def govuk = load("/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy")
 
   properties([
+    [$class: "BuildDiscarderProperty",
+     strategy: [$class: "LogRotator",
+                artifactDaysToKeepStr: "",
+                artifactDaysToKeepStr: "",
+                daysToKeepStr: "30",
+                numToKeepStr: ""]],
     parameters([
       stringParam(
         defaultValue: "",
