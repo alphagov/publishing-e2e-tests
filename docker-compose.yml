@@ -11,7 +11,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
       - ./docker/nginx.tmpl:/app/nginx.tmpl
 
-  db:
+  postgres:
     image: postgres:9.6
 
   mysql:
@@ -189,7 +189,7 @@ services:
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
-      - db
+      - postgres
       - redis
       # - rabbitmq
       - nginx-proxy:error-handler.dev.gov.uk
@@ -211,7 +211,7 @@ services:
       SENTRY_CURRENT_ENV: publishing-api-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     links:
-      - db
+      - postgres
       - redis
       # - rabbitmq
       - nginx-proxy:content-store.dev.gov.uk
