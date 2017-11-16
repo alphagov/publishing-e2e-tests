@@ -18,11 +18,29 @@ module PublisherHelpers
     select format, from: "Format"
   end
 
+  def publish_artefact
+    confirm_action(link: "2nd pair of eyes", button: "Send to 2nd pair of eyes")
+    confirm_action(link: "Skip review", button: "Skip review")
+    confirm_action(link: "Publish", button: "Send to publish")
+  end
+
   def confirm_action(link:, button:)
     click_link link
     click_button button
 
     expect(page).to have_text('Transaction edition was successfully updated.')
+  end
+
+  def add_part_to_artefact(title:, body: sentence)
+    click_link "Add new part"
+
+    slug = within("div#untitled-part") do
+      fill_in "Title", with: title
+      fill_in "Body", with: body
+      find_field("Slug").value
+    end
+    click_button "Save"
+    slug
   end
 
   def switch_to_tab(tab)
