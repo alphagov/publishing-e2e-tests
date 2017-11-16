@@ -184,6 +184,7 @@ services:
       - publishing-api-worker
       - diet-error-handler
     environment:
+      DATABASE_URL: postgresql://postgres@postgres/publishing-api
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -207,6 +208,7 @@ services:
       - draft-content-store
       - diet-error-handler
     environment:
+      DATABASE_URL: postgresql://postgres@postgres/publishing-api
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
