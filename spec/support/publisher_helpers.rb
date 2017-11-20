@@ -18,6 +18,12 @@ module PublisherHelpers
     select format, from: "Format"
   end
 
+  def fill_in_schedule_downtime_form(date)
+    select(date.day, from: "downtime_start_time_3i")
+    select(Date::MONTHNAMES[Date.today.month], from: "downtime_start_time_2i")
+    select(date.year, from: "downtime_start_time_1i")
+  end
+
   def publish_artefact
     confirm_action(link: "2nd pair of eyes", button: "Send to 2nd pair of eyes")
     confirm_action(link: "Skip review", button: "Skip review")
