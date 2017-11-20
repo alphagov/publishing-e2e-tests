@@ -34,7 +34,7 @@ module PublisherHelpers
     click_link link
     click_button button
 
-    expect(page).to have_text('Transaction edition was successfully updated.')
+    expect(page).to have_text("edition was successfully updated.")
   end
 
   def add_part_to_artefact(title:, body: sentence)
