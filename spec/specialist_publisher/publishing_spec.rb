@@ -31,6 +31,7 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true do
 
     click_link("View on website")
     expect_rendering_application("government-frontend")
+    expect_url_matches_live_gov_uk
     expect(page).to have_content(title)
   end
 end

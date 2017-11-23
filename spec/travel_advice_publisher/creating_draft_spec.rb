@@ -37,7 +37,8 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
 
     @window = window_opened_by { click_link("Preview saved version") }
     within_window(@window) do
-      expect_rendering_application("draft-government-frontend")
+      expect_rendering_application("government-frontend")
+      expect_url_matches_draft_gov_uk
       expect(page).to have_content(ignore_quotes_regex(summary))
     end
   end
