@@ -36,6 +36,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
     @window = window_opened_by { click_link("view") }
     within_window(@window) do
       expect_rendering_application("government-frontend")
+      expect_url_matches_live_gov_uk
       expect(page).to have_content(ignore_quotes_regex(summary))
     end
   end

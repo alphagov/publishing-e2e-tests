@@ -34,6 +34,7 @@ feature "Archiving a child topic on Collections Publisher", collections_publishe
     window = window_opened_by { click_link(link) }
     within_window(window) do
       expect_rendering_application("collections")
+      expect_url_matches_live_gov_uk
       expect(page).to have_content(parent_title)
       expect(current_url).to eq(@published_parent_url)
     end

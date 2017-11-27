@@ -38,6 +38,7 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true do
     reload_url_until_status_code(@url, 410, keep_retrying_while: 200)
 
     visit(@url)
+    expect_url_matches_live_gov_uk
     expect(page).to have_content("gone")
   end
 end

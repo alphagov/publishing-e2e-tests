@@ -24,7 +24,8 @@ feature "Creating a draft on Specialist Publisher", specialist_publisher: true d
     reload_url_until_status_code(url, 200)
 
     click_link("Preview draft")
-    expect_rendering_application("draft-government-frontend")
+    expect_rendering_application("government-frontend")
+    expect_url_matches_draft_gov_uk
     expect(page).to have_content(title)
   end
 end
