@@ -1,7 +1,8 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher collections-publisher \
-	collections frontend publisher calendars
+	collections frontend publisher calendars \
+	manuals-publisher manuals-frontend whitehall
 
 TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec
 
@@ -32,9 +33,11 @@ setup:
 	docker-compose run specialist-publisher bundle exec rake db:seed
 	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
 	docker-compose run travel-advice-publisher bundle exec rake db:seed
+	docker-compose run manuals-publisher bundle exec rake db:seed
 	docker-compose run collections-publisher bundle exec rake db:setup
 	docker-compose run publisher bundle exec rake db:setup
 	docker-compose run frontend bundle exec rake publishing_api:publish_special_routes
+	docker-compose run whitehall bundle exec rake db:create db:purge db:setup
 	docker-compose run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
@@ -57,8 +60,11 @@ test-collections-publisher:
 test-publisher:
 	$(TEST_CMD) --tag publisher
 
+test-manuals-publisher:
+	$(TEST_CMD) --tag manuals_publisher
+
 stop: down
 
 .PHONY: all $(APPS) clone down build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
-	test-collections-publisher test-publisher
+	test-collections-publisher test-publisher test-manuals-publisher

@@ -86,6 +86,7 @@ services:
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
       - nginx-proxy:calendars.dev.gov.uk
+      - nginx-proxy:manuals-frontend.dev.gov.uk
     ports:
       - "33054:3054"
       - "33055:3055"
@@ -106,6 +107,7 @@ services:
       - mongo
       - nginx-proxy:draft-government-frontend.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
+      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
     ports:
       - "33154:3154"
       - "33155:3155"
@@ -443,6 +445,83 @@ services:
     ports:
       - "33105:3105"
 
+  manuals-publisher: &manuals-publisher
+    build: apps/manuals-publisher
+    depends_on:
+      - publishing-api
+      - mongo
+      - rummager
+      - asset-manager
+      - manuals-publisher-worker
+      - diet-error-handler
+      - whitehall
+    environment:
+      SENTRY_CURRENT_ENV: manuals-publisher
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: manuals-publisher.dev.gov.uk
+    links:
+      - mongo
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:asset-manager.dev.gov.uk
+      - nginx-proxy:whitehall-admin.dev.gov.uk
+    ports:
+      - "33205:3205"
+    volumes:
+      - ./apps/manuals-publisher/log:/app/log
+
+  manuals-publisher-worker:
+    << : *manuals-publisher
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - publishing-api
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: manuals-publisher-worker
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    ports: []
+
+  manuals-frontend: &manuals-frontend
+    build: apps/manuals-frontend
+    depends_on:
+      - content-store
+      - static
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: manuals-frontend
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: manuals-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33072:3072"
+    volumes:
+      - ./apps/manuals-frontend/log:/app/log
+
+  draft-manuals-frontend: &draft-manuals-frontend
+    << : *manuals-frontend
+    depends_on:
+      - draft-content-store
+      - draft-static
+      - diet-error-handler
+    environment:
+      PLEK_HOSTNAME_PREFIX: draft-
+      LOG_PATH: log/draft.log
+      SENTRY_CURRENT_ENV: draft-manuals-frontend
+      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: draft-manuals-frontend.dev.gov.uk
+      PORT: 3172
+    links:
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33172:3172"
+
   calendars: &calendars
     build: apps/calendars
     depends_on:
@@ -465,6 +544,32 @@ services:
       - "33011:3011"
     volumes:
       - ./apps/calendars/log:/app/log
+
+  whitehall: &whitehall
+    build: apps/whitehall
+    depends_on:
+      - publishing-api
+      - rummager
+      - static
+      - asset-manager
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: whitehall
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: whitehall-admin.dev.gov.uk
+    links:
+      - mysql
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:asset-manager.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+    ports:
+      - "33020:3020"
+    volumes:
+      - ./apps/whitehall/log:/app/log
+
+  # TODO: When adding E2E specs for Whitehall, it is likely we'll need to create a service for the Whitehall workers.
 
   asset-manager: &asset-manager
     build: apps/asset-manager
@@ -605,6 +710,9 @@ services:
       - publisher
       - frontend
       - draft-frontend
+      - manuals-publisher
+      - manuals-frontend
+      - draft-manuals-frontend
     links:
       - nginx-proxy:www.dev.gov.uk
       - nginx-proxy:assets-origin.dev.gov.uk
@@ -616,5 +724,6 @@ services:
       - nginx-proxy:collections-publisher.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:publisher.dev.gov.uk
+      - nginx-proxy:manuals-publisher.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
