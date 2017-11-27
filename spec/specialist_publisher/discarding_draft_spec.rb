@@ -33,6 +33,5 @@ feature "Discarding a draft on Specialist Publisher", specialist_publisher: true
 
     visit(@url)
     expect_url_matches_draft_gov_uk
-    expect(page).to have_text("Not found")
   end
 end
