@@ -66,6 +66,8 @@ module RetryHelpers
     end
   end
 
+  alias expect_status_code_eventually reload_url_until_status_code
+
   def retry_while_false(fail_reason: nil, reload_seconds: nil, interval_seconds: nil, &block)
     reload_seconds = reload_seconds || RSpec.configuration.reload_page_wait_time
     interval_seconds = interval_seconds || 0.5
