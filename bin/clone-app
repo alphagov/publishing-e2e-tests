@@ -7,7 +7,12 @@ class App
 
   def prepare
     Dir.chdir("apps") do
-      File.directory?(name) ? update : (clone && checkout)
+      if File.directory?(name)
+        update
+      else
+        clone
+        Dir.chdir(name) { checkout }
+      end
     end
   end
 
@@ -26,7 +31,7 @@ private
   end
 
   def checkout
-    unless system "git checkout -f #{commitish}"
+    unless system "git checkout -f #{commitish} --"
       raise "git failed to checkout #{commitish}"
     end
   end
