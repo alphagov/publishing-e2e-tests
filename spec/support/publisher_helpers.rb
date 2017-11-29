@@ -25,16 +25,37 @@ module PublisherHelpers
   end
 
   def publish_artefact
-    confirm_action(link: "2nd pair of eyes", button: "Send to 2nd pair of eyes")
-    confirm_action(link: "Skip review", button: "Skip review")
-    confirm_action(link: "Publish", button: "Send to publish")
+    confirm_dialog_action(link: "2nd pair of eyes", button: "Send to 2nd pair of eyes")
+    confirm_dialog_action(link: "Skip review", button: "Skip review")
+    confirm_dialog_action(link: "Publish", button: "Send to publish")
   end
 
-  def confirm_action(link:, button:)
-    click_link link
+  def confirm_dialog_action(link:, button:)
+    reload_options = {
+      fail_reason: "\"#{link}\" link not opening confirmation dialog with button \"#{button}\"",
+    }
+
+    # There exists a race hazard here whereby the browser is adding the modal event handler to the link in one thread.
+    # While capybara is simultaneously trying to click the link.
+    # If capybara clicks the link before the modal event handler is registered then it won't bring up the modal.
+    # This loop exists to ensure the modal dialog box is brought up.
+    retry_while_false(reload_options) do
+      click_link link
+      is_button_visible? button
+    end
+
     click_button button
 
     expect(page).to have_text("edition was successfully updated.")
+  end
+
+  def is_button_visible?(button)
+    begin
+      find_button button
+      true
+    rescue Capybara::ElementNotFound
+      false
+    end
   end
 
   def add_part_to_artefact(title:, body: sentence)
