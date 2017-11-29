@@ -116,6 +116,12 @@ node {
     originBuildStatus("Publishing end-to-end tests failed on Jenkins", "FAILED")
   }
 
+  def abortBuild = { reason ->
+     currentBuild.result = "ABORTED"
+     originBuildStatus(reason, "ERROR")
+     error(reason)
+  }
+
   lock("publishing-e2e-tests-$NODE_NAME") {
     try {
       originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
@@ -132,6 +138,12 @@ node {
         govuk.rubyLinter("spec lib")
       }
 
+    } catch(e) {
+      failBuild()
+      throw e
+    }
+
+    try {
       stage("Clone applications") {
         withEnv([
           "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
@@ -148,8 +160,7 @@ node {
         }
       }
     } catch(e) {
-      failBuild()
-      throw e
+      abortBuild("Publishing end-to-end tests could not clone all repositories")
     }
 
     try {
