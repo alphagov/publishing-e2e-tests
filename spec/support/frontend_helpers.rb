@@ -13,11 +13,11 @@ module FrontendHelpers
   end
 
   def expect_url_matches_draft_gov_uk
-    expect(current_url).to start_with("http://draft-origin.dev.gov.uk/")
+    expect(current_url).to start_with(Plek.find("draft-origin"))
   end
 
   def expect_url_matches_live_gov_uk
-    expect(current_url).to start_with("http://www.dev.gov.uk/")
+    expect(current_url).to start_with(Plek.new.website_root)
   end
 
   RSpec.configuration.include FrontendHelpers
