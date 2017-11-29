@@ -106,6 +106,16 @@ node {
     }
   }
 
+  def failBuild = {
+    currentBuild.result = "FAILED"
+    step([$class: "Mailer",
+          notifyEveryUnstableBuild: true,
+          recipients: "govuk-ci-notifications@digital.cabinet-office.gov.uk",
+          sendToIndividuals: true])
+
+    originBuildStatus("Publishing end-to-end tests failed on Jenkins", "FAILED")
+  }
+
   lock("publishing-e2e-tests-$NODE_NAME") {
     try {
       originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
@@ -137,7 +147,12 @@ node {
           sh("make clone -j4")
         }
       }
+    } catch(e) {
+      failBuild()
+      throw e
+    }
 
+    try {
       stage("Build docker environment") {
         sh("make build")
       }
@@ -166,13 +181,7 @@ node {
       originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
 
     } catch (e) {
-      currentBuild.result = "FAILED"
-      step([$class: "Mailer",
-            notifyEveryUnstableBuild: true,
-            recipients: "govuk-ci-notifications@digital.cabinet-office.gov.uk",
-            sendToIndividuals: true])
-
-      originBuildStatus("Publishing end-to-end tests failed on Jenkins", "FAILED")
+      failBuild()
 
       throw e
     } finally {
