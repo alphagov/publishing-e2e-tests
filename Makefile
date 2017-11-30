@@ -20,8 +20,6 @@ build: down
 
 setup:
 	docker-compose run publishing-e2e-tests bash -c 'rm -rf /app/tmp/*'
-	docker-compose up -d elasticsearch
-	docker-compose up -d mysql
 	docker-compose run router-api bundle exec rake db:purge
 	docker-compose run draft-router-api bundle exec rake db:purge
 	docker-compose run content-store bundle exec rake db:purge

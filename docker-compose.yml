@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -13,17 +13,25 @@ services:
 
   postgres:
     image: postgres:9.6
+    healthcheck:
+      test: ["CMD", "psql --username 'postgres' -c 'SELECT 1'"]
 
   mysql:
     image: mysql:5.5.58
     environment:
       MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysql --user=root --password=root -e 'SELECT 1'"]
 
   mongo:
     image: mongo:2.4
+    healthcheck:
+      test: ["CMD", "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"]
 
   redis:
     image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli ping"]
 
   # commented out as not used currently
   # rabbitmq:
@@ -35,6 +43,8 @@ services:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
 
   rummager:
     build: apps/rummager
@@ -234,6 +244,8 @@ services:
       SENTRY_CURRENT_ENV: specialist-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3064 || exit 1"]
     links:
       - mongo
       - redis
@@ -258,6 +270,8 @@ services:
       SENTRY_CURRENT_ENV: travel-advice-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3035 || exit 1"]
     links:
       - mongo
       - redis
@@ -283,26 +297,28 @@ services:
     ports: []
 
   collections-publisher: &collections-publisher
-      build: apps/collections-publisher
-      depends_on:
-        - publishing-api
-        - mysql
-        - rummager
-        - collections-publisher-worker
-        - diet-error-handler
-      environment:
-        SENTRY_CURRENT_ENV: collections-publisher
-        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
-        VIRTUAL_HOST: collections-publisher.dev.gov.uk
-      links:
-        - mysql
-        - nginx-proxy:rummager.dev.gov.uk
-        - nginx-proxy:publishing-api.dev.gov.uk
-        - nginx-proxy:error-handler.dev.gov.uk
-      ports:
-        - "33071:3071"
-      volumes:
-        - ./apps/collections-publisher/log:/app/log
+    build: apps/collections-publisher
+    depends_on:
+      - publishing-api
+      - mysql
+      - rummager
+      - collections-publisher-worker
+      - diet-error-handler
+    environment:
+      SENTRY_CURRENT_ENV: collections-publisher
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: collections-publisher.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3071 || exit 1"]
+    links:
+      - mysql
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33071:3071"
+    volumes:
+      - ./apps/collections-publisher/log:/app/log
 
   collections-publisher-worker:
     << : *collections-publisher
@@ -316,51 +332,55 @@ services:
     ports: []
 
   collections: &collections
-      build: apps/collections
-      depends_on:
-        - content-store
-        - static
-        - rummager
-        - diet-error-handler
-      environment:
-        PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
-        SENTRY_CURRENT_ENV: collections
-        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
-        VIRTUAL_HOST: collections.dev.gov.uk
-      links:
-        - nginx-proxy:rummager.dev.gov.uk
-        - nginx-proxy:content-store.dev.gov.uk
-        - nginx-proxy:static.dev.gov.uk
-        - nginx-proxy:error-handler.dev.gov.uk
-      ports:
-        - "33070:3070"
-      volumes:
-        - ./apps/collections/log:/app/log
+    build: apps/collections
+    depends_on:
+      - content-store
+      - static
+      - rummager
+      - diet-error-handler
+    environment:
+      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+      SENTRY_CURRENT_ENV: collections
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: collections.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3070/learn-to-drive-a-car || exit 1"]
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "33070:3070"
+    volumes:
+      - ./apps/collections/log:/app/log
 
   publisher: &publisher
-      build: apps/publisher
-      depends_on:
-        - publishing-api
-        - publisher-worker
-        - diet-error-handler
-        - calendars
-      environment:
-        SENTRY_CURRENT_ENV: publisher
-        SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
-        VIRTUAL_HOST: publisher.dev.gov.uk
-        GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
-      volumes:
-        - apps/govuk-content-schemas/:/govuk-content-schemas/
-      links:
-        - redis
-        - mongo
-        - nginx-proxy:publishing-api.dev.gov.uk
-        - nginx-proxy:error-handler.dev.gov.uk
-        - nginx-proxy:calendars.dev.gov.uk
-      ports:
-        - "33000:3000"
-      volumes:
-        - ./apps/publisher/log:/app/log
+    build: apps/publisher
+    depends_on:
+      - publishing-api
+      - publisher-worker
+      - diet-error-handler
+      - calendars
+    environment:
+      SENTRY_CURRENT_ENV: publisher
+      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      VIRTUAL_HOST: publisher.dev.gov.uk
+      GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3000 || exit 1"]
+    volumes:
+      - apps/govuk-content-schemas/:/govuk-content-schemas/
+    links:
+      - redis
+      - mongo
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:calendars.dev.gov.uk
+    ports:
+      - "33000:3000"
+    volumes:
+      - ./apps/publisher/log:/app/log
 
   publisher-worker:
     << : *publisher
@@ -386,6 +406,8 @@ services:
       SENTRY_CURRENT_ENV: frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: frontend.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3005 || exit 1"]
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
@@ -411,6 +433,8 @@ services:
       SENTRY_CURRENT_ENV: draft-frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-frontend.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3105 || exit 1"]
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
@@ -458,6 +482,8 @@ services:
       SENTRY_CURRENT_ENV: asset-manager
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: asset-manager.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3037 || exit 1"]
     ports:
       - "33037:3037"
     volumes:
@@ -530,6 +556,8 @@ services:
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: government-frontend.dev.gov.uk
       VIRTUAL_PORT: 3090
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3090 || exit 1"]
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
@@ -556,6 +584,8 @@ services:
       SENTRY_CURRENT_ENV: draft-government-frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-government-frontend.dev.gov.uk
+    healthcheck:
+      test: ["CMD", "curl --silent --fail localhost:3190 || exit 1"]
     links:
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
