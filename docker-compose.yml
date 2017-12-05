@@ -15,6 +15,9 @@ services:
     healthcheck:
       test: "psql --username 'postgres' -c 'SELECT 1'"
 
+  memcached:
+    image: memcached:alpine
+
   mysql:
     image: mysql:5.5.58
     environment:
@@ -51,6 +54,7 @@ services:
     depends_on:
       - diet-error-handler
     environment:
+      RAILS_ENV: production
       GOVUK_APP_NAME: rummager
       LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: rummager
@@ -118,6 +122,8 @@ services:
     depends_on:
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
       LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: router-api
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -135,6 +141,8 @@ services:
     << : *router-api
     command: bundle exec unicorn -p 3156
     environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
       GOVUK_APP_NAME: draft-router-api
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
@@ -159,6 +167,11 @@ services:
       - router-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      MONGO_WRITE_CONCERN: 1
       LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: content-store
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -180,6 +193,11 @@ services:
       - draft-router-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      MONGO_WRITE_CONCERN: 1
       ERRBIT_ENVIRONMENT_NAME: draft-content-store
       GOVUK_APP_NAME: draft-content-store
       LOG_PATH: log/draft.log
@@ -204,10 +222,16 @@ services:
       - publishing-api-worker
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: publishing-api.dev.gov.uk
+      GDS_SSO_STRATEGY: mock
     links:
       - postgres
       - redis
@@ -227,6 +251,9 @@ services:
       - draft-content-store
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -245,13 +272,24 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
-    build: apps/specialist-publisher
+    build:
+      context: apps/specialist-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3064
     depends_on:
       - publishing-api
       - asset-manager
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_TOKEN: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      MONGO_WRITE_CONCERN: 1
+      RAILS_SERVE_STATIC_FILES: "true"
+      GDS_SSO_STRATEGY: mock
       SENTRY_CURRENT_ENV: specialist-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
@@ -267,7 +305,10 @@ services:
       - ./apps/specialist-publisher/log:/app/log
 
   travel-advice-publisher: &travel-advice-publisher
-    build: apps/travel-advice-publisher
+    build:
+      context: apps/travel-advice-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3035
     depends_on:
       - publishing-api
@@ -277,6 +318,13 @@ services:
       - travel-advice-publisher-worker
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
+      GDS_SSO_STRATEGY: mock
       SENTRY_CURRENT_ENV: travel-advice-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
@@ -302,12 +350,19 @@ services:
     healthcheck:
       disable: true
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     ports: []
 
   collections-publisher: &collections-publisher
-    build: apps/collections-publisher
+    build:
+      context: apps/collections-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3071
     depends_on:
       - publishing-api
@@ -316,6 +371,14 @@ services:
       - collections-publisher-worker
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+      RAILS_SERVE_STATIC_FILES: "true"
+      GDS_SSO_STRATEGY: mock
       SENTRY_CURRENT_ENV: collections-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: collections-publisher.dev.gov.uk
@@ -336,6 +399,8 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
       SENTRY_CURRENT_ENV: collections-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
@@ -343,7 +408,10 @@ services:
     ports: []
 
   collections: &collections
-    build: apps/collections
+    build:
+      context: apps/collections
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3070
     depends_on:
       - content-store
@@ -351,6 +419,12 @@ services:
       - rummager
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_TOKEN: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
       SENTRY_CURRENT_ENV: collections
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -366,7 +440,10 @@ services:
       - ./apps/collections/log:/app/log
 
   publisher: &publisher
-    build: apps/publisher
+    build:
+      context: apps/publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3000
     depends_on:
       - publishing-api
@@ -374,7 +451,17 @@ services:
       - diet-error-handler
       - calendars
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
+      DISABLE_SECURE_COOKIES: "true"
+      DISABLE_EMAIL: "true"
+      JWT_AUTH_SECRET: bobajob
       SENTRY_CURRENT_ENV: publisher
+      GDS_SSO_STRATEGY: mock
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
@@ -398,6 +485,10 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
       SENTRY_CURRENT_ENV: publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
@@ -405,7 +496,10 @@ services:
     ports: []
 
   frontend: &frontend
-    build: apps/frontend
+    build:
+      context: apps/frontend
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3005
     depends_on:
       - content-store
@@ -414,6 +508,12 @@ services:
       - diet-error-handler
       - publishing-api
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
       SENTRY_CURRENT_ENV: frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -438,6 +538,12 @@ services:
       - rummager
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       PORT: 3105
       PLEK_HOSTNAME_PREFIX: draft-
       PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
@@ -453,7 +559,10 @@ services:
       - "3105"
 
   manuals-publisher: &manuals-publisher
-    build: apps/manuals-publisher
+    build:
+      context: apps/manuals-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3205
     depends_on:
       - publishing-api
@@ -464,6 +573,13 @@ services:
       - diet-error-handler
       - whitehall
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_TOKEN: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
+      GDS_SSO_STRATEGY: mock
       SENTRY_CURRENT_ENV: manuals-publisher
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
@@ -486,6 +602,10 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
       SENTRY_CURRENT_ENV: manuals-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
@@ -493,13 +613,22 @@ services:
     ports: []
 
   manuals-frontend: &manuals-frontend
-    build: apps/manuals-frontend
+    build:
+      context: apps/manuals-frontend
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3072
     depends_on:
       - content-store
       - static
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       SENTRY_CURRENT_ENV: manuals-frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: manuals-frontend.dev.gov.uk
@@ -520,6 +649,11 @@ services:
       - draft-static
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       PLEK_HOSTNAME_PREFIX: draft-
       LOG_PATH: log/draft.log
       SENTRY_CURRENT_ENV: draft-manuals-frontend
@@ -535,7 +669,10 @@ services:
       - "3172"
 
   calendars: &calendars
-    build: apps/calendars
+    build:
+      context: apps/calendars
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3011
     depends_on:
       - rummager
@@ -544,6 +681,12 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       SENTRY_CURRENT_ENV: calendars
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: calendars.dev.gov.uk
@@ -559,7 +702,10 @@ services:
       - ./apps/calendars/log:/app/log
 
   whitehall: &whitehall
-    build: apps/whitehall
+    build:
+      context: apps/whitehall
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3020
     depends_on:
       - publishing-api
@@ -568,7 +714,15 @@ services:
       - asset-manager
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+      GOVUK_ASSET_HOST: http://static.dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      RAILS_SERVE_STATIC_FILES: "true"
       SENTRY_CURRENT_ENV: whitehall
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: whitehall-admin.dev.gov.uk
     links:
@@ -597,12 +751,17 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       FAKE_S3_HOST: http://127.0.0.1
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: asset-manager.dev.gov.uk
+      GDS_SSO_STRATEGY: mock
+      ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
     ports:
       - "3037"
     volumes:
@@ -617,11 +776,14 @@ services:
       - diet-error-handler
     environment:
       FAKE_S3_HOST: http://127.0.0.1
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
     healthcheck:
       disable: true
     ports: []
@@ -632,6 +794,10 @@ services:
     depends_on:
       - diet-error-handler
     environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: static
       LOG_PATH: log/live.log
@@ -649,6 +815,10 @@ services:
     << : *static
     command: bundle exec unicorn -p 3113
     environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: draft-static
       GOVUK_APP_NAME: draft-static
@@ -674,7 +844,12 @@ services:
       - content-store
       - static
       - diet-error-handler
+      - memcached
     environment:
+      MEMCACHE_SERVERS: memcached
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: government-frontend
       LOG_PATH: log/live.log
@@ -698,7 +873,12 @@ services:
       - draft-content-store
       - draft-static
       - diet-error-handler
+      - memcached
     environment:
+      MEMCACHE_SERVERS: memcached
+      RAILS_ENV: production
+      GOVUK_APP_DOMAIN: dev.gov.uk
+      SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: draft-government-frontend
       GOVUK_APP_NAME: draft-government-frontend
