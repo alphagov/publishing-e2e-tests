@@ -19,6 +19,7 @@ the details of all the apps involved check
 - [Dealing with a flaky test](#dealing-with-a-flaky-test)
 - [Contributing](#contributing)
 - [Gotchas](#gotchas)
+- [License](#license)
 
 ## How to run the tests
 
@@ -77,6 +78,10 @@ was upgraded to Rails 5.1 and Mongoid 6.1. The symptom was that any requests
 to the server seemed to hang and never respond. The way this was resolved was
 to switch from using WEBrick on Router API and instead
 [use unicorn server][use-unicorn-pr].
+
+## Licence
+
+[MIT License](LICENSE)
 
 [install-docker]: https://www.docker.com/community-edition
 [use-unicorn-pr]: https://github.com/alphagov/router-api/pull/113
