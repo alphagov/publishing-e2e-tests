@@ -79,5 +79,4 @@ to switch from using WEBrick on Router API and instead
 [use unicorn server][use-unicorn-pr].
 
 [install-docker]: https://www.docker.com/community-edition
-[docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
 [use-unicorn-pr]: https://github.com/alphagov/router-api/pull/113
