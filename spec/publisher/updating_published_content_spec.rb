@@ -1,4 +1,4 @@
-feature "Updating published content from Publisher", publisher: true do
+feature "Updating published content from Publisher", publisher: true, frontend: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
