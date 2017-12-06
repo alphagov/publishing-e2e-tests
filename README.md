@@ -44,18 +44,8 @@ $ make -j4 clone
 $ make build start test-specialist-publisher stop
 ```
 
-#### Configuring Docker
-
-We recommend that you configure Docker to use at least 4 CPUs with 4 GB of
-memory, otherwise you may find the apps struggle to run well enough to pass the
-tests.
-
-<img src="docs/docker-configuration.png" width="300" />
-
-#### More Docker help
-
-There's further docker documentation for this project available in
-[docs/docker.md](docs/docker.md).
+See [docs/docker.md](docs/docker.md) for more information
+configuring/troubleshooting docker.
 
 ### Without Docker
 
