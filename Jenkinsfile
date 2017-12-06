@@ -251,6 +251,10 @@ node {
       failBuild()
 
       echo("Did this fail due to a flaky test? See: https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md")
+      // Send a slack message just when tests fail within docker context
+      def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
+      message += (params.ORIGIN_REPO && params.ORIGIN_COMMIT) ? " for <https://github.com/alphagov/${params.ORIGIN_REPO}/commit/${params.ORIGIN_COMMIT}|${params.ORIGIN_REPO}>" : ""
+      slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
 
       throw e
     } finally {
