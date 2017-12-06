@@ -16,7 +16,6 @@ the details of all the apps involved check
 ## Contents
 
 - [How to run the tests](#how-to-run-tests)
-- [Todo](#todo)
 - [Gotchas](#gotchas)
 
 ## How to run the tests
@@ -57,15 +56,7 @@ bundle exec rspec
 
 ### Contributing
 
-More information on adding tests can be found in the [contributing guidelines](CONTRIBUTING.md) 
-
-## Todo
-
-- Can we run the tests in parallel?
-- Run the applications in rails production - requires mocking sign-on, and
-  various env var changes
-- Disable the virus scanner in asset-manager - perhaps with env var
-- Reduce setup steps - can Specialist Publisher work without finders for instance?
+More information on adding tests can be found in the [contributing guidelines](CONTRIBUTING.md)
 
 ## Gotchas
 
