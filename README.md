@@ -8,11 +8,10 @@ are browser tests (written in [RSpec](http://rspec.info/), using
 [Capybara](https://github.com/teamcapybara/capybara)) that mimic the behaviour
 of content editors.
 
-Currently we have tests for [Specialist Publisher][specialist-publisher] and
-[Travel Advice Publisher][travel-advice-publisher] (which require the
-supporting applications and infrastructure, including Publishing API,
-Content Store, Content Schemas, Router, Frontend, Static, MongoDB, Postgres,
-Redis, RabbitMQ).
+Tests are written against a variety of publishing applications to see which
+apps are tested check the contents of the [spec](./spec) directory. To view
+the details of all the apps involved check
+[docker-compose.yml](./docker-compose.yml).
 
 ## Contents
 
@@ -80,7 +79,5 @@ to switch from using WEBrick on Router API and instead
 [use unicorn server][use-unicorn-pr].
 
 [install-docker]: https://www.docker.com/community-edition
-[specialist-publisher]: https://github.com/alphagov/specialist-publisher
-[travel-advice-publisher]: https://github.com/alphagov/travel-advice-publisher
 [docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
 [use-unicorn-pr]: https://github.com/alphagov/router-api/pull/113
