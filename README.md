@@ -15,7 +15,9 @@ the details of all the apps involved check
 
 ## Contents
 
-- [How to run the tests](#how-to-run-tests)
+- [How to run the tests](#how-to-run-the-tests)
+- [Dealing with a flaky test](#dealing-with-a-flaky-test)
+- [Contributing](#contributing)
 - [Gotchas](#gotchas)
 
 ## How to run the tests
@@ -54,9 +56,16 @@ on `*.dev.gov.uk`. The tests can then be run with:
 bundle exec rspec
 ```
 
-### Contributing
+## Dealing with a flaky test
 
-More information on adding tests can be found in the [contributing guidelines](CONTRIBUTING.md)
+A key aim of these tests is to be as reliable as possible, however this can be
+difficult - particularly early in a tests introduction - therefore we have a
+[strategy](CONTRIBUTING.md#dealing-with-flaky-tests) to deal with flaky tests.
+
+## Contributing
+
+There is information on the coding standards, how to ad tests and how to add
+applications to this project in the [contributing guidelines](CONTRIBUTING.md).
 
 ## Gotchas
 
