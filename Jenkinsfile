@@ -75,6 +75,46 @@ node {
         description: "Which commit/branch/tag of travel-advice-publisher to clone",
         name: "TRAVEL_ADVICE_PUBLISHER_COMMITISH"
       ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of collections-publisher to clone",
+        name: "COLLECTIONS_PUBLISHER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of collections to clone",
+        name: "COLLECTIONS_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of publisher to clone",
+        name: "PUBLISHER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of frontend to clone",
+        name: "FRONTEND_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of calendars to clone",
+        name: "CALENDARS_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of manuals-publisher to clone",
+        name: "MANUALS_PUBLISHER_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of manuals-frontend to clone",
+        name: "MANUALS_FRONTEND_COMMITISH"
+      ),
+      stringParam(
+        defaultValue: DEFAULT_COMMITISH,
+        description: "Which commit/branch/tag of whitehall to clone",
+        name: "WHITEHALL_COMMITISH"
+      ),
     ])
   ])
 
@@ -91,6 +131,14 @@ node {
     "SPECIALIST_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
     "STATIC_COMMITISH": DEFAULT_COMMITISH,
     "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "COLLECTIONS_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "COLLECTIONS_COMMITISH": DEFAULT_COMMITISH,
+    "PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "FRONTEND_COMMITISH": DEFAULT_COMMITISH,
+    "CALENDARS_COMMITISH": DEFAULT_COMMITISH,
+    "MANUALS_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
+    "MANUALS_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
+    "WHITEHALL_COMMITISH": DEFAULT_COMMITISH,
   ])
 
   def originBuildStatus = { message, status ->
@@ -155,6 +203,14 @@ node {
           "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
           "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
           "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
+          "COLLECTIONS_PUBLISHER_COMMITISH=${params.COLLECTIONS_PUBLISHER_COMMITISH}",
+          "COLLECTIONS_COMMITISH=${params.COLLECTIONS_COMMITISH}",
+          "PUBLISHER_COMMITISH=${params.PUBLISHER_COMMITISH}",
+          "FRONTEND_COMMITISH=${params.FRONTEND_COMMITISH}",
+          "CALENDARS_COMMITISH=${params.CALENDARS_COMMITISH}",
+          "MANUALS_PUBLISHER_COMMITISH=${params.MANUALS_PUBLISHER_COMMITISH}",
+          "MANUALS_FRONTEND_COMMITISH=${params.MANUALS_FRONTEND_COMMITISH}",
+          "WHITEHALL_COMMITISH=${params.WHITEHALL_COMMITISH}",
         ]) {
           sh("make clone -j4")
         }
