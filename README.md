@@ -106,13 +106,16 @@ This list has been adapted from
 [whitehall testing guide][whitehall-testing-guide] which is worth reading
 for more testing insights.
 
+### Contributing
+
+More information on adding tests can be found in the [contributing guidelines](CONTRIBUTING.md) 
+
 ## Todo
 
 - Can we run the tests in parallel?
 - Run the applications in rails production - requires mocking sign-on, and
   various env var changes
 - Disable the virus scanner in asset-manager - perhaps with env var
-- Explore and utilise [Docker healthcheck][docker-healthcheck]
 - Reduce setup steps - can Specialist Publisher work without finders for instance?
 
 ## Gotchas
