@@ -1,4 +1,4 @@
-feature "Creating draft content on Publisher", publisher: true do
+feature "Creating draft content on Publisher", publisher: true, frontend: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }

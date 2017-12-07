@@ -63,8 +63,12 @@ test-publisher:
 test-manuals-publisher:
 	$(TEST_CMD) --tag manuals_publisher
 
+test-frontend:
+	$(TEST_CMD) --tag frontend
+
 stop: down
 
 .PHONY: all $(APPS) clone down build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
-	test-collections-publisher test-publisher test-manuals-publisher
+	test-collections-publisher test-publisher test-manuals-publisher \
+	test-frontend
