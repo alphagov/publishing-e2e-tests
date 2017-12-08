@@ -250,6 +250,8 @@ node {
     } catch (e) {
       failBuild()
 
+      echo("Did this fail due to a flaky test? See: https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md")
+
       throw e
     } finally {
       stage("Make logs available") {

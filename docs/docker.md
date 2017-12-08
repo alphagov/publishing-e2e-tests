@@ -7,6 +7,14 @@
 - Get shell access to a given container: `docker-compose run specialist-frontend bash`
 - Kill the containers and move on with your life: `docker-compose down`
 
+## Configuration
+
+We recommend that you configure Docker to use at least 4 CPUs with 4 GB of
+memory, otherwise you may find the apps struggle to run well enough to pass the
+tests.
+
+<img src="docs/docker-configuration.png" width="300" />
+
 ## Adding containers
 
 - Create a `Dockerfile` in the repository of the app you want to add.
