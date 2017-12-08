@@ -3,7 +3,7 @@
 REPOSITORY = "publishing-e2e-tests"
 DEFAULT_COMMITISH = "deployed-to-production"
 
-node {
+node("publishing-e2e-tests") {
 
   def govuk = load("/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy")
 
