@@ -593,7 +593,7 @@ services:
       - "33037:3037"
     volumes:
       - ./apps/asset-manager/log:/app/log
-      - ./tmp:/app/uploads
+      - ./tmp/uploads:/app/uploads
 
   asset-manager-worker:
     << : *asset-manager
