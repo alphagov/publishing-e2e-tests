@@ -594,6 +594,7 @@ services:
     volumes:
       - ./apps/asset-manager/log:/app/log
       - ./tmp/uploads:/app/uploads
+      - ./tmp/fake-s3:/app/fake-s3
 
   asset-manager-worker:
     << : *asset-manager

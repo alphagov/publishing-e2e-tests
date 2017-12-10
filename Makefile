@@ -20,7 +20,7 @@ build: down
 	docker-compose build
 
 setup:
-	docker-compose run publishing-e2e-tests bash -c 'rm -rf /app/tmp/uploads/*'
+	docker-compose run publishing-e2e-tests bash -c 'rm -rf /app/tmp/uploads/*; rm -rf /app/tmp/fake-s3/*'
 	docker-compose run router-api bundle exec rake db:purge
 	docker-compose run draft-router-api bundle exec rake db:purge
 	docker-compose run content-store bundle exec rake db:purge
