@@ -278,6 +278,15 @@ server {
     proxy_set_header Host asset-manager.dev.gov.uk;
     proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
   }
+  location ~ /cloud-storage-proxy/(.*) {
+    internal;
+    set $download_url $1$is_args$args;
+    proxy_pass $download_url;
+  }
+  location ~ /fake-s3/(.*) {
+    proxy_set_header Host asset-manager.dev.gov.uk;
+    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
+  }
   {{ end }}
 
   {{ end }}
