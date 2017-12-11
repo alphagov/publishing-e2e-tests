@@ -1,5 +1,5 @@
 feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true do
-  include ManualsHelpers
+  include ManualsPublisherHelpers
 
   let(:title) { title_with_timestamp }
   let(:section_title) { title_with_timestamp }

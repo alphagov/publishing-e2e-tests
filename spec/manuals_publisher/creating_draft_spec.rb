@@ -1,5 +1,5 @@
 feature "Creating a draft on Manuals Publisher", manuals_publisher: true do
-  include ManualsHelpers
+  include ManualsPublisherHelpers
 
   let(:title) { title_with_timestamp }
 
