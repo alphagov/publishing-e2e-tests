@@ -1,4 +1,4 @@
-module ManualsHelpers
+module ManualsPublisherHelpers
   def create_draft_manual(title:)
     visit(Plek.find("manuals-publisher") + "/manuals/new")
     fill_in "Title", with: title
