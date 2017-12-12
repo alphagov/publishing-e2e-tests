@@ -274,7 +274,22 @@ server {
   {{ end }}
 
   {{ if eq $host "asset-manager.dev.gov.uk" }}
+  # Ref: https://github.com/alphagov/govuk-puppet/blob/3001e50c2c44c5456e316ae5bd0d241eade063b8/modules/govuk/templates/static_extra_nginx_config.conf.erb#L19-L37
   location ~ ^/media/ {
+    proxy_set_header Host asset-manager.dev.gov.uk;
+    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
+  }
+  # Ref: https://github.com/alphagov/govuk-puppet/blob/3001e50c2c44c5456e316ae5bd0d241eade063b8/modules/govuk/manifests/apps/asset_manager.pp#L131-L199
+  location ~ /cloud-storage-proxy/(.*) {
+    internal;
+    set $download_url $1$is_args$args;
+    proxy_pass $download_url;
+  }
+  # The cloud-storage-proxy location block (above) sets the Host header to
+  # assets-origin.dev.gov.uk when proxying to http://127.0.0.1/fake-s3/...,
+  # so we need this location block to proxy that URL to the Asset Manager Rails
+  # app, i.e. the upstream server.
+  location ~ /fake-s3/(.*) {
     proxy_set_header Host asset-manager.dev.gov.uk;
     proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
   }

@@ -581,6 +581,9 @@ services:
       - redis
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
+      PROXY_PERCENTAGE_OF_ASSET_REQUESTS_TO_S3_VIA_NGINX: 100
+      PROXY_PERCENTAGE_OF_WHITEHALL_ASSET_REQUESTS_TO_S3_VIA_NGINX: 100
+      FAKE_S3_HOST: http://127.0.0.1
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager
       REDIS_HOST: redis
@@ -593,7 +596,8 @@ services:
       - "33037:3037"
     volumes:
       - ./apps/asset-manager/log:/app/log
-      - ./tmp:/app/uploads
+      - ./tmp/uploads:/app/uploads
+      - ./tmp/fake-s3:/app/fake-s3
 
   asset-manager-worker:
     << : *asset-manager
@@ -601,6 +605,9 @@ services:
     depends_on:
       - diet-error-handler
     environment:
+      PROXY_PERCENTAGE_OF_ASSET_REQUESTS_TO_S3_VIA_NGINX: 100
+      PROXY_PERCENTAGE_OF_WHITEHALL_ASSET_REQUESTS_TO_S3_VIA_NGINX: 100
+      FAKE_S3_HOST: http://127.0.0.1
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
       REDIS_HOST: redis
