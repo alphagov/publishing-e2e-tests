@@ -1,0 +1,118 @@
+version: '3'
+
+# In development we want to expose the ports to the host machine on a predictable port.
+# This allows for easier manual testing of the services
+
+# On CI this is unnecessary and can cause conflicts between two builds wanting to use the same port.
+
+services:
+  nginx-proxy:
+    ports:
+      - "80:80"
+
+  rummager:
+    ports:
+      - "33009:3009"
+
+  diet-error-handler:
+    ports:
+      - "33129:3129"
+
+  router:
+    ports:
+      - "33054:3054"
+      - "33055:3055"
+
+  draft-router:
+    ports:
+      - "33154:3154"
+      - "33155:3155"
+
+  router-api:
+    ports:
+      - "33056:3056"
+
+  draft-router-api:
+    ports:
+      - "33156:3156"
+
+  content-store:
+    ports:
+      - "33068:3068"
+
+  draft-content-store:
+    ports:
+      - "33100:3100"
+
+  publishing-api:
+    ports:
+      - "33093:3093"
+
+  specialist-publisher:
+    ports:
+      - "33064:3064"
+
+  travel-advice-publisher:
+    ports:
+      - "33035:3035"
+
+  collections-publisher:
+    ports:
+      - "33071:3071"
+
+  collections:
+    ports:
+      - "33070:3070"
+
+  publisher:
+    ports:
+      - "33000:3000"
+
+  frontend:
+    ports:
+      - "33005:3005"
+
+  draft-frontend:
+    ports:
+      - "33105:3105"
+
+  manuals-publisher:
+    ports:
+      - "33205:3205"
+
+  manuals-frontend:
+    ports:
+      - "33072:3072"
+
+  draft-manuals-frontend:
+    ports:
+      - "33172:3172"
+
+  calendars:
+    ports:
+      - "33011:3011"
+
+  whitehall:
+    ports:
+      - "33020:3020"
+
+  asset-manager:
+    ports:
+      - "33037:3037"
+
+  static:
+    ports:
+      - "33013:3013"
+
+  draft-static:
+    ports:
+      - "33113:3113"
+
+  government-frontend:
+    ports:
+      - "33090:3090"
+
+  draft-government-frontend:
+    ports:
+      - "33190:3190"
+
