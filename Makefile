@@ -19,7 +19,8 @@ $(APPS):
 clone: $(APPS)
 
 down:
-	$(DOCKER_COMPOSE_CMD) down
+	$(DOCKER_COMPOSE_CMD) kill
+	$(DOCKER_COMPOSE_CMD) rm -f
 
 build: down
 	$(DOCKER_COMPOSE_CMD) build
