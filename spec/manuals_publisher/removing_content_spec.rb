@@ -2,8 +2,8 @@ feature "Removing content on Manuals Publisher", manuals_publisher: true do
   include ManualsPublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:section_title) { title_with_timestamp }
-  let(:section_slug) { section_title.downcase.tr(" ", "-").gsub(/[^\w-]/, '') }
+  let(:section_title) { "How to eat an orange" }
+  let(:section_slug) { "how-to-eat-an-orange" }
 
   scenario "Remove a section from a published manual" do
     given_there_is_a_published_manual_with_sections
