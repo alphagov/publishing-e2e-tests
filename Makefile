@@ -4,7 +4,12 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	collections frontend publisher calendars \
 	manuals-publisher manuals-frontend whitehall
 
-TEST_CMD = docker-compose run publishing-e2e-tests bundle exec rspec
+DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
+
+ifndef JENKINS_URL
+  DOCKER_COMPOSE_CMD += -f docker-compose.development.yml
+endif
+TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec
 
 all: clone build start test stop
 
@@ -14,34 +19,34 @@ $(APPS):
 clone: $(APPS)
 
 down:
-	docker-compose down
+	$(DOCKER_COMPOSE_CMD) down
 
 build: down
-	docker-compose build
+	$(DOCKER_COMPOSE_CMD) build
 
 setup:
-	docker-compose run publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
-	docker-compose run router-api bundle exec rake db:purge
-	docker-compose run draft-router-api bundle exec rake db:purge
-	docker-compose run content-store bundle exec rake db:purge
-	docker-compose run draft-content-store bundle exec rake db:purge
-	docker-compose run asset-manager bundle exec rake db:purge
-	docker-compose run publishing-api bundle exec rake db:setup
-	docker-compose run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
-	docker-compose run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
-	# docker-compose run publishing-api-worker bundle exec rails runner 'channel = Bunny.new.start.create_channel;Bunny::Exchange.new(channel, :topic, "published_documents")'
-	docker-compose run specialist-publisher bundle exec rake db:seed
-	docker-compose run specialist-publisher bundle exec rake publishing_api:publish_finders
-	docker-compose run travel-advice-publisher bundle exec rake db:seed
-	docker-compose run manuals-publisher bundle exec rake db:seed
-	docker-compose run collections-publisher bundle exec rake db:setup
-	docker-compose run publisher bundle exec rake db:setup
-	docker-compose run frontend bundle exec rake publishing_api:publish_special_routes
-	docker-compose run whitehall bundle exec rake db:create db:purge db:setup
-	docker-compose run publishing-e2e-tests bundle exec rake wait_for_router
+	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
+	$(DOCKER_COMPOSE_CMD) run router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run draft-router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run draft-content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run asset-manager bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
+	$(DOCKER_COMPOSE_CMD) run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
+	# $(DOCKER_COMPOSE_CMD) run publishing-api-worker bundle exec rails runner 'channel = Bunny.new.start.create_channel;Bunny::Exchange.new(channel, :topic, "published_documents")'
+	$(DOCKER_COMPOSE_CMD) run specialist-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run specialist-publisher bundle exec rake publishing_api:publish_finders
+	$(DOCKER_COMPOSE_CMD) run travel-advice-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run manuals-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run collections-publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run frontend bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) run whitehall bundle exec rake db:create db:purge db:setup
+	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
-	docker-compose up -d
+	$(DOCKER_COMPOSE_CMD) up -d
 
 start: setup up
 
