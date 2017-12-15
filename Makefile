@@ -18,10 +18,11 @@ $(APPS):
 
 clone: $(APPS)
 
-down:
-	$(DOCKER_COMPOSE_CMD) down
+kill:
+	$(DOCKER_COMPOSE_CMD) kill
+	$(DOCKER_COMPOSE_CMD) rm -f
 
-build: down
+build: kill
 	$(DOCKER_COMPOSE_CMD) build
 
 setup:
@@ -71,9 +72,9 @@ test-manuals-publisher:
 test-frontend:
 	$(TEST_CMD) --tag frontend
 
-stop: down
+stop: kill
 
-.PHONY: all $(APPS) clone down build setup start up test stop \
+.PHONY: all $(APPS) clone kill build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
 	test-collections-publisher test-publisher test-manuals-publisher \
 	test-frontend
