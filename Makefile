@@ -11,7 +11,7 @@ ifndef JENKINS_URL
 endif
 
 ifndef TEST_ARGS
-  TEST_ARGS = --tag ~flaky
+  TEST_ARGS = --tag ~flaky --tag ~new
 endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec $(TEST_ARGS)

@@ -244,6 +244,18 @@ node("publishing-e2e-tests") {
         sh("make ${params.TEST_COMMAND}")
       }
 
+      stage("Run flaky/new tests") {
+        echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
+        try {
+          sh("make test TEST_ARGS='--tag flaky --tag new'")
+        } catch(err) {
+          // Send a slack message just when tests fail within docker context
+          def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
+          message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+          slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+        }
+      }
+
       if (env.BRANCH_NAME == "master") {
         echo 'Pushing to test-against branch'
         sshagent(['govuk-ci-ssh-key']) {
