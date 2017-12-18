@@ -9,7 +9,12 @@ DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
 ifndef JENKINS_URL
   DOCKER_COMPOSE_CMD += -f docker-compose.development.yml
 endif
-TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec
+
+ifndef TEST_ARGS
+  TEST_ARGS = --tag ~flaky
+endif
+
+TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec $(TEST_ARGS)
 
 all: clone build start test stop
 
