@@ -31,6 +31,11 @@ node("publishing-e2e-tests") {
         name: "TEST_COMMAND"
       ),
       stringParam(
+        defaultValue: "",
+        description: "Allows for overriding the default arguments following rspec such as the path to spec or spec directory used to focus on the test(s), useful for flaky tests.",
+        name: "TEST_ARGS"
+      ),
+      stringParam(
         defaultValue: DEFAULT_COMMITISH,
         description: "Which commit/branch/tag of asset-manager to clone",
         name: "ASSET_MANAGER_COMMITISH"
@@ -122,6 +127,7 @@ node("publishing-e2e-tests") {
     "ORIGIN_REPO": "",
     "ORIGIN_COMMIT": "",
     "TEST_COMMAND": "test",
+    "TEST_ARGS": "",
     "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
     "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
     "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
