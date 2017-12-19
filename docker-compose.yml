@@ -224,6 +224,8 @@ services:
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    healthcheck:
+      disable: true
     links:
       - postgres
       - redis
@@ -288,6 +290,8 @@ services:
     depends_on:
       - publishing-api
       - diet-error-handler
+    healthcheck:
+      disable: true
     environment:
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -324,6 +328,8 @@ services:
     environment:
       SENTRY_CURRENT_ENV: collections-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    healthcheck:
+      disable: true
     ports: []
 
   collections: &collections
@@ -382,6 +388,8 @@ services:
     environment:
       SENTRY_CURRENT_ENV: publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    healthcheck:
+      disable: true
     ports: []
 
   frontend: &frontend
@@ -465,6 +473,8 @@ services:
     environment:
       SENTRY_CURRENT_ENV: manuals-publisher-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    healthcheck:
+      disable: true
     ports: []
 
   manuals-frontend: &manuals-frontend
@@ -592,6 +602,8 @@ services:
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+    healthcheck:
+      disable: true
     ports: []
 
   static: &static
