@@ -233,6 +233,7 @@ services:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
+    ports: []
     volumes:
       - ./apps/govuk-content-schemas:/govuk-content-schemas
       - ./apps/publishing-api/log:/app/log
