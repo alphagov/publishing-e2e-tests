@@ -1,4 +1,4 @@
-feature "Creating a live edition on Travel Advice Publisher", feature: true, travel_advice_publisher: true do
+feature "Creating a live edition on Travel Advice Publisher", feature: true, travel_advice_publisher: true, government_frontend: true do
   include TravelAdvicePublisherHelpers
 
   let(:country) { "Malta" }

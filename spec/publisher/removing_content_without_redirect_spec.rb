@@ -1,4 +1,4 @@
-feature "Removing content without a redirect from Publisher", publisher: true do
+feature "Removing content without a redirect from Publisher", publisher: true, government_frontend: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }

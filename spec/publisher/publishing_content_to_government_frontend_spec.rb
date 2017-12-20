@@ -1,4 +1,4 @@
-feature "Publishing content from Publisher to Government Frontend", publisher: true do
+feature "Publishing content from Publisher to Government Frontend", publisher: true, government_frontend: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }

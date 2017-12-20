@@ -1,4 +1,4 @@
-feature "Unpublishing with Specialist Publisher", specialist_publisher: true do
+feature "Unpublishing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
   let(:title) { "#{Faker::Book.title} #{Time.now.to_i}" }

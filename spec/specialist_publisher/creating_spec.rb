@@ -1,4 +1,4 @@
-feature "Creating a draft on Specialist Publisher", specialist_publisher: true do
+feature "Creating a draft on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
   let(:title) { title_with_timestamp }

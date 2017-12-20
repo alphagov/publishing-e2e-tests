@@ -77,6 +77,9 @@ test-manuals-publisher:
 test-frontend:
 	$(TEST_CMD) --tag frontend
 
+test-government-frontend:
+	$(TEST_CMD) --tag government_frontend
+
 stop: kill
 
 .PHONY: all $(APPS) clone kill build setup start up test stop \
