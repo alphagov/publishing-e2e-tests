@@ -1,4 +1,4 @@
-feature "Creating a draft on Travel Advice Publisher", feature: true, travel_advice_publisher: true do
+feature "Creating a draft on Travel Advice Publisher", feature: true, travel_advice_publisher: true, government_frontend: true do
   include TravelAdvicePublisherHelpers
 
   let(:country) { "Chad" }

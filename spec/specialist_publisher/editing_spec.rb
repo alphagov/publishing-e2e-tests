@@ -1,4 +1,4 @@
-feature "Editing with Specialist Publisher", specialist_publisher: true do
+feature "Editing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
   let(:old_title) { title_with_timestamp }

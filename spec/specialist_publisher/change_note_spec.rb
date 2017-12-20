@@ -1,4 +1,4 @@
-feature "Change notes on Specialist Publisher", specialist_publisher: true do
+feature "Change notes on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
   let(:title) { title_with_timestamp }
