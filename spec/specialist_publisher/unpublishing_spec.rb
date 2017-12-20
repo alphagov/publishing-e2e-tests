@@ -20,12 +20,14 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true do
     page.accept_confirm do
       click_button("Publish")
     end
+
     expect_published_alert(title)
     expect(page).to have_text(/Published #{Regexp.escape(title)}/), "Failed to publish #{title}"
   end
 
   def when_i_unpublish_it
     @url = find_link("View on website")[:href]
+    reload_url_until_status_code(@url, 200, keep_retrying_while: 404)
 
     page.accept_confirm do
       click_button("Unpublish document")
