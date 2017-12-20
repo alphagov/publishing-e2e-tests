@@ -247,7 +247,7 @@ node("publishing-e2e-tests") {
       stage("Run flaky/new tests") {
         echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
         try {
-          sh("make test TEST_ARGS='--tag flaky --tag new'")
+          sh("make test TEST_ARGS='--out tmp/rspec_flaky.xml --tag flaky --tag new'")
         } catch(err) {
           // Send a slack message just when tests fail within docker context
           def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
@@ -289,6 +289,7 @@ node("publishing-e2e-tests") {
         sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
 
         archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
+        junit 'tmp/rspec*.xml'
       }
 
       stage("Stop Docker") {
