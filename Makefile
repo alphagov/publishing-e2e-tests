@@ -5,16 +5,18 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	manuals-publisher manuals-frontend whitehall
 
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
+TEST_PROCESSES = 2
 
 ifndef JENKINS_URL
   DOCKER_COMPOSE_CMD += -f docker-compose.development.yml
+  TEST_PROCESSES = 1
 endif
 
 ifndef TEST_ARGS
-  TEST_ARGS = --out tmp/rspec.xml --tag ~flaky --tag ~new
+  TEST_ARGS = spec -o '--tag ~flaky --tag ~new'
 endif
 
-TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec --format RspecJunitFormatter $(TEST_ARGS)
+TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
 
 all: clone build start test stop
 
