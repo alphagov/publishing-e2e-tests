@@ -240,11 +240,6 @@ timestamps {
           }
         }
 
-        stage("Run tests") {
-          echo "Running tests with `make ${params.TEST_COMMAND}`"
-          sh("make ${params.TEST_COMMAND}")
-        }
-
         stage("Run flaky/new tests") {
           echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
           try {
@@ -255,6 +250,11 @@ timestamps {
             message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
             slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
           }
+        }
+
+        stage("Run tests") {
+          echo "Running tests with `make ${params.TEST_COMMAND}`"
+          sh("make ${params.TEST_COMMAND}")
         }
 
         if (env.BRANCH_NAME == "master") {
