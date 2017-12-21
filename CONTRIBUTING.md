@@ -45,7 +45,10 @@ Common reasons for a flaky tests can include:
 Tests should be tagged to the publishing and rendering applications they are
 testing using [rspec tags][] to only run tests that concern that application.
 This is because the tests are slow and doing this can limit the impact of
-introducing a flaky test.
+a flaky test.
+
+When adding a new test into the project it can also be tagged with `new: true`, tests that are tagged with `new` or `flaky` are executed in the new/flaky stage. This stage runs separately from the existing tests and will not fail the overall build. If this stage fails a notification is posted to the `#end-to-end-tests` slack channel to provide easy monitoring.
+This allows for a chance to build confidence in new tests without impacting the current suite should there be any flakiness as they run at a much higher volume than when being developed originally.
 
 [flaky tests]: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 [docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
@@ -71,9 +74,9 @@ test can erode this trust.
   - If the test is failing consistently it might be a sign that something
     different in the stack is broken
 - Next we want to stop the test failing for users of the suite:
-  - Create a PR which skips the flaky test in this repository e.g.
+  - Create a PR which marks the test as flaky in this repository e.g.
     ```ruby
-    scenario "Change note on a Countryside Stewardship Grant", skip: true do
+    scenario "Change note on a Countryside Stewardship Grant", flaky: true do
       ...
     end
     ```
@@ -85,7 +88,7 @@ test can erode this trust.
 
 The challenge with fixing a flaky test is to be confident that what you have
 done has resolved the issue, and that you can convince someone reviewing the
-fix that your changes resolve this.
+fix that your changes resolve this. It can be valuable to point to a number of successful test runs on the flaky stage.
 
 It is therefore useful to use the commit message as a place to explain exactly
 what the cause of the flaky result is and how the changes introduced resolve
