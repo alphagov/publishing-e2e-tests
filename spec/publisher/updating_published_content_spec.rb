@@ -4,7 +4,7 @@ feature "Updating published content from Publisher", publisher: true, frontend: 
   let(:title) { title_with_timestamp }
   let(:slug) { slug_with_timestamp }
 
-  scenario "Scheduling downtime for a transaction on Publisher", flaky: true do
+  scenario "Scheduling downtime for a transaction on Publisher" do
     given_there_is_a_published_transaction_artefact
     when_i_schedule_downtime_for_now_on_the_transaction
     and_i_visit_the_transaction_on_gov_uk
