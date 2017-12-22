@@ -37,6 +37,11 @@ timestamps {
           name: "TEST_ARGS"
         ),
         stringParam(
+          defaultValue: "2",
+          description: "Set number of processes for parallel testing",
+          name: "TEST_PROCESSES"
+        ),
+        stringParam(
           defaultValue: DEFAULT_COMMITISH,
           description: "Which commit/branch/tag of asset-manager to clone",
           name: "ASSET_MANAGER_COMMITISH"
@@ -129,6 +134,7 @@ timestamps {
       "ORIGIN_COMMIT": "",
       "TEST_COMMAND": "test",
       "TEST_ARGS": "",
+      "TEST_PROCESSES": "3",
       "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
       "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
       "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
@@ -243,7 +249,7 @@ timestamps {
         stage("Run flaky/new tests") {
           echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
           try {
-            sh("make test TEST_ARGS='--out tmp/rspec_flaky.xml --tag flaky --tag new'")
+            sh("make test TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
           } catch(err) {
             // Send a slack message just when tests fail within docker context
             def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
