@@ -2,5 +2,3 @@
 --require spec_helper
 --order rand
 --format documentation
---format RspecJunitFormatter
---out tmp/rspec<%= ENV["TEST_ENV_NUMBER"] %><%= Time.now.to_i %>.xml
