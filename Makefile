@@ -62,25 +62,25 @@ test:
 	$(TEST_CMD)
 
 test-specialist-publisher:
-	$(TEST_CMD) --tag specialist_publisher
+	$(TEST_CMD) --o '-tag specialist_publisher --tag ~flaky --tag ~new'
 
 test-travel-advice-publisher:
-	$(TEST_CMD) --tag travel_advice_publisher
+	$(TEST_CMD) --o '--tag travel_advice_publisher --tag ~flaky --tag ~new'
 
 test-collections-publisher:
-	$(TEST_CMD) --tag collections_publisher
+	$(TEST_CMD) --o '--tag collections_publisher --tag ~flaky --tag ~new'
 
 test-publisher:
-	$(TEST_CMD) --tag publisher
+	$(TEST_CMD) --o '--tag publisher --tag ~flaky --tag ~new'
 
 test-manuals-publisher:
-	$(TEST_CMD) --tag manuals_publisher
+	$(TEST_CMD) --o '--tag manuals_publisher --tag ~flaky --tag ~new'
 
 test-frontend:
-	$(TEST_CMD) --tag frontend
+	$(TEST_CMD) --o '--tag frontend --tag ~flaky --tag ~new'
 
 test-government-frontend:
-	$(TEST_CMD) --tag government_frontend
+	$(TEST_CMD) --o '--tag government_frontend --tag ~flaky --tag ~new'
 
 stop: kill
 
