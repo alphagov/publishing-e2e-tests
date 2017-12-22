@@ -20,6 +20,7 @@ feature "Discarding a draft on Specialist Publisher", specialist_publisher: true
 
   def when_i_discard_it
     @url = find_link("Preview draft")[:href]
+    expect_status_code_eventually(@url, 200, keep_retrying_while: 404)
 
     page.accept_confirm do
       click_button("Discard draft")
