@@ -161,7 +161,8 @@ module SpecialistPublisherHelpers
       base.before(:each) do |example|
         @user = get_next_user(
           'Specialist Publisher' =>
-          example.metadata.fetch(:permissions, default_permissions)
+          example.metadata.fetch(:permissions, default_permissions),
+          'Content Preview' => %w[]
         )
         signin_with_user(@user)
       end
