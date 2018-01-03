@@ -110,7 +110,6 @@ services:
     environment:
       GOVUK_APP_NAME: draft-router
       PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       ROUTER_BACKEND_HEADER_TIMEOUT: 60s
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
@@ -200,12 +199,10 @@ services:
     environment:
       << : *x-production
       MONGO_WRITE_CONCERN: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-content-store
       GOVUK_APP_NAME: draft-content-store
       LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
       PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3100
       SENTRY_CURRENT_ENV: draft-content-store
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -587,7 +584,6 @@ services:
       PLEK_HOSTNAME_PREFIX: draft-
       LOG_PATH: log/draft.log
       SENTRY_CURRENT_ENV: draft-manuals-frontend
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-manuals-frontend.dev.gov.uk
       PORT: 3172
@@ -669,8 +665,6 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       << : *x-production
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: asset-manager
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -691,8 +685,6 @@ services:
       - diet-error-handler
     environment:
       << : *x-production
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -709,8 +701,6 @@ services:
       - diet-error-handler
     environment:
       << : *x-production
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: static
       LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: static
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -727,12 +717,9 @@ services:
     command: bundle exec unicorn -p 3113
     environment:
       << : *x-production
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-static
       GOVUK_APP_NAME: draft-static
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3113
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: draft-static
@@ -756,8 +743,6 @@ services:
     environment:
       << : *x-production
       MEMCACHE_SERVERS: memcached
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: government-frontend
       LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: government-frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
@@ -783,12 +768,9 @@ services:
     environment:
       << : *x-production
       MEMCACHE_SERVERS: memcached
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-government-frontend
       GOVUK_APP_NAME: draft-government-frontend
       LOG_PATH: log/draft.log
       PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3190
       SENTRY_CURRENT_ENV: draft-government-frontend
       SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
