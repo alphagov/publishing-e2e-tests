@@ -122,12 +122,16 @@ module SignonHelpers
 
           options = all('option', visible: :all)
 
+          if permissions.include? 'signin'
+            raise "The 'signin' permission is implicit, so it doesn't need to be included"
+          end
+
           supported_permissions = options.map { |o| o.text(:all) }
           unsupported_permissions =
             permissions - supported_permissions
 
           unless unsupported_permissions.empty?
-            raise "#{app} does not support the #{unsupported_permissions} permissions"
+            raise "#{app} does not support the #{unsupported_permissions} permissions, only #{supported_permissions}"
           end
 
           options.each do |option|
