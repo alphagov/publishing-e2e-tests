@@ -47,6 +47,7 @@ services:
 
   rummager:
     build: apps/rummager
+    command: bundle exec unicorn -p 3009
     depends_on:
       - diet-error-handler
     environment:
@@ -113,6 +114,7 @@ services:
 
   router-api: &router-api
     build: apps/router-api
+    command: bundle exec unicorn -p 3056
     depends_on:
       - diet-error-handler
     environment:
@@ -131,6 +133,7 @@ services:
 
   draft-router-api:
     << : *router-api
+    command: bundle exec unicorn -p 3156
     environment:
       GOVUK_APP_NAME: draft-router-api
       LOG_PATH: log/draft.log
@@ -151,6 +154,7 @@ services:
 
   content-store: &content-store
     build: apps/content-store
+    command: bundle exec unicorn -p 3068
     depends_on:
       - router-api
       - diet-error-handler
@@ -171,6 +175,7 @@ services:
 
   draft-content-store:
     << : *content-store
+    command: bundle exec unicorn -p 3100
     depends_on:
       - draft-router-api
       - diet-error-handler
@@ -194,6 +199,7 @@ services:
 
   publishing-api:
     build: apps/publishing-api
+    command: bundle exec unicorn -p 3093
     depends_on:
       - publishing-api-worker
       - diet-error-handler
@@ -240,6 +246,7 @@ services:
 
   specialist-publisher:
     build: apps/specialist-publisher
+    command: bundle exec unicorn -p 3064
     depends_on:
       - publishing-api
       - asset-manager
@@ -261,6 +268,7 @@ services:
 
   travel-advice-publisher: &travel-advice-publisher
     build: apps/travel-advice-publisher
+    command: bundle exec unicorn -p 3035
     depends_on:
       - publishing-api
       - asset-manager
@@ -300,6 +308,7 @@ services:
 
   collections-publisher: &collections-publisher
     build: apps/collections-publisher
+    command: bundle exec unicorn -p 3071
     depends_on:
       - publishing-api
       - mysql
@@ -335,6 +344,7 @@ services:
 
   collections: &collections
     build: apps/collections
+    command: bundle exec unicorn -p 3070
     depends_on:
       - content-store
       - static
@@ -357,6 +367,7 @@ services:
 
   publisher: &publisher
     build: apps/publisher
+    command: bundle exec unicorn -p 3000
     depends_on:
       - publishing-api
       - publisher-worker
@@ -395,6 +406,7 @@ services:
 
   frontend: &frontend
     build: apps/frontend
+    command: bundle exec unicorn -p 3005
     depends_on:
       - content-store
       - static
@@ -419,6 +431,7 @@ services:
 
   draft-frontend:
     << : *frontend
+    command: bundle exec unicorn -p 3105
     depends_on:
       - draft-content-store
       - draft-static
@@ -441,6 +454,7 @@ services:
 
   manuals-publisher: &manuals-publisher
     build: apps/manuals-publisher
+    command: bundle exec unicorn -p 3205
     depends_on:
       - publishing-api
       - mongo
@@ -480,6 +494,7 @@ services:
 
   manuals-frontend: &manuals-frontend
     build: apps/manuals-frontend
+    command: bundle exec unicorn -p 3072
     depends_on:
       - content-store
       - static
@@ -499,6 +514,7 @@ services:
 
   draft-manuals-frontend: &draft-manuals-frontend
     << : *manuals-frontend
+    command: bundle exec unicorn -p 3172
     depends_on:
       - draft-content-store
       - draft-static
@@ -520,6 +536,7 @@ services:
 
   calendars: &calendars
     build: apps/calendars
+    command: bundle exec unicorn -p 3011
     depends_on:
       - rummager
       - content-store
@@ -543,6 +560,7 @@ services:
 
   whitehall: &whitehall
     build: apps/whitehall
+    command: bundle exec unicorn -p 3020
     depends_on:
       - publishing-api
       - rummager
@@ -569,6 +587,7 @@ services:
 
   asset-manager: &asset-manager
     build: apps/asset-manager
+    command: bundle exec unicorn -p 3037
     depends_on:
       - asset-manager-worker
       - diet-error-handler
@@ -609,6 +628,7 @@ services:
 
   static: &static
     build: apps/static
+    command: bundle exec unicorn -p 3013
     depends_on:
       - diet-error-handler
     environment:
@@ -627,6 +647,7 @@ services:
 
   draft-static:
     << : *static
+    command: bundle exec unicorn -p 3113
     environment:
       ERRBIT_API_KEY: 1
       ERRBIT_ENVIRONMENT_NAME: draft-static
@@ -648,6 +669,7 @@ services:
 
   government-frontend: &government-frontend
     build: apps/government-frontend
+    command: bundle exec unicorn -p 3090
     depends_on:
       - content-store
       - static
@@ -671,6 +693,7 @@ services:
 
   draft-government-frontend:
     << : *government-frontend
+    command: bundle exec unicorn -p 3190
     depends_on:
       - draft-content-store
       - draft-static
