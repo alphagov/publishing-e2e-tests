@@ -5,7 +5,6 @@ require 'rotp'
 module SignonHelpers
   class User
     attr_reader :email, :passphrase, :number
-    attr_accessor :two_step_verification_secret
 
     @next_user_number = 1
 
@@ -21,7 +20,23 @@ module SignonHelpers
     end
 
     def two_step_verification_code
-      ROTP::TOTP.new(@two_step_verification_secret).now
+      ROTP::TOTP.new(two_step_verification_secret).now
+    end
+
+    # Save the secret, so that the tests can be rerun
+    def two_step_verification_secret_file_name
+      "tmp/user_#{number}_two_step_verification_secret"
+    end
+
+    def two_step_verification_secret=(secret)
+      File.open(two_step_verification_secret_file_name, 'w') do |f|
+        f.puts secret
+      end
+    end
+
+    def two_step_verification_secret
+      @_two_step_verification_secret ||=
+        File.open(two_step_verification_secret_file_name, &:readline).strip
     end
 
     def self.get_next_user_number
