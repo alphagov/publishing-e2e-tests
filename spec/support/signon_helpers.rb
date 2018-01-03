@@ -117,7 +117,7 @@ module SignonHelpers
 
     within_table('editable-permissions') do
       app_permissions.each do |app, permissions|
-        within('tr', text: app) do
+        within(:xpath, "//tr[td//text()[normalize-space(.) ='#{app}']]") do
           find("input[type='checkbox']").set(!permissions.nil?)
 
           options = all('option', visible: :all)
