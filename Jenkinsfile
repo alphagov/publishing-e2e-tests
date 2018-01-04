@@ -296,11 +296,14 @@ timestamps {
           sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
 
           archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
-          junit 'tmp/rspec*.xml'
         }
 
         stage("Stop Docker") {
           sh("make stop")
+        }
+
+        stage("JUnit") {
+          junit 'tmp/rspec*.xml'
         }
       }
     }
