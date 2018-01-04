@@ -5,11 +5,10 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	manuals-publisher manuals-frontend whitehall
 
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
-TEST_PROCESSES = 2
+TEST_PROCESSES := 1
 
 ifndef JENKINS_URL
   DOCKER_COMPOSE_CMD += -f docker-compose.development.yml
-  TEST_PROCESSES = 1
 endif
 
 ifndef TEST_ARGS

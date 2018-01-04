@@ -134,7 +134,7 @@ timestamps {
       "ORIGIN_COMMIT": "",
       "TEST_COMMAND": "test",
       "TEST_ARGS": "",
-      "TEST_PROCESSES": "3",
+      "TEST_PROCESSES": "2",
       "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
       "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
       "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
@@ -249,7 +249,7 @@ timestamps {
         stage("Run flaky/new tests") {
           echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
           try {
-            sh("make test TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
+            sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
           } catch(err) {
             // Send a slack message just when tests fail within docker context
             def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
@@ -260,7 +260,7 @@ timestamps {
 
         stage("Run tests") {
           echo "Running tests with `make ${params.TEST_COMMAND}`"
-          sh("make ${params.TEST_COMMAND}")
+          sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
         }
 
         if (env.BRANCH_NAME == "master") {
