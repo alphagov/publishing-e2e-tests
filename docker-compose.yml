@@ -1,7 +1,25 @@
-version: '3'
+version: '3.4'
+
+x-govuk-app-env: &govuk-app
+  DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+  GDS_SSO_STRATEGY: mock
+  GOVUK_APP_DOMAIN: dev.gov.uk
+  GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+  GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+  LOG_PATH: log/live.log
+  PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+  RAILS_ENV: production
+  RAILS_SERVE_STATIC_FILES: "true"
+  SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+  SECRET_TOKEN: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
+  SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+
+x-draft-govuk-app-env: &draft-govuk-app
+  << : *govuk-app
+  LOG_PATH: log/draft.log
+  PLEK_HOSTNAME_PREFIX: draft-
 
 services:
-
   nginx-proxy:
     image: jwilder/nginx-proxy:latest
     ports:
@@ -14,6 +32,9 @@ services:
     image: postgres:9.6
     healthcheck:
       test: "psql --username 'postgres' -c 'SELECT 1'"
+
+  memcached:
+    image: memcached:alpine
 
   mysql:
     image: mysql:5.5.58
@@ -51,10 +72,9 @@ services:
     depends_on:
       - diet-error-handler
     environment:
+      << : *govuk-app
       GOVUK_APP_NAME: rummager
-      LOG_PATH: log/live.log
       SENTRY_CURRENT_ENV: rummager
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: rummager.dev.gov.uk
     links:
       - elasticsearch
@@ -96,7 +116,6 @@ services:
     environment:
       GOVUK_APP_NAME: draft-router
       PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       ROUTER_BACKEND_HEADER_TIMEOUT: 60s
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
@@ -118,9 +137,8 @@ services:
     depends_on:
       - diet-error-handler
     environment:
-      LOG_PATH: log/live.log
+      << : *govuk-app
       SENTRY_CURRENT_ENV: router-api
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: router-api.dev.gov.uk
     links:
       - mongo
@@ -135,14 +153,12 @@ services:
     << : *router-api
     command: bundle exec unicorn -p 3156
     environment:
+      << : *draft-govuk-app
       GOVUK_APP_NAME: draft-router-api
-      LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-router
-      PLEK_HOSTNAME_PREFIX: draft-
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       SENTRY_CURRENT_ENV: draft-router-api
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       TEST_MONGODB_URI: mongodb://mongo/draft-router-test
       VIRTUAL_HOST: draft-router-api.dev.gov.uk
     links:
@@ -159,9 +175,9 @@ services:
       - router-api
       - diet-error-handler
     environment:
-      LOG_PATH: log/live.log
+      << : *govuk-app
+      MONGO_WRITE_CONCERN: 1
       SENTRY_CURRENT_ENV: content-store
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: content-store.dev.gov.uk
     links:
       - mongo
@@ -180,15 +196,12 @@ services:
       - draft-router-api
       - diet-error-handler
     environment:
-      ERRBIT_ENVIRONMENT_NAME: draft-content-store
+      << : *draft-govuk-app
+      MONGO_WRITE_CONCERN: 1
       GOVUK_APP_NAME: draft-content-store
-      LOG_PATH: log/draft.log
       MONGODB_URI: mongodb://mongo/draft-content-store
-      PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3100
       SENTRY_CURRENT_ENV: draft-content-store
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
     links:
       - mongo
@@ -204,9 +217,9 @@ services:
       - publishing-api-worker
       - diet-error-handler
     environment:
+      << : *govuk-app
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
       - postgres
@@ -227,9 +240,9 @@ services:
       - draft-content-store
       - diet-error-handler
     environment:
+      << : *govuk-app
       DISABLE_QUEUE_PUBLISHER: 1
       SENTRY_CURRENT_ENV: publishing-api-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
       disable: true
     links:
@@ -245,15 +258,19 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
-    build: apps/specialist-publisher
+    build:
+      context: apps/specialist-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3064
     depends_on:
       - publishing-api
       - asset-manager
       - diet-error-handler
     environment:
+      << : *govuk-app
+      MONGO_WRITE_CONCERN: 1
       SENTRY_CURRENT_ENV: specialist-publisher
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
     links:
       - mongo
@@ -267,7 +284,10 @@ services:
       - ./apps/specialist-publisher/log:/app/log
 
   travel-advice-publisher: &travel-advice-publisher
-    build: apps/travel-advice-publisher
+    build:
+      context: apps/travel-advice-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3035
     depends_on:
       - publishing-api
@@ -277,8 +297,8 @@ services:
       - travel-advice-publisher-worker
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: travel-advice-publisher
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
     links:
       - mongo
@@ -302,12 +322,15 @@ services:
     healthcheck:
       disable: true
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     ports: []
 
   collections-publisher: &collections-publisher
-    build: apps/collections-publisher
+    build:
+      context: apps/collections-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3071
     depends_on:
       - publishing-api
@@ -316,8 +339,8 @@ services:
       - collections-publisher-worker
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: collections-publisher
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: collections-publisher.dev.gov.uk
     links:
       - mysql
@@ -336,14 +359,17 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: collections-publisher-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
       disable: true
     ports: []
 
   collections: &collections
-    build: apps/collections
+    build:
+      context: apps/collections
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3070
     depends_on:
       - content-store
@@ -351,9 +377,8 @@ services:
       - rummager
       - diet-error-handler
     environment:
-      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+      << : *govuk-app
       SENTRY_CURRENT_ENV: collections
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: collections.dev.gov.uk
     links:
       - nginx-proxy:rummager.dev.gov.uk
@@ -366,7 +391,10 @@ services:
       - ./apps/collections/log:/app/log
 
   publisher: &publisher
-    build: apps/publisher
+    build:
+      context: apps/publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3000
     depends_on:
       - publishing-api
@@ -374,8 +402,11 @@ services:
       - diet-error-handler
       - calendars
     environment:
+      << : *govuk-app
+      DISABLE_SECURE_COOKIES: "true"
+      DISABLE_EMAIL: "true"
+      JWT_AUTH_SECRET: fakejwtsecret
       SENTRY_CURRENT_ENV: publisher
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
     volumes:
@@ -398,14 +429,17 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: publisher-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
       disable: true
     ports: []
 
   frontend: &frontend
-    build: apps/frontend
+    build:
+      context: apps/frontend
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3005
     depends_on:
       - content-store
@@ -414,9 +448,8 @@ services:
       - diet-error-handler
       - publishing-api
     environment:
-      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+      << : *govuk-app
       SENTRY_CURRENT_ENV: frontend
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: frontend.dev.gov.uk
     links:
       - nginx-proxy:rummager.dev.gov.uk
@@ -438,11 +471,9 @@ services:
       - rummager
       - diet-error-handler
     environment:
+      << : *draft-govuk-app
       PORT: 3105
-      PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
       SENTRY_CURRENT_ENV: draft-frontend
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-frontend.dev.gov.uk
     links:
       - nginx-proxy:rummager.dev.gov.uk
@@ -453,7 +484,10 @@ services:
       - "3105"
 
   manuals-publisher: &manuals-publisher
-    build: apps/manuals-publisher
+    build:
+      context: apps/manuals-publisher
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3205
     depends_on:
       - publishing-api
@@ -464,8 +498,8 @@ services:
       - diet-error-handler
       - whitehall
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: manuals-publisher
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
     links:
       - mongo
@@ -486,22 +520,25 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: manuals-publisher-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
     healthcheck:
       disable: true
     ports: []
 
   manuals-frontend: &manuals-frontend
-    build: apps/manuals-frontend
+    build:
+      context: apps/manuals-frontend
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3072
     depends_on:
       - content-store
       - static
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: manuals-frontend
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: manuals-frontend.dev.gov.uk
     links:
       - nginx-proxy:content-store.dev.gov.uk
@@ -520,11 +557,8 @@ services:
       - draft-static
       - diet-error-handler
     environment:
-      PLEK_HOSTNAME_PREFIX: draft-
-      LOG_PATH: log/draft.log
+      << : *draft-govuk-app
       SENTRY_CURRENT_ENV: draft-manuals-frontend
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-manuals-frontend.dev.gov.uk
       PORT: 3172
     links:
@@ -535,7 +569,10 @@ services:
       - "3172"
 
   calendars: &calendars
-    build: apps/calendars
+    build:
+      context: apps/calendars
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3011
     depends_on:
       - rummager
@@ -544,8 +581,8 @@ services:
       - publishing-api
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: calendars
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: calendars.dev.gov.uk
     links:
       - nginx-proxy:static.dev.gov.uk
@@ -559,7 +596,10 @@ services:
       - ./apps/calendars/log:/app/log
 
   whitehall: &whitehall
-    build: apps/whitehall
+    build:
+      context: apps/whitehall
+      args:
+        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3020
     depends_on:
       - publishing-api
@@ -568,8 +608,8 @@ services:
       - asset-manager
       - diet-error-handler
     environment:
+      << : *govuk-app
       SENTRY_CURRENT_ENV: whitehall
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: whitehall-admin.dev.gov.uk
     links:
       - mysql
@@ -596,13 +636,12 @@ services:
       - redis
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
-      FAKE_S3_HOST: http://127.0.0.1
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: asset-manager
+      << : *govuk-app
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: asset-manager.dev.gov.uk
+      FAKE_S3_HOST: http://127.0.0.1
+      ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
     ports:
       - "3037"
     volumes:
@@ -616,12 +655,11 @@ services:
     depends_on:
       - diet-error-handler
     environment:
-      FAKE_S3_HOST: http://127.0.0.1
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: asset-manager-worker
+      << : *govuk-app
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
+      FAKE_S3_HOST: http://127.0.0.1
+      ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
     healthcheck:
       disable: true
     ports: []
@@ -632,11 +670,8 @@ services:
     depends_on:
       - diet-error-handler
     environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: static
-      LOG_PATH: log/live.log
+      << : *govuk-app
       SENTRY_CURRENT_ENV: static
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: static.dev.gov.uk
     links:
       - nginx-proxy:error-handler.dev.gov.uk
@@ -649,16 +684,11 @@ services:
     << : *static
     command: bundle exec unicorn -p 3113
     environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-static
+      << : *draft-govuk-app
       GOVUK_APP_NAME: draft-static
-      LOG_PATH: log/draft.log
-      PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3113
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: draft-static
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
       - "3113"
@@ -674,12 +704,11 @@ services:
       - content-store
       - static
       - diet-error-handler
+      - memcached
     environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: government-frontend
-      LOG_PATH: log/live.log
+      << : *govuk-app
+      MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: government-frontend
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: government-frontend.dev.gov.uk
       VIRTUAL_PORT: 3090
     links:
@@ -698,16 +727,13 @@ services:
       - draft-content-store
       - draft-static
       - diet-error-handler
+      - memcached
     environment:
-      ERRBIT_API_KEY: 1
-      ERRBIT_ENVIRONMENT_NAME: draft-government-frontend
+      << : *draft-govuk-app
+      MEMCACHE_SERVERS: memcached
       GOVUK_APP_NAME: draft-government-frontend
-      LOG_PATH: log/draft.log
-      PLEK_HOSTNAME_PREFIX: draft-
-      PLEK_SERVICE_ERRBIT_URI: http://error-handler.dev.gov.uk
       PORT: 3190
       SENTRY_CURRENT_ENV: draft-government-frontend
-      SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
       VIRTUAL_HOST: draft-government-frontend.dev.gov.uk
     links:
       - nginx-proxy:draft-content-store.dev.gov.uk

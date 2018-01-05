@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 # In development we want to expose the ports to the host machine on a predictable port.
 # This allows for easier manual testing of the services
