@@ -6,7 +6,7 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true, gove
   let(:new_body) { Faker::Lorem.paragraph }
   let(:change_note) { Faker::Lorem.sentence }
 
-  scenario "Change note on a Countryside Stewardship Grant" do
+  scenario "Change note on a Countryside Stewardship Grant", flakey: true do
     given_there_is_a_published_countryside_stewardship_grant
     when_i_edit_it_with_a_change_note
     and_publish_it
