@@ -1,4 +1,4 @@
-feature "Publishing content from Publisher to Frontend", publisher: true, frontend: true do
+feature "Publishing content from Publisher to Frontend", flaky: true, publisher: true, frontend: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
