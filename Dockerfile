@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:2.4.2
 RUN apt-get update -qq && apt-get upgrade -y
 
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
