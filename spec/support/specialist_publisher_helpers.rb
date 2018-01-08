@@ -155,17 +155,17 @@ module SpecialistPublisherHelpers
   end
 
   def self.included(base)
-    if SignonHelpers::use_signon?
-      default_permissions = %w[editor gds_editor]
+    return unless SignonHelpers::use_signon?
 
-      base.before(:each) do |example|
-        @user = get_next_user(
-          'Specialist Publisher' =>
-          example.metadata.fetch(:permissions, default_permissions),
-          'Content Preview' => %w[]
-        )
-        signin_with_user(@user)
-      end
+    default_permissions = %w[editor gds_editor]
+
+    base.before(:each) do |example|
+      @user = get_next_user(
+        "Specialist Publisher" =>
+        example.metadata.fetch(:permissions, default_permissions),
+        "Content Preview" => %w[]
+      )
+      signin_with_user(@user)
     end
   end
 end
