@@ -1,4 +1,6 @@
 feature "Creating a draft taxon on Content Tagger", new: true, content_tagger: true do
+  include ContentTaggerHelpers
+
   let(:title) { "Create Draft Taxon" + SecureRandom.uuid }
   let(:slug) { "draft-taxon" + SecureRandom.uuid }
 
@@ -8,12 +10,7 @@ feature "Creating a draft taxon on Content Tagger", new: true, content_tagger: t
   end
 
   def when_i_create_a_new_taxon
-    visit(Plek.find("content-tagger") + "/taxons/new")
-    fill_in "Path", with: slug
-    fill_in "Internal taxon name", with: title
-    fill_in "External taxon name", with: title
-    fill_in "Description", with: Faker::Lorem.paragraph
-    click_button "Create taxon"
+    create_draft_taxon(slug: slug, title: title)
   end
 
   def then_i_can_preview_it_on_draft_gov_uk
