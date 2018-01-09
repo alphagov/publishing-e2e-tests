@@ -96,6 +96,10 @@ services:
     ports:
       - "33020:3020"
 
+  content-tagger:
+    ports:
+      - "33116:3116"
+
   asset-manager:
     ports:
       - "33037:3037"

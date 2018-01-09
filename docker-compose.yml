@@ -625,6 +625,38 @@ services:
 
   # TODO: When adding E2E specs for Whitehall, it is likely we'll need to create a service for the Whitehall workers.
 
+  content-tagger: &content-tagger
+    build: apps/content-tagger
+    depends_on:
+      - content-tagger-worker
+      - diet-error-handler
+      - publishing-api
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: content-tagger
+      VIRTUAL_HOST: content-tagger.dev.gov.uk
+    links:
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - postgres
+      - redis
+    ports:
+      - "3116"
+    volumes:
+      - ./apps/content-tagger/log:/app/log
+
+  content-tagger-worker:
+    << : *content-tagger
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - diet-error-handler
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: content-tagger-worker
+    healthcheck:
+      disable: true
+    ports: []
+
   asset-manager: &asset-manager
     build: apps/asset-manager
     command: bundle exec unicorn -p 3037
