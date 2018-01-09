@@ -37,7 +37,7 @@ timestamps {
           name: "TEST_ARGS"
         ),
         stringParam(
-          defaultValue: "2",
+          defaultValue: "6",
           description: "Set number of processes for parallel testing",
           name: "TEST_PROCESSES"
         ),
@@ -134,7 +134,7 @@ timestamps {
       "ORIGIN_COMMIT": "",
       "TEST_COMMAND": "test",
       "TEST_ARGS": "",
-      "TEST_PROCESSES": "2",
+      "TEST_PROCESSES": "6",
       "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
       "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
       "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
