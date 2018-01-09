@@ -823,5 +823,6 @@ services:
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:publisher.dev.gov.uk
       - nginx-proxy:manuals-publisher.dev.gov.uk
+      - nginx-proxy:content-tagger.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp

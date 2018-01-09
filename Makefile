@@ -82,6 +82,9 @@ test-frontend:
 test-government-frontend:
 	$(TEST_CMD) -o '--tag government_frontend --tag ~flaky --tag ~new'
 
+test-content-tagger:
+	$(TEST_CMD) -o '--tag content_tagger --tag ~flaky --tag ~new'
+
 stop: kill
 
 .PHONY: all $(APPS) clone kill build setup start up test stop \
