@@ -7,4 +7,9 @@ module ContentTaggerHelpers
     fill_in "Description", with: Faker::Lorem.paragraph
     click_button "Create taxon"
   end
+
+  def publish_taxon
+    click_link "Publish"
+    click_button "Confirm publish"
+  end
 end

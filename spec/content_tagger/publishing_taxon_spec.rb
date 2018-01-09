@@ -15,8 +15,7 @@ feature "Publishing a taxon on Content Tagger", new: true, content_tagger: true 
   end
 
   def when_i_publish_the_taxon
-    click_link "Publish"
-    click_button "Confirm publish"
+    publish_taxon
   end
 
   def then_i_can_view_it_on_gov_uk
