@@ -64,6 +64,10 @@ services:
     ports:
       - "33070:3070"
 
+  draft-collections:
+    ports:
+      - "33170:3170"
+
   publisher:
     ports:
       - "33000:3000"
