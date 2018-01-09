@@ -2,7 +2,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher calendars \
-	manuals-publisher manuals-frontend whitehall
+	manuals-publisher manuals-frontend whitehall content-tagger
 
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
 TEST_PROCESSES := 1
@@ -50,6 +50,7 @@ setup:
 	$(DOCKER_COMPOSE_CMD) run publisher bundle exec rake db:setup
 	$(DOCKER_COMPOSE_CMD) run frontend bundle exec rake publishing_api:publish_special_routes
 	$(DOCKER_COMPOSE_CMD) run whitehall bundle exec rake db:create db:purge db:setup
+	$(DOCKER_COMPOSE_CMD) run content-tagger bundle exec rake db:setup
 	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake wait_for_router
 
 up:

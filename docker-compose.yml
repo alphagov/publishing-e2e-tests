@@ -125,6 +125,7 @@ services:
     links:
       - mongo
       - nginx-proxy:draft-government-frontend.dev.gov.uk
+      - nginx-proxy:draft-collections.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
       - nginx-proxy:draft-manuals-frontend.dev.gov.uk
     ports:
@@ -390,6 +391,27 @@ services:
     volumes:
       - ./apps/collections/log:/app/log
 
+  draft-collections:
+    << : *collections
+    command: bundle exec unicorn -p 3170
+    depends_on:
+      - draft-content-store
+      - draft-static
+      - rummager
+      - diet-error-handler
+    environment:
+      << : *draft-govuk-app
+      SENTRY_CURRENT_ENV: draft-collections
+      VIRTUAL_HOST: draft-collections.dev.gov.uk
+      PORT: 3170
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:draft-content-store.dev.gov.uk
+      - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "3170"
+
   publisher: &publisher
     build:
       context: apps/publisher
@@ -624,6 +646,38 @@ services:
       - ./apps/whitehall/log:/app/log
 
   # TODO: When adding E2E specs for Whitehall, it is likely we'll need to create a service for the Whitehall workers.
+
+  content-tagger: &content-tagger
+    build: apps/content-tagger
+    depends_on:
+      - content-tagger-worker
+      - diet-error-handler
+      - publishing-api
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: content-tagger
+      VIRTUAL_HOST: content-tagger.dev.gov.uk
+    links:
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - postgres
+      - redis
+    ports:
+      - "3116"
+    volumes:
+      - ./apps/content-tagger/log:/app/log
+
+  content-tagger-worker:
+    << : *content-tagger
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - diet-error-handler
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: content-tagger-worker
+    healthcheck:
+      disable: true
+    ports: []
 
   asset-manager: &asset-manager
     build: apps/asset-manager
