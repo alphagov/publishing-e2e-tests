@@ -72,16 +72,16 @@ module TravelAdvicePublisherHelpers
   end
 
   def self.included(base)
-    if SignonHelpers::use_signon?
-      default_permissions = %w[gds_editor]
+    return unless SignonHelpers::use_signon?
 
-      base.before(:each) do |example|
-        @user = get_next_user(
-          'Travel Advice Publisher' =>
-          example.metadata.fetch(:permissions, default_permissions)
-        )
-        signin_with_user(@user)
-      end
+    default_permissions = %w[gds_editor]
+
+    base.before(:each) do |example|
+      @user = get_next_user(
+        "Travel Advice Publisher" =>
+        example.metadata.fetch(:permissions, default_permissions)
+      )
+      signin_with_user(@user)
     end
   end
 end
