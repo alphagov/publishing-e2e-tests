@@ -27,9 +27,8 @@ module RetryHelpers
       raise "#{url} returned a status code of #{code}"
     end
 
-    session = Capybara::Session.new(Capybara.default_driver)
-
     retry_while_false(reload_options) do
+      session = Capybara::Session.new(Capybara.default_driver)
       session.visit(url)
       if within_selector
         session.witin(within_selector, wait: capybara_options[:wait]) do
