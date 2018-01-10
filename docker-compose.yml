@@ -277,7 +277,6 @@ services:
       - rabbitmq
     environment:
       << : *govuk-app
-      DISABLE_QUEUE_PUBLISHER: 1
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
@@ -302,7 +301,6 @@ services:
       - rabbitmq
     environment:
       << : *govuk-app
-      DISABLE_QUEUE_PUBLISHER: 1
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api-worker
     healthcheck:
@@ -863,6 +861,7 @@ services:
       - government-frontend
       - draft-government-frontend
       - travel-advice-publisher
+      - content-tagger
       - collections-publisher
       - collections
       - publisher
