@@ -217,9 +217,11 @@ services:
     depends_on:
       - publishing-api-worker
       - diet-error-handler
+      - memcached
     environment:
       << : *govuk-app
       DISABLE_QUEUE_PUBLISHER: 1
+      MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
@@ -240,9 +242,11 @@ services:
       - content-store
       - draft-content-store
       - diet-error-handler
+      - memcached
     environment:
       << : *govuk-app
       DISABLE_QUEUE_PUBLISHER: 1
+      MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api-worker
     healthcheck:
       disable: true
