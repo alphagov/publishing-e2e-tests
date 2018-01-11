@@ -1,7 +1,7 @@
 feature "Unpublishing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { "#{Faker::Book.title} #{Time.now.to_i}" }
+  let(:title) { "Unpublishing Specialist Publisher #{SecureRandom.uuid}" }
 
   scenario "Unpublishing a DFID research output" do
     given_there_is_a_published_dfid_research_output

@@ -1,7 +1,7 @@
 feature "Creating a draft on Manuals Publisher", manuals_publisher: true do
   include ManualsPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Creating a draft manual #{SecureRandom.uuid}" }
 
   scenario "Creating a draft manual" do
     when_i_create_a_new_manual

@@ -2,7 +2,7 @@ feature "Updating published content from Publisher", publisher: true, frontend: 
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:slug) { slug_with_timestamp }
+  let(:slug) { "updating-published-content-publisher-#{SecureRandom.uuid}" }
 
   scenario "Scheduling downtime for a transaction on Publisher" do
     given_there_is_a_published_transaction_artefact

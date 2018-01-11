@@ -2,11 +2,11 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
   include CollectionsPublisherHelpers
 
   let(:parent_title) { title_with_timestamp }
-  let(:parent_slug) { slug_with_timestamp }
+  let(:parent_slug) { "publishing-collections-publisher-parent-#{SecureRandom.uuid}" }
   let(:link) { "/topic/" + parent_slug }
 
-  let(:child_slug) { slug_with_timestamp }
   let(:child_title) { title_with_timestamp }
+  let(:child_slug) { "publishing-collections-publisher-child-#{SecureRandom.uuid}" }
 
   scenario "Publishing a parent and child topic" do
     given_i_have_a_published_topic

@@ -1,8 +1,8 @@
 feature "Creating a draft taxon on Content Tagger", new: true, content_tagger: true do
   include ContentTaggerHelpers
 
-  let(:title) { "Create Draft Taxon" + SecureRandom.uuid }
-  let(:slug) { "draft-taxon" + SecureRandom.uuid }
+  let(:title) { "Create Draft Taxon #{SecureRandom.uuid}" }
+  let(:slug) { "draft-taxon-#{SecureRandom.uuid}" }
 
   scenario "Creating a draft taxon" do
     when_i_create_a_new_taxon

@@ -2,7 +2,7 @@ feature "Removing content without a redirect from Publisher", publisher: true, g
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:slug) { slug_with_timestamp }
+  let(:slug) { "removing-content-without-redirect-publisher-#{SecureRandom.uuid}" }
 
   scenario "Unpublishing an artefact" do
     given_a_published_artefact_with_subpages

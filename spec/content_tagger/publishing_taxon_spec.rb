@@ -1,8 +1,8 @@
 feature "Publishing a taxon on Content Tagger", new: true, content_tagger: true do
   include ContentTaggerHelpers
 
-  let(:title) { "Publishing a taxon" + SecureRandom.uuid }
-  let(:slug) { "publishing-taxon" + SecureRandom.uuid }
+  let(:title) { "Publishing a taxon #{SecureRandom.uuid}" }
+  let(:slug) { "publishing-taxon-#{SecureRandom.uuid}" }
 
   scenario "Publishing a taxon" do
     given_there_is_a_draft_taxon

@@ -1,7 +1,7 @@
 feature "Change notes on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Change note Specialist Publisher #{SecureRandom.uuid}" }
   let(:old_body) { Faker::Lorem.paragraph }
   let(:new_body) { Faker::Lorem.paragraph }
   let(:change_note) { Faker::Lorem.sentence }
