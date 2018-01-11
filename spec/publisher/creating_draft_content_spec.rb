@@ -2,7 +2,7 @@ feature "Creating draft content on Publisher", publisher: true, frontend: true d
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:slug) { slug_with_timestamp }
+  let(:slug) { "creating-draft-publisher-content-#{SecureRandom.uuid}" }
 
   scenario "Creating a draft artefact" do
     when_i_create_a_new_artefact

@@ -3,8 +3,8 @@ require "httparty"
 feature "Uploading an attachment on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { title_with_timestamp }
-  let(:attachment_title) { title_with_timestamp }
+  let(:title) { "Uploading an attachment to a EAT decision #{SecureRandom.uuid}" }
+  let(:attachment_title) { "Uploading an attachment to a EAT decision attachment #{SecureRandom.uuid}" }
   let(:file) { File.expand_path("../fixtures/specialist_publisher/tax_returns.pdf", __dir__) }
 
   scenario "Uploading an attachment to a EAT decision" do

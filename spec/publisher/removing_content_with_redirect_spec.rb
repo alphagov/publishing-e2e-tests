@@ -2,7 +2,7 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:slug) { slug_with_timestamp }
+  let(:slug) { "removing-content-with-redirect-publisher-#{SecureRandom.uuid}" }
   let(:redirect_url) { "https://www.gov.uk/help" }
 
   scenario "Unpublishing an artefact" do

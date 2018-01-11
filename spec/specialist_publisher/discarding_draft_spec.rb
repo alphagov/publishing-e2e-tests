@@ -1,7 +1,7 @@
 feature "Discarding a draft on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Discarding a draft Specialist Publisher #{SecureRandom.uuid}" }
 
   scenario "Discarding a draft CMA case" do
     given_there_is_a_draft_cma_case

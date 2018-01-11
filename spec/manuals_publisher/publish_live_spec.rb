@@ -1,7 +1,7 @@
 feature "Publishing content on Manuals Publisher", manuals_publisher: true do
   include ManualsPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Publishing a manual #{SecureRandom.uuid}" }
 
   scenario "Publishing a manual" do
     given_there_is_a_draft_manual_with_a_section

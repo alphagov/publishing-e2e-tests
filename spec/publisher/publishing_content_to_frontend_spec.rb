@@ -2,7 +2,7 @@ feature "Publishing content from Publisher to Frontend", flaky: true, publisher:
   include PublisherHelpers
 
   let(:title) { title_with_timestamp }
-  let(:slug) { slug_with_timestamp }
+  let(:slug) { "publishing-content-publisher-to-frontend-#{SecureRandom.uuid}" }
   let(:subpart_title) { title_with_timestamp }
 
   scenario "Publishing an artefact" do

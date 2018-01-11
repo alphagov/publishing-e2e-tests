@@ -1,7 +1,7 @@
 feature "Removing content on Manuals Publisher", manuals_publisher: true do
   include ManualsPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Removing a section from a manual #{SecureRandom.uuid}" }
   let(:section_title) { "How to eat an orange" }
   let(:section_slug) { "how-to-eat-an-orange" }
 

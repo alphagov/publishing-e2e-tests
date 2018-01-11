@@ -1,7 +1,7 @@
 feature "Creating a draft on Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Creating a draft Specialist Publisher #{SecureRandom.uuid}" }
 
   scenario "Creating a Business Finance Support Scheme" do
     when_i_create_a_business_finance_support_scheme

@@ -1,8 +1,8 @@
 feature "Editing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:old_title) { title_with_timestamp }
-  let(:new_title) { title_with_timestamp }
+  let(:old_title) { "Editing Specialist Publisher Old title #{SecureRandom.uuid}" }
+  let(:new_title) { "Editing Specialist Publisher New title #{SecureRandom.uuid}" }
 
   scenario "Editing an Asylum Support Decision" do
     given_there_is_an_asylum_support_decision

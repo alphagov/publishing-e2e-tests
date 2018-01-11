@@ -2,10 +2,10 @@ feature "Archiving a child topic on Collections Publisher", collections_publishe
   include CollectionsPublisherHelpers
 
   let(:parent_title) { title_with_timestamp }
-  let(:parent_slug) { slug_with_timestamp }
+  let(:parent_slug) { "archiving-collections-publisher-parent-#{SecureRandom.uuid}" }
 
-  let(:child_slug) { slug_with_timestamp }
   let(:child_title) { title_with_timestamp }
+  let(:child_slug) { "archiving-collections-publisher-child-#{SecureRandom.uuid}" }
   let(:link) { ["/topic", parent_slug, child_slug].join("/") }
 
   scenario "Archiving a child topic" do

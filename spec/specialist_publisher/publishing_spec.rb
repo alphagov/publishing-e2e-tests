@@ -1,7 +1,7 @@
 feature "Publishing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { "Publishing Specialist Publisher #{SecureRandom.uuid}" }
 
   scenario "Publishing an AAIB Report" do
     given_there_is_a_draft_aaib_report
