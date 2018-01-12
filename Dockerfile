@@ -14,3 +14,5 @@ WORKDIR $APP_HOME
 ADD Gemfile* $APP_HOME/
 RUN bundle install
 ADD . $APP_HOME
+
+ENV RABBITMQ_URL amqp://guest:guest@rabbitmq:5672

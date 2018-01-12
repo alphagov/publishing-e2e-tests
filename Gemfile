@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "bunny"
 gem "byebug"
 gem "capybara"
 gem "capybara-screenshot"
