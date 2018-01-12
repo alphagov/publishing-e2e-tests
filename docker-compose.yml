@@ -3,6 +3,7 @@ version: '3.4'
 x-govuk-app-env: &govuk-app
   DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
   GDS_SSO_STRATEGY: mock
+  GDS_API_DISABLE_CACHE: "true"
   GOVUK_APP_DOMAIN: dev.gov.uk
   GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
