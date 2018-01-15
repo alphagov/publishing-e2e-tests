@@ -28,9 +28,7 @@ feature "Adding a taxon to external content", new: true, collections: true, cont
   end
 
   def when_i_tag_the_guide_with_the_taxon
-    visit(Plek.find("content-tagger") + "/taggings/lookup")
-    fill_in "content_lookup_form_base_path", with: "/" + guide_slug
-    click_button "Edit page"
+    visit_tag_external_content_page(slug: guide_slug)
     select2(taxon_title, css: "#s2id_tagging_tagging_update_form_taxons")
     click_button "Update tagging"
   end
