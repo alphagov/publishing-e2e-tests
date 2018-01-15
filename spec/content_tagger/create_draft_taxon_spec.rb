@@ -1,4 +1,4 @@
-feature "Creating a draft taxon on Content Tagger", new: true, content_tagger: true do
+feature "Creating a draft taxon on Content Tagger", new: true, collections: true, content_tagger: true do
   include ContentTaggerHelpers
 
   let(:title) { "Create Draft Taxon #{SecureRandom.uuid}" }

@@ -1,4 +1,4 @@
-feature "Archiving a child topic on Collections Publisher", collections_publisher: true do
+feature "Archiving a child topic on Collections Publisher", collections: true, collections_publisher: true do
   include CollectionsPublisherHelpers
 
   let(:parent_title) { title_with_timestamp }
