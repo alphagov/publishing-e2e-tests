@@ -76,6 +76,9 @@ test-publisher:
 test-manuals-publisher:
 	$(TEST_CMD) -o '--tag manuals_publisher --tag ~flaky --tag ~new'
 
+test-collections:
+	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~new'
+
 test-frontend:
 	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~new'
 
