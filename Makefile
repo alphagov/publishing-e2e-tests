@@ -39,9 +39,9 @@ setup:
 	$(DOCKER_COMPOSE_CMD) run draft-content-store bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run asset-manager bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake setup_rabbitmq_rummager
 	$(DOCKER_COMPOSE_CMD) run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
 	$(DOCKER_COMPOSE_CMD) run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
-	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake setup_rabbitmq_rummager
 	$(DOCKER_COMPOSE_CMD) run -e RUN_SEEDS_IN_PRODUCTION=true specialist-publisher bundle exec rake db:seed
 	$(DOCKER_COMPOSE_CMD) run specialist-publisher bundle exec rake publishing_api:publish_finders
 	$(DOCKER_COMPOSE_CMD) run travel-advice-publisher bundle exec rake db:seed
