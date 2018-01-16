@@ -91,7 +91,7 @@ services:
 
   rummager-worker:
     << : *rummager
-    command: bundle exec foreman worker
+    command: bundle exec foreman run worker
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -107,7 +107,7 @@ services:
 
   rummager-listener-publishing-queue:
     << : *rummager
-    command: bundle exec foreman publishing-queue-listener
+    command: bundle exec foreman run publishing-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -119,7 +119,7 @@ services:
 
   rummager-listener-insert-data:
     << : *rummager
-    command: bundle exec foreman govuk-index-queue-listener
+    command: bundle exec foreman run govuk-index-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -131,7 +131,7 @@ services:
 
   rummager-listener-bulk-insert-data:
     << : *rummager
-    command: bundle exec foreman bulk-reindex-queue-listener
+    command: bundle exec foreman run bulk-reindex-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
