@@ -91,7 +91,7 @@ services:
 
   rummager-worker:
     << : *rummager
-    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    command: bundle exec foreman worker
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -107,7 +107,7 @@ services:
 
   rummager-listener-publishing-queue:
     << : *rummager
-    command: bundle exec rake message_queue:listen_to_publishing_queue
+    command: bundle exec foreman publishing-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -119,7 +119,7 @@ services:
 
   rummager-listener-insert-data:
     << : *rummager
-    command: bundle exec rake message_queue:insert_data_into_govuk
+    command: bundle exec foreman govuk-index-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -131,7 +131,7 @@ services:
 
   rummager-listener-bulk-insert-data:
     << : *rummager
-    command: bundle exec rake message_queue:bulk_insert_data_into_govuk
+    command: bundle exec foreman bulk-reindex-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
