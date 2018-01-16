@@ -1,4 +1,4 @@
-feature "Adding a taxon to external content", new: true, collections: true, content_tagger: true, publisher: true do
+feature "Adding a taxon to external content", skip: true, new: true, collections: true, content_tagger: true, publisher: true do
   include ContentTaggerHelpers
   include PublisherHelpers
 
