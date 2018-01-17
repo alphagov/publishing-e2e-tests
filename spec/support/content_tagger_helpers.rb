@@ -12,4 +12,10 @@ module ContentTaggerHelpers
     click_link "Publish"
     click_button "Confirm publish"
   end
+
+  def visit_tag_external_content_page(slug:)
+    visit(Plek.find("content-tagger") + "/taggings/lookup")
+    fill_in "content_lookup_form_base_path", with: "/" + slug
+    click_button "Edit page"
+  end
 end
