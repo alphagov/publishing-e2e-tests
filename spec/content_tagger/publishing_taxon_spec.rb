@@ -1,4 +1,4 @@
-feature "Publishing a taxon on Content Tagger", new: true, collections: true, content_tagger: true do
+feature "Publishing a taxon on Content Tagger", collections: true, content_tagger: true do
   include ContentTaggerHelpers
 
   let(:title) { "Publishing a taxon #{SecureRandom.uuid}" }
