@@ -1,6 +1,12 @@
 feature "Publishing content from Publisher to Frontend", flaky: true, publisher: true, frontend: true do
   include PublisherHelpers
 
+  around do |spec|
+    Capybara.current_driver = :poltergeist_logging
+    spec.run
+    Capybara.use_default_driver
+  end
+
   let(:title) { title_with_timestamp }
   let(:slug) { "publishing-content-publisher-to-frontend-#{SecureRandom.uuid}" }
   let(:subpart_title) { title_with_timestamp }
