@@ -67,6 +67,7 @@ services:
       test: "curl --silent --fail localhost:9200/_cluster/health || exit 1"
 
   rummager: &rummager
+    image: govuk/rummager:${RUMMAGER_COMMITISH:-master}
     build: apps/rummager
     command: bundle exec unicorn -p 3009
     depends_on:
@@ -151,6 +152,7 @@ services:
       - ./tmp:/app/tmp
 
   router: &router
+    image: govuk/router:${ROUTER_COMMITISH:-master}
     build: apps/router
     environment:
       VIRTUAL_HOST: www.dev.gov.uk
@@ -189,6 +191,7 @@ services:
       - "3155"
 
   router-api: &router-api
+    image: govuk/router-api:${ROUTER_API_COMMITISH:-master}
     build: apps/router-api
     command: bundle exec unicorn -p 3056
     depends_on:
@@ -226,6 +229,7 @@ services:
       - "3156"
 
   content-store: &content-store
+    image: govuk/content-store:${CONTENT_STORE_COMMITISH:-master}
     build: apps/content-store
     command: bundle exec unicorn -p 3068
     depends_on:
@@ -268,6 +272,7 @@ services:
       - "3100"
 
   publishing-api:
+    image: govuk/publishing-api:${PUBLISHING_API_COMMITISH:-master}
     build: apps/publishing-api
     command: bundle exec unicorn -p 3093
     depends_on:
@@ -291,6 +296,7 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   publishing-api-worker:
+    image: govuk/publishing-api:${PUBLISHING_API_COMMITISH:-master}
     build: apps/publishing-api
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
@@ -317,10 +323,9 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
+    image: govuk/specialist-publisher:${SPECIALIST_PUBLISHER_COMMITISH:-master}
     build:
       context: apps/specialist-publisher
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3064
     depends_on:
       - publishing-api
@@ -343,10 +348,9 @@ services:
       - ./apps/specialist-publisher/log:/app/log
 
   travel-advice-publisher: &travel-advice-publisher
+    image: govuk/travel-advice-publisher:${TRAVEL_ADVICE_PUBLISHER_COMMITISH:-master}
     build:
       context: apps/travel-advice-publisher
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3035
     depends_on:
       - publishing-api
@@ -386,10 +390,9 @@ services:
     ports: []
 
   collections-publisher: &collections-publisher
+    image: govuk/collections-publisher:${COLLECTIONS_PUBLISHER_COMMITISH:-master}
     build:
       context: apps/collections-publisher
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3071
     depends_on:
       - publishing-api
@@ -425,10 +428,9 @@ services:
     ports: []
 
   collections: &collections
+    image: govuk/collections:${COLLECTIONS_COMMITISH:-master}
     build:
       context: apps/collections
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3070
     depends_on:
       - content-store
@@ -471,10 +473,9 @@ services:
       - "3170"
 
   publisher: &publisher
+    image: govuk/publisher:${PUBLISHER_COMMITISH:-master}
     build:
       context: apps/publisher
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3000
     depends_on:
       - publishing-api
@@ -516,10 +517,9 @@ services:
     ports: []
 
   frontend: &frontend
+    image: govuk/frontend:${FRONTEND_COMMITISH:-master}
     build:
       context: apps/frontend
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3005
     depends_on:
       - content-store
@@ -564,10 +564,9 @@ services:
       - "3105"
 
   manuals-publisher: &manuals-publisher
+    image: govuk/manuals-publisher:${MANUALS_PUBLISHER_COMMITISH:-master}
     build:
       context: apps/manuals-publisher
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3205
     depends_on:
       - publishing-api
@@ -607,10 +606,9 @@ services:
     ports: []
 
   manuals-frontend: &manuals-frontend
+    image: govuk/manuals-frontend:${MANUALS_FRONTEND_COMMITISH:-master}
     build:
       context: apps/manuals-frontend
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3072
     depends_on:
       - content-store
@@ -649,10 +647,9 @@ services:
       - "3172"
 
   calendars: &calendars
+    image: govuk/calendars:${CALENDARS_COMMITISH:-master}
     build:
       context: apps/calendars
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3011
     depends_on:
       - rummager
@@ -676,10 +673,9 @@ services:
       - ./apps/calendars/log:/app/log
 
   whitehall: &whitehall
+    image: govuk/whitehall:${WHITEHALL_COMMITISH:-master}
     build:
       context: apps/whitehall
-      args:
-        - COMPILE_ASSETS
     command: bundle exec unicorn -p 3020
     depends_on:
       - publishing-api
@@ -706,6 +702,7 @@ services:
   # TODO: When adding E2E specs for Whitehall, it is likely we'll need to create a service for the Whitehall workers.
 
   content-tagger: &content-tagger
+    image: govuk/content-tagger:${CONTENT_TAGGER_COMMITISH:-master}
     build: apps/content-tagger
     depends_on:
       - content-tagger-worker
@@ -738,6 +735,7 @@ services:
     ports: []
 
   asset-manager: &asset-manager
+    image: govuk/asset-manager:${ASSET_MANAGER_COMMITISH:-master}
     build: apps/asset-manager
     command: bundle exec unicorn -p 3037
     depends_on:
@@ -777,6 +775,7 @@ services:
     ports: []
 
   static: &static
+    image: govuk/static:${STATIC_COMMITISH:-master}
     build: apps/static
     command: bundle exec unicorn -p 3013
     depends_on:
@@ -810,6 +809,7 @@ services:
   # draft-finder-frontend:
 
   government-frontend: &government-frontend
+    image: govuk/government-frontend:${GOVERNMENT_FRONTEND_COMMITISH:-master}
     build: apps/government-frontend
     command: bundle exec unicorn -p 3090
     depends_on:
