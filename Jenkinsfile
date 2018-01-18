@@ -189,6 +189,14 @@ timestamps {
        error(reason)
     }
 
+    def tagFromCommitish = { commitish ->
+      if (commitish != DEFAULT_COMMITISH) {
+        "commit-sha-" + commitish
+      } else {
+        commitish
+      }
+    }
+
     lock("publishing-e2e-tests-$NODE_NAME") {
       withEnv([
         "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
@@ -209,6 +217,24 @@ timestamps {
         "MANUALS_PUBLISHER_COMMITISH=${params.MANUALS_PUBLISHER_COMMITISH}",
         "MANUALS_FRONTEND_COMMITISH=${params.MANUALS_FRONTEND_COMMITISH}",
         "WHITEHALL_COMMITISH=${params.WHITEHALL_COMMITISH}",
+        "ASSET_MANAGER_DOCKER_TAG=${tagFromCommitish(params.ASSET_MANAGER_COMMITISH)}",
+        "CONTENT_STORE_DOCKER_TAG=${tagFromCommitish(params.CONTENT_STORE_COMMITISH)}",
+        "CONTENT_TAGGER_DOCKER_TAG=${tagFromCommitish(params.CONTENT_TAGGER_COMMITISH)}",
+        "GOVERNMENT_FRONTEND_DOCKER_TAG=${tagFromCommitish(params.GOVERNMENT_FRONTEND_COMMITISH)}",
+        "PUBLISHING_API_DOCKER_TAG=${tagFromCommitish(params.PUBLISHING_API_COMMITISH)}",
+        "ROUTER_API_DOCKER_TAG=${tagFromCommitish(params.ROUTER_API_COMMITISH)}",
+        "RUMMAGER_DOCKER_TAG=${tagFromCommitish(params.RUMMAGER_COMMITISH)}",
+        "SPECIALIST_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.SPECIALIST_PUBLISHER_COMMITISH)}",
+        "STATIC_DOCKER_TAG=${tagFromCommitish(params.STATIC_COMMITISH)}",
+        "TRAVEL_ADVICE_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.TRAVEL_ADVICE_PUBLISHER_COMMITISH)}",
+        "COLLECTIONS_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.COLLECTIONS_PUBLISHER_COMMITISH)}",
+        "COLLECTIONS_DOCKER_TAG=${tagFromCommitish(params.COLLECTIONS_COMMITISH)}",
+        "PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.PUBLISHER_COMMITISH)}",
+        "FRONTEND_DOCKER_TAG=${tagFromCommitish(params.FRONTEND_COMMITISH)}",
+        "CALENDARS_DOCKER_TAG=${tagFromCommitish(params.CALENDARS_COMMITISH)}",
+        "MANUALS_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.MANUALS_PUBLISHER_COMMITISH)}",
+        "MANUALS_FRONTEND_DOCKER_TAG=${tagFromCommitish(params.MANUALS_FRONTEND_COMMITISH)}",
+        "WHITEHALL_DOCKER_TAG=${tagFromCommitish(params.WHITEHALL_COMMITISH)}",
       ]) {
         try {
           originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
