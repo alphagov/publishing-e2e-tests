@@ -1,4 +1,4 @@
-feature "Unpublishing with Specialist Publisher", specialist_publisher: true, government_frontend: true do
+feature "Unpublishing with Specialist Publisher", flaky: true, specialist_publisher: true, government_frontend: true do
   include SpecialistPublisherHelpers
 
   let(:title) { "Unpublishing Specialist Publisher #{SecureRandom.uuid}" }
