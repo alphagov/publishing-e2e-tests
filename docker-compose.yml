@@ -271,7 +271,7 @@ services:
     ports:
       - "3100"
 
-  publishing-api:
+  publishing-api: &publishing-api
     image: govuk/publishing-api:${PUBLISHING_API_COMMITISH:-master}
     build: apps/publishing-api
     command: bundle exec unicorn -p 3093
@@ -296,8 +296,7 @@ services:
       - ./apps/publishing-api/log:/app/log
 
   publishing-api-worker:
-    image: govuk/publishing-api:${PUBLISHING_API_COMMITISH:-master}
-    build: apps/publishing-api
+    << : *publishing-api
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - content-store
@@ -318,9 +317,6 @@ services:
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
     ports: []
-    volumes:
-      - ./apps/govuk-content-schemas:/govuk-content-schemas
-      - ./apps/publishing-api/log:/app/log
 
   specialist-publisher:
     image: govuk/specialist-publisher:${SPECIALIST_PUBLISHER_COMMITISH:-master}
