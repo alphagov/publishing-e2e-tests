@@ -114,12 +114,19 @@ timestamps {
        error(reason)
     }
 
+    appsToBuild = []
     apps.each { app ->
       commitishConstant = "${app.constantPrefix}_COMMITISH"
 
       commitish = params[commitishConstant].trim()
       govuk.setEnvar(commitishConstant, commitish)
+
+      if (commitish != app.defaultCommitish) {
+        appsToBuild << app.app
+      }
     }
+
+    govuk.setEnvar("APPS_TO_BUILD", appsToBuild.join(" "))
 
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {

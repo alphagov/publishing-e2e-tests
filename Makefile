@@ -29,7 +29,7 @@ kill:
 	$(DOCKER_COMPOSE_CMD) rm -f
 
 build: kill
-	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests
+	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
 setup:
 	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
