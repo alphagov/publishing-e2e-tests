@@ -162,7 +162,12 @@ timestamps {
           sh("make pull")
           sh("make build")
         }
+      } catch(e) {
+        failBuild()
+        throw e
+      }
 
+      try {
         stage("Start docker apps") {
           try {
             sh("make start")
