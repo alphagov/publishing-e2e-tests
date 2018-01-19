@@ -16,6 +16,9 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
   def given_there_is_a_draft_manual_with_a_section
     create_draft_manual(title: title)
     create_manual_section(title: section_title)
+
+    url = find_link("Preview draft")[:href]
+    reload_url_until_match(url, :has_text?, section_title)
   end
 
   def when_i_upload_an_attachment
@@ -38,10 +41,6 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
   end
 
   def then_i_can_access_the_attachment_through_the_draft
-    url = find_link("Preview draft")[:href]
-
-    reload_url_until_status_code(url, 200)
-
     click_link("Preview draft")
 
     section_url = find_link(section_title)[:href]
