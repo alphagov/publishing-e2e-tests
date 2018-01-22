@@ -189,128 +189,155 @@ timestamps {
        error(reason)
     }
 
-    lock("publishing-e2e-tests-$NODE_NAME") {
-      try {
-        originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
-
-        stage("Checkout") {
-          checkout(scm)
-        }
-
-        stage("Bundle Gems") {
-          govuk.bundleApp()
-        }
-
-        stage("Ruby Lint") {
-          govuk.rubyLinter("spec lib")
-        }
-
-      } catch(e) {
-        failBuild()
-        throw e
+    def tagFromCommitish = { commitish ->
+      if (commitish != DEFAULT_COMMITISH) {
+        "commit-sha-" + commitish
+      } else {
+        commitish
       }
+    }
 
-      try {
-        stage("Clone applications") {
-          withEnv([
-            "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
-            "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
-            "CONTENT_TAGGER_COMMITISH=${params.CONTENT_TAGGER_COMMITISH}",
-            "GOVERNMENT_FRONTEND_COMMITISH=${params.GOVERNMENT_FRONTEND_COMMITISH}",
-            "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
-            "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
-            "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
-            "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
-            "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
-            "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
-            "COLLECTIONS_PUBLISHER_COMMITISH=${params.COLLECTIONS_PUBLISHER_COMMITISH}",
-            "COLLECTIONS_COMMITISH=${params.COLLECTIONS_COMMITISH}",
-            "PUBLISHER_COMMITISH=${params.PUBLISHER_COMMITISH}",
-            "FRONTEND_COMMITISH=${params.FRONTEND_COMMITISH}",
-            "CALENDARS_COMMITISH=${params.CALENDARS_COMMITISH}",
-            "MANUALS_PUBLISHER_COMMITISH=${params.MANUALS_PUBLISHER_COMMITISH}",
-            "MANUALS_FRONTEND_COMMITISH=${params.MANUALS_FRONTEND_COMMITISH}",
-            "WHITEHALL_COMMITISH=${params.WHITEHALL_COMMITISH}",
-          ]) {
+    lock("publishing-e2e-tests-$NODE_NAME") {
+      withEnv([
+        "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
+        "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
+        "CONTENT_TAGGER_COMMITISH=${params.CONTENT_TAGGER_COMMITISH}",
+        "GOVERNMENT_FRONTEND_COMMITISH=${params.GOVERNMENT_FRONTEND_COMMITISH}",
+        "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
+        "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
+        "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
+        "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
+        "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
+        "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
+        "COLLECTIONS_PUBLISHER_COMMITISH=${params.COLLECTIONS_PUBLISHER_COMMITISH}",
+        "COLLECTIONS_COMMITISH=${params.COLLECTIONS_COMMITISH}",
+        "PUBLISHER_COMMITISH=${params.PUBLISHER_COMMITISH}",
+        "FRONTEND_COMMITISH=${params.FRONTEND_COMMITISH}",
+        "CALENDARS_COMMITISH=${params.CALENDARS_COMMITISH}",
+        "MANUALS_PUBLISHER_COMMITISH=${params.MANUALS_PUBLISHER_COMMITISH}",
+        "MANUALS_FRONTEND_COMMITISH=${params.MANUALS_FRONTEND_COMMITISH}",
+        "WHITEHALL_COMMITISH=${params.WHITEHALL_COMMITISH}",
+        "ASSET_MANAGER_DOCKER_TAG=${tagFromCommitish(params.ASSET_MANAGER_COMMITISH)}",
+        "CONTENT_STORE_DOCKER_TAG=${tagFromCommitish(params.CONTENT_STORE_COMMITISH)}",
+        "CONTENT_TAGGER_DOCKER_TAG=${tagFromCommitish(params.CONTENT_TAGGER_COMMITISH)}",
+        "GOVERNMENT_FRONTEND_DOCKER_TAG=${tagFromCommitish(params.GOVERNMENT_FRONTEND_COMMITISH)}",
+        "PUBLISHING_API_DOCKER_TAG=${tagFromCommitish(params.PUBLISHING_API_COMMITISH)}",
+        "ROUTER_API_DOCKER_TAG=${tagFromCommitish(params.ROUTER_API_COMMITISH)}",
+        "RUMMAGER_DOCKER_TAG=${tagFromCommitish(params.RUMMAGER_COMMITISH)}",
+        "SPECIALIST_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.SPECIALIST_PUBLISHER_COMMITISH)}",
+        "STATIC_DOCKER_TAG=${tagFromCommitish(params.STATIC_COMMITISH)}",
+        "TRAVEL_ADVICE_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.TRAVEL_ADVICE_PUBLISHER_COMMITISH)}",
+        "COLLECTIONS_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.COLLECTIONS_PUBLISHER_COMMITISH)}",
+        "COLLECTIONS_DOCKER_TAG=${tagFromCommitish(params.COLLECTIONS_COMMITISH)}",
+        "PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.PUBLISHER_COMMITISH)}",
+        "FRONTEND_DOCKER_TAG=${tagFromCommitish(params.FRONTEND_COMMITISH)}",
+        "CALENDARS_DOCKER_TAG=${tagFromCommitish(params.CALENDARS_COMMITISH)}",
+        "MANUALS_PUBLISHER_DOCKER_TAG=${tagFromCommitish(params.MANUALS_PUBLISHER_COMMITISH)}",
+        "MANUALS_FRONTEND_DOCKER_TAG=${tagFromCommitish(params.MANUALS_FRONTEND_COMMITISH)}",
+        "WHITEHALL_DOCKER_TAG=${tagFromCommitish(params.WHITEHALL_COMMITISH)}",
+      ]) {
+        try {
+          originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
+
+          stage("Checkout") {
+            checkout(scm)
+          }
+
+          stage("Bundle Gems") {
+            govuk.bundleApp()
+          }
+
+          stage("Ruby Lint") {
+            govuk.rubyLinter("spec lib")
+          }
+
+        } catch(e) {
+          failBuild()
+          throw e
+        }
+
+        try {
+          stage("Clone applications") {
             sh("make clone -j4")
           }
-        }
-      } catch(e) {
-        abortBuild("Publishing end-to-end tests could not clone all repositories")
-      }
-
-      try {
-        stage("Build docker environment") {
-          sh("make build")
+        } catch(e) {
+          abortBuild("Publishing end-to-end tests could not clone all repositories")
         }
 
-        stage("Start docker apps") {
-          try {
-            sh("make start")
-          } catch(e) {
-            echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
-            throw e
-          }
-        }
-
-        stage("Run flaky/new tests") {
-          echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
-          try {
-            sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
-          } catch(err) {
-            // Send a slack message just when tests fail within docker context
-            def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
-            message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-            slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
-          }
-        }
-
-        stage("Run tests") {
-          echo "Running tests with `make ${params.TEST_COMMAND}`"
-          sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
-        }
-
-        if (env.BRANCH_NAME == "master") {
-          echo 'Pushing to test-against branch'
-          sshagent(['govuk-ci-ssh-key']) {
-            sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
-          }
-        }
-
-        originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
-
-      } catch (e) {
-        failBuild()
-
-        echo("Did this fail due to a flaky test? See: https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md")
-        // Send a slack message just when tests fail within docker context
-        def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
-        message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-        slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
-
-        throw e
-      } finally {
-        stage("Make logs available") {
-          errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
-          if (errors == 0) {
-            echo("The following errors were logged with sentry/errbit:")
-            sh("cat tmp/errors.log")
-          } else {
-            echo("No errors were sent to sentry/errbit")
+        try {
+          stage("Build docker environment") {
+            sh("make pull")
+            sh("make build")
           }
 
-          echo("dumping docker log")
-          sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
+          stage("Start docker apps") {
+            try {
+              sh("make start")
+            } catch(e) {
+              echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
+              throw e
+            }
+          }
 
-          archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
-        }
+          stage("Run flaky/new tests") {
+            echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
+            try {
+              sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
+            } catch(err) {
+              // Send a slack message just when tests fail within docker context
+              def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
+              message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+              slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+            }
+          }
 
-        stage("Stop Docker") {
-          sh("make stop")
-        }
+          stage("Run tests") {
+            echo "Running tests with `make ${params.TEST_COMMAND}`"
+            sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
+          }
 
-        stage("JUnit") {
-          junit 'tmp/rspec*.xml'
+          if (env.BRANCH_NAME == "master") {
+            echo 'Pushing to test-against branch'
+            sshagent(['govuk-ci-ssh-key']) {
+              sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
+            }
+          }
+
+          originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
+
+        } catch (e) {
+          failBuild()
+
+          echo("Did this fail due to a flaky test? See: https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md")
+          // Send a slack message just when tests fail within docker context
+          def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
+          message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+          slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+
+          throw e
+        } finally {
+          stage("Make logs available") {
+            errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
+            if (errors == 0) {
+              echo("The following errors were logged with sentry/errbit:")
+              sh("cat tmp/errors.log")
+            } else {
+              echo("No errors were sent to sentry/errbit")
+            }
+
+            echo("dumping docker log")
+            sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
+
+            archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
+          }
+
+          stage("Stop Docker") {
+            sh("make stop")
+          }
+
+          stage("JUnit") {
+            junit 'tmp/rspec*.xml'
+          }
         }
       }
     }

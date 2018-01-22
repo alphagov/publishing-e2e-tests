@@ -17,7 +17,7 @@ endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
 
-all: clone build start test stop
+all: clone pull build start test stop
 
 $(APPS):
 	bin/clone-app $@
@@ -29,7 +29,7 @@ kill:
 	$(DOCKER_COMPOSE_CMD) rm -f
 
 build: kill
-	COMPILE_ASSETS=true $(DOCKER_COMPOSE_CMD) build
+	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests
 
 setup:
 	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
@@ -55,6 +55,9 @@ setup:
 
 up:
 	$(DOCKER_COMPOSE_CMD) up -d
+
+pull:
+	$(DOCKER_COMPOSE_CMD) pull --parallel --ignore-pull-failures
 
 start: setup up
 
@@ -93,4 +96,4 @@ stop: kill
 .PHONY: all $(APPS) clone kill build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
 	test-collections-publisher test-publisher test-manuals-publisher \
-	test-frontend
+	test-frontend pull
