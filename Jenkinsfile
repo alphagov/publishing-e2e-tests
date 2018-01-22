@@ -3,10 +3,43 @@
 REPOSITORY = "publishing-e2e-tests"
 DEFAULT_COMMITISH = "deployed-to-production"
 
+def apps = [
+  [constantPrefix: "ASSET_MANAGER", app: "asset-manager", name: "Asset Manager"],
+  [constantPrefix: "CALENDARS", app: "calendars", name: "Calendars"],
+  [constantPrefix: "COLLECTIONS", app: "collections", name: "Collections"],
+  [constantPrefix: "COLLECTIONS_PUBLISHER", app: "collections-publisher", name: "Collections Publisher"],
+  [constantPrefix: "CONTENT_STORE", app: "content-store", name: "Content Store"],
+  [constantPrefix: "CONTENT_TAGGER", app: "content-tagger", name: "Content Tagger"],
+  [constantPrefix: "FRONTEND", app: "frontend", name: "Frontend"],
+  [constantPrefix: "GOVERNMENT_FRONTEND", app: "government-frontend", name: "Government Frontend"],
+  [constantPrefix: "MANUALS_FRONTEND", app: "manuals-frontend", name: "Manuals Frontend"],
+  [constantPrefix: "MANUALS_PUBLISHER", app: "manuals-publisher", name: "Manuals Publisher"],
+  [constantPrefix: "PUBLISHER", app: "publisher", name: "Publisher"],
+  [constantPrefix: "PUBLISHING_API", app: "publishing-api", name: "Publishing API"],
+  [constantPrefix: "ROUTER", app: "router", name: "Router", defaultCommitish: "master"],
+  [constantPrefix: "ROUTER_API", app: "router-api", name: "Router API"],
+  [constantPrefix: "RUMMAGER", app: "rummager", name: "Rummager"],
+  [constantPrefix: "SPECIALIST_PUBLISHER", app: "specialist-publisher", name: "Specialist Publisher"],
+  [constantPrefix: "STATIC", app: "static", name: "Static"],
+  [constantPrefix: "TRAVEL_ADVICE_PUBLISHER", app: "travel-advice-publisher", name: "Travel Advice Publisher"],
+  [constantPrefix: "WHITEHALL", app: "whitehall", name: "Whitehall"],
+].each { app -> app.defaultCommitish = app.defaultCommitish ?: DEFAULT_COMMITISH }
+
 timestamps {
   node("publishing-e2e-tests") {
 
     def govuk = load("/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy")
+
+    appDefaultCommits = [:]
+    appParams = apps.collect { app ->
+      appDefaultCommits["${app.constantPrefix}_COMMITISH"] = app.defaultCommitish
+
+      stringParam(
+        defaultValue: app.defaultCommitish,
+        description: "Which commit/branch/tag of ${app.name} to clone",
+        name: "${app.constantPrefix}_COMMITISH"
+      )
+    }
 
     properties([
       [$class: "BuildDiscarderProperty",
@@ -40,98 +73,8 @@ timestamps {
           defaultValue: "6",
           description: "Set number of processes for parallel testing",
           name: "TEST_PROCESSES"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of asset-manager to clone",
-          name: "ASSET_MANAGER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of content-store to clone",
-          name: "CONTENT_STORE_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of content-tagger to clone",
-          name: "CONTENT_TAGGER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of government-frontend to clone",
-          name: "GOVERNMENT_FRONTEND_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of publishing-api to clone",
-          name: "PUBLISHING_API_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of router-api to clone",
-          name: "ROUTER_API_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of rummager to clone",
-          name: "RUMMAGER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of specialist-publisher to clone",
-          name: "SPECIALIST_PUBLISHER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of static to clone",
-          name: "STATIC_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of travel-advice-publisher to clone",
-          name: "TRAVEL_ADVICE_PUBLISHER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of collections-publisher to clone",
-          name: "COLLECTIONS_PUBLISHER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of collections to clone",
-          name: "COLLECTIONS_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of publisher to clone",
-          name: "PUBLISHER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of frontend to clone",
-          name: "FRONTEND_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of calendars to clone",
-          name: "CALENDARS_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of manuals-publisher to clone",
-          name: "MANUALS_PUBLISHER_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of manuals-frontend to clone",
-          name: "MANUALS_FRONTEND_COMMITISH"
-        ),
-        stringParam(
-          defaultValue: DEFAULT_COMMITISH,
-          description: "Which commit/branch/tag of whitehall to clone",
-          name: "WHITEHALL_COMMITISH"
-        ),
-      ])
+        )
+      ] + appParams)
     ])
 
     govuk.initializeParameters([
@@ -139,26 +82,8 @@ timestamps {
       "ORIGIN_COMMIT": "",
       "TEST_COMMAND": "test",
       "TEST_ARGS": "",
-      "TEST_PROCESSES": "6",
-      "ASSET_MANAGER_COMMITISH": DEFAULT_COMMITISH,
-      "CONTENT_STORE_COMMITISH": DEFAULT_COMMITISH,
-      "CONTENT_TAGGER_COMMITISH": DEFAULT_COMMITISH,
-      "GOVERNMENT_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
-      "PUBLISHING_API_COMMITISH": DEFAULT_COMMITISH,
-      "ROUTER_API_COMMITISH": DEFAULT_COMMITISH,
-      "RUMMAGER_COMMITISH": DEFAULT_COMMITISH,
-      "SPECIALIST_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
-      "STATIC_COMMITISH": DEFAULT_COMMITISH,
-      "TRAVEL_ADVICE_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
-      "COLLECTIONS_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
-      "COLLECTIONS_COMMITISH": DEFAULT_COMMITISH,
-      "PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
-      "FRONTEND_COMMITISH": DEFAULT_COMMITISH,
-      "CALENDARS_COMMITISH": DEFAULT_COMMITISH,
-      "MANUALS_PUBLISHER_COMMITISH": DEFAULT_COMMITISH,
-      "MANUALS_FRONTEND_COMMITISH": DEFAULT_COMMITISH,
-      "WHITEHALL_COMMITISH": DEFAULT_COMMITISH,
-    ])
+      "TEST_PROCESSES": "6"] + appDefaultCommits
+    )
 
     def originBuildStatus = { message, status ->
       if (params.ORIGIN_REPO && params.ORIGIN_COMMIT) {
@@ -189,6 +114,20 @@ timestamps {
        error(reason)
     }
 
+    appsToBuild = []
+    apps.each { app ->
+      commitishConstant = "${app.constantPrefix}_COMMITISH"
+
+      commitish = params[commitishConstant].trim()
+      govuk.setEnvar(commitishConstant, commitish)
+
+      if (commitish != app.defaultCommitish) {
+        appsToBuild << app.app
+      }
+    }
+
+    govuk.setEnvar("APPS_TO_BUILD", appsToBuild.join(" "))
+
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {
         originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
@@ -212,28 +151,7 @@ timestamps {
 
       try {
         stage("Clone applications") {
-          withEnv([
-            "ASSET_MANAGER_COMMITISH=${params.ASSET_MANAGER_COMMITISH}",
-            "CONTENT_STORE_COMMITISH=${params.CONTENT_STORE_COMMITISH}",
-            "CONTENT_TAGGER_COMMITISH=${params.CONTENT_TAGGER_COMMITISH}",
-            "GOVERNMENT_FRONTEND_COMMITISH=${params.GOVERNMENT_FRONTEND_COMMITISH}",
-            "PUBLISHING_API_COMMITISH=${params.PUBLISHING_API_COMMITISH}",
-            "ROUTER_API_COMMITISH=${params.ROUTER_API_COMMITISH}",
-            "RUMMAGER_COMMITISH=${params.RUMMAGER_COMMITISH}",
-            "SPECIALIST_PUBLISHER_COMMITISH=${params.SPECIALIST_PUBLISHER_COMMITISH}",
-            "STATIC_COMMITISH=${params.STATIC_COMMITISH}",
-            "TRAVEL_ADVICE_PUBLISHER_COMMITISH=${params.TRAVEL_ADVICE_PUBLISHER_COMMITISH}",
-            "COLLECTIONS_PUBLISHER_COMMITISH=${params.COLLECTIONS_PUBLISHER_COMMITISH}",
-            "COLLECTIONS_COMMITISH=${params.COLLECTIONS_COMMITISH}",
-            "PUBLISHER_COMMITISH=${params.PUBLISHER_COMMITISH}",
-            "FRONTEND_COMMITISH=${params.FRONTEND_COMMITISH}",
-            "CALENDARS_COMMITISH=${params.CALENDARS_COMMITISH}",
-            "MANUALS_PUBLISHER_COMMITISH=${params.MANUALS_PUBLISHER_COMMITISH}",
-            "MANUALS_FRONTEND_COMMITISH=${params.MANUALS_FRONTEND_COMMITISH}",
-            "WHITEHALL_COMMITISH=${params.WHITEHALL_COMMITISH}",
-          ]) {
-            sh("make clone -j4")
-          }
+          sh("make clone -j4")
         }
       } catch(e) {
         abortBuild("Publishing end-to-end tests could not clone all repositories")
@@ -241,9 +159,15 @@ timestamps {
 
       try {
         stage("Build docker environment") {
+          sh("make pull")
           sh("make build")
         }
+      } catch(e) {
+        failBuild()
+        throw e
+      }
 
+      try {
         stage("Start docker apps") {
           try {
             sh("make start")
