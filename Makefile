@@ -2,7 +2,8 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher calendars \
-	manuals-publisher manuals-frontend whitehall content-tagger
+	manuals-publisher manuals-frontend whitehall content-tagger \
+	contacts-admin finder-frontend
 
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
 TEST_PROCESSES := 1
@@ -42,14 +43,15 @@ setup:
 	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake setup_rabbitmq_rummager
 	$(DOCKER_COMPOSE_CMD) run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
 	$(DOCKER_COMPOSE_CMD) run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
+	$(DOCKER_COMPOSE_CMD) run whitehall bundle exec rake db:create db:purge db:setup
 	$(DOCKER_COMPOSE_CMD) run -e RUN_SEEDS_IN_PRODUCTION=true specialist-publisher bundle exec rake db:seed
 	$(DOCKER_COMPOSE_CMD) run specialist-publisher bundle exec rake publishing_api:publish_finders
 	$(DOCKER_COMPOSE_CMD) run travel-advice-publisher bundle exec rake db:seed
 	$(DOCKER_COMPOSE_CMD) run manuals-publisher bundle exec rake db:seed
 	$(DOCKER_COMPOSE_CMD) run collections-publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run contacts-admin bundle exec rake db:setup finders:publish
 	$(DOCKER_COMPOSE_CMD) run publisher bundle exec rake db:setup
 	$(DOCKER_COMPOSE_CMD) run frontend bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run whitehall bundle exec rake db:create db:purge db:setup
 	$(DOCKER_COMPOSE_CMD) run content-tagger bundle exec rake db:setup
 	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake wait_for_router
 

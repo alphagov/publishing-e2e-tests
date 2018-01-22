@@ -64,6 +64,14 @@ services:
     ports:
       - "33070:3070"
 
+  contacts-admin:
+    ports:
+      - "33051:3051"
+
+  finder-frontend:
+    ports:
+      - "33062:3062"
+
   draft-collections:
     ports:
       - "33170:3170"
@@ -123,4 +131,3 @@ services:
   draft-government-frontend:
     ports:
       - "33190:3190"
-
