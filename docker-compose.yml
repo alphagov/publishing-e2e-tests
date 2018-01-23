@@ -167,6 +167,7 @@ services:
       - nginx-proxy:calendars.dev.gov.uk
       - nginx-proxy:manuals-frontend.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
+      - nginx-proxy:finder-frontend.dev.gov.uk
     ports:
       - "3054"
       - "3055"
