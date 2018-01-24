@@ -468,6 +468,53 @@ services:
     ports:
       - "3170"
 
+  contacts-admin:
+    image: govuk/contacts:${CONTACTS_ADMIN_COMMITISH:-master}
+    build:
+      context: apps/contacts-admin
+    depends_on:
+      - publishing-api
+      - mysql
+      - rummager
+      - diet-error-handler
+      - whitehall
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: contacts-admin
+      VIRTUAL_HOST: contacts-admin.dev.gov.uk
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:whitehall-admin.dev.gov.uk
+    ports:
+      - "3051"
+    volumes:
+      - ./apps/contacts-admin/log:/app/log
+
+  finder-frontend:
+    image: govuk/finder-frontend:${FINDER_FRONTEND_COMMITISH:-master}
+    build:
+      context: apps/finder-frontend
+    depends_on:
+      - content-store
+      - static
+      - rummager
+      - diet-error-handler
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: finder-frontend
+      VIRTUAL_HOST: finder-frontend.dev.gov.uk
+    links:
+      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    ports:
+      - "3062"
+    volumes:
+      - ./apps/finder-frontend/log:/app/log
+
   publisher: &publisher
     image: govuk/publisher:${PUBLISHER_COMMITISH:-master}
     build:
@@ -857,10 +904,12 @@ services:
       - government-frontend
       - draft-government-frontend
       - travel-advice-publisher
+      - contacts-admin
       - content-tagger
       - collections-publisher
       - collections
       - publisher
+      - finder-frontend
       - frontend
       - draft-frontend
       - manuals-publisher
@@ -875,9 +924,9 @@ services:
       - nginx-proxy:specialist-publisher.dev.gov.uk
       - nginx-proxy:travel-advice-publisher.dev.gov.uk
       - nginx-proxy:collections-publisher.dev.gov.uk
-      - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:publisher.dev.gov.uk
       - nginx-proxy:manuals-publisher.dev.gov.uk
       - nginx-proxy:content-tagger.dev.gov.uk
+      - nginx-proxy:contacts-admin.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
