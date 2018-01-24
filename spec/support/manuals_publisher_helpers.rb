@@ -7,7 +7,7 @@ module ManualsPublisherHelpers
     click_button "Save as draft"
   end
 
-  def create_manual_section(title: title_with_timestamp, change_note: nil)
+  def create_manual_section(title: unique_title, change_note: nil)
     click_link "Add section"
     fill_in "Section title", with: title
     fill_in "Section summary", with: Faker::Lorem.sentence

@@ -2,7 +2,7 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
   include ManualsPublisherHelpers
 
   let(:title) { "Uploading atttachent to manual #{SecureRandom.uuid}" }
-  let(:section_title) { title_with_timestamp }
+  let(:section_title) { unique_title }
   let(:attachment_title) { "Uploading atttachent to manual attachment #{SecureRandom.uuid}" }
   let(:file) { File.expand_path("../fixtures/manuals_publisher/manuals.png", __dir__) }
 

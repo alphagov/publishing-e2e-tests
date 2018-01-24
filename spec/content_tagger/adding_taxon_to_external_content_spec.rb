@@ -16,7 +16,7 @@ feature "Adding a taxon to external content", new: true, collections: true, cont
 
   def given_there_is_a_published_guide
     create_publisher_artefact(slug: guide_slug, title: guide_title, format: "Guide")
-    add_part_to_artefact(title: title_with_timestamp)
+    add_part_to_artefact(title: unique_title)
     publish_artefact
   end
 

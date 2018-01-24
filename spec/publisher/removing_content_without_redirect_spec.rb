@@ -1,7 +1,7 @@
 feature "Removing content without a redirect from Publisher", publisher: true, government_frontend: true do
   include PublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { unique_title }
   let(:slug) { "removing-content-without-redirect-publisher-#{SecureRandom.uuid}" }
 
   scenario "Unpublishing an artefact" do
@@ -16,8 +16,8 @@ feature "Removing content without a redirect from Publisher", publisher: true, g
   def given_a_published_artefact_with_subpages
     create_publisher_artefact(slug: slug, title: title, format: "Guide")
 
-    add_part_to_artefact(title: title_with_timestamp)
-    @subpart_slug = add_part_to_artefact(title: title_with_timestamp)
+    add_part_to_artefact(title: unique_title)
+    @subpart_slug = add_part_to_artefact(title: unique_title)
 
     publish_artefact
 

@@ -2,7 +2,7 @@ feature "Updating content on Manuals Publisher", manuals_publisher: true do
   include ManualsPublisherHelpers
 
   let(:title) { "Updating a manual #{SecureRandom.uuid}" }
-  let(:section_title) { title_with_timestamp }
+  let(:section_title) { unique_title }
   let(:change_note) { sentence }
 
   scenario "Update a published manual with a new section" do

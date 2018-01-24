@@ -1,10 +1,10 @@
 require "faker"
 
 module TextHelpers
-  def title_with_timestamp
+  def unique_title
     # As quotes are changed to curly quotes by govspeak they are a pain to
     # match, so we strip them here
-    "#{Faker::Book.title.delete("'")} #{Time.now.to_i}"
+    "#{Faker::Book.title.delete("'")} #{SecureRandom.uuid}"
   end
 
   def slug_with_timestamp
