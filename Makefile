@@ -33,29 +33,30 @@ build: kill
 	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
 setup:
-	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
-	$(DOCKER_COMPOSE_CMD) run router-api bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run draft-router-api bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run content-store bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run draft-content-store bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run asset-manager bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake setup_exchange
-	$(DOCKER_COMPOSE_CMD) run rummager bundle exec rake message_queue:create_queues
-	$(DOCKER_COMPOSE_CMD) run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
-	$(DOCKER_COMPOSE_CMD) run rummager bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
-	$(DOCKER_COMPOSE_CMD) run whitehall-admin bundle exec rake db:create db:purge db:setup publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run -e RUN_SEEDS_IN_PRODUCTION=true specialist-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run specialist-publisher bundle exec rake publishing_api:publish_finders
-	$(DOCKER_COMPOSE_CMD) run travel-advice-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run manuals-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run collections-publisher bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run contacts-admin bundle exec rake db:setup finders:publish
-	$(DOCKER_COMPOSE_CMD) run publisher bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run frontend bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run content-tagger bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake wait_for_router
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
+	$(DOCKER_COMPOSE_CMD) up -d elasticsearch
+	$(DOCKER_COMPOSE_CMD) run --rm router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm draft-router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm draft-content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm asset-manager bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-api bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-api bundle exec rake setup_exchange
+	$(DOCKER_COMPOSE_CMD) run --rm rummager-worker bundle exec rake message_queue:create_queues
+	$(DOCKER_COMPOSE_CMD) run --rm -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
+	$(DOCKER_COMPOSE_CMD) run --rm rummager bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
+	$(DOCKER_COMPOSE_CMD) run --rm whitehall-admin bundle exec rake db:create db:purge db:setup publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) run --rm -e RUN_SEEDS_IN_PRODUCTION=true specialist-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run --rm specialist-publisher bundle exec rake publishing_api:publish_finders
+	$(DOCKER_COMPOSE_CMD) run --rm travel-advice-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run --rm manuals-publisher bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run --rm collections-publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm contacts-admin bundle exec rake db:setup finders:publish
+	$(DOCKER_COMPOSE_CMD) run --rm publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm frontend bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) run --rm content-tagger bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake wait_for_router
 
 up:
 	$(DOCKER_COMPOSE_CMD) up -d
