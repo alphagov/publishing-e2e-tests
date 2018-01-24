@@ -6,6 +6,7 @@ x-govuk-app-env: &govuk-app
   GDS_API_DISABLE_CACHE: "true"
   GOVUK_APP_DOMAIN: dev.gov.uk
   GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
+  GOVUK_ASSET_HOST: http://assets-origin.dev.gov.uk
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
   LOG_PATH: log/live.log
   PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
@@ -95,11 +96,15 @@ services:
     command: bundle exec foreman run worker
     depends_on:
       - diet-error-handler
+      - publishing-api
       - rabbitmq
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
       SENTRY_CURRENT_ENV: rummager-worker
+    links:
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
     ports: []
 
   rummager-listener-publishing-queue:
@@ -161,6 +166,7 @@ services:
       - nginx-proxy:frontend.dev.gov.uk
       - nginx-proxy:calendars.dev.gov.uk
       - nginx-proxy:manuals-frontend.dev.gov.uk
+      - nginx-proxy:whitehall-frontend.dev.gov.uk
     ports:
       - "3054"
       - "3055"
@@ -182,6 +188,7 @@ services:
       - nginx-proxy:draft-collections.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
       - nginx-proxy:draft-manuals-frontend.dev.gov.uk
+      - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
     ports:
       - "3154"
       - "3155"
@@ -473,7 +480,7 @@ services:
       - mysql
       - rummager
       - diet-error-handler
-      - whitehall
+      - whitehall-admin
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: contacts-admin
@@ -614,7 +621,7 @@ services:
       - asset-manager
       - manuals-publisher-worker
       - diet-error-handler
-      - whitehall
+      - whitehall-admin
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: manuals-publisher
@@ -711,34 +718,65 @@ services:
     volumes:
       - ./apps/calendars/log:/app/log
 
-  whitehall: &whitehall
+  whitehall-admin: &whitehall
     image: govuk/whitehall:${WHITEHALL_COMMITISH:-master}
     build:
       context: apps/whitehall
     command: bundle exec unicorn -p 3020
     depends_on:
+      - asset-manager
+      - content-store
+      - diet-error-handler
+      - mysql
       - publishing-api
       - rummager
       - static
-      - asset-manager
-      - diet-error-handler
+      - whitehall-worker
     environment:
       << : *govuk-app
-      SENTRY_CURRENT_ENV: whitehall
+      DISABLE_SECURE_COOKIES: "true"
       VIRTUAL_HOST: whitehall-admin.dev.gov.uk
+      MEMCACHE_SERVERS: memcached
+      SENTRY_CURRENT_ENV: whitehall-admin
+      GOVUK_ASSET_ROOT: http://whitehall-admin.dev.gov.uk
     links:
-      - mysql
-      - nginx-proxy:rummager.dev.gov.uk
-      - nginx-proxy:publishing-api.dev.gov.uk
-      - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
+      - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
     ports:
       - "3020"
     volumes:
       - ./apps/whitehall/log:/app/log
+      - ./apps/whitehall/asset-manager-tmp:/app/asset-manager-tmp
 
-  # TODO: When adding E2E specs for Whitehall, it is likely we'll need to create a service for the Whitehall workers.
+  whitehall-frontend:
+    << : *whitehall
+    environment:
+      << : *govuk-app
+      VIRTUAL_HOST: whitehall-frontend.dev.gov.uk
+      SENTRY_CURRENT_ENV: whitehall-frontend
+
+  draft-whitehall-frontend:
+    << : *whitehall
+    environment:
+      << : *govuk-app
+      VIRTUAL_HOST: draft-whitehall-frontend.dev.gov.uk
+      SENTRY_CURRENT_ENV: draft-whitehall-frontend
+
+  whitehall-worker:
+    << : *whitehall
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
+    depends_on:
+      - diet-error-handler
+    environment:
+      << : *govuk-app
+      SENTRY_CURRENT_ENV: whitehall-worker
+    healthcheck:
+      disable: true
+    ports: []
 
   content-tagger: &content-tagger
     image: govuk/content-tagger:${CONTENT_TAGGER_COMMITISH:-master}

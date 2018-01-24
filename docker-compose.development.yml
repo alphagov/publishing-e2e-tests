@@ -104,9 +104,17 @@ services:
     ports:
       - "33011:3011"
 
-  whitehall:
+  whitehall-admin:
     ports:
       - "33020:3020"
+
+  whitehall-frontend:
+    ports:
+      - "33120:3020"
+
+  draft-whitehall-frontend:
+    ports:
+      - "33220:3020"
 
   content-tagger:
     ports:
