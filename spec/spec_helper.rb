@@ -115,6 +115,13 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
+Capybara.register_driver :poltergeist_logging do |app|
+  driver_options = {
+    phantomjs_options: ["--debug=true"],
+  }
+  Capybara::Poltergeist::Driver.new(app, driver_options)
+end
+
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :poltergeist
