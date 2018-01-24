@@ -93,9 +93,12 @@ test-government-frontend:
 test-content-tagger:
 	$(TEST_CMD) -o '--tag content_tagger --tag ~flaky --tag ~new'
 
+test-contacts:
+	$(TEST_CMD) -o '--tag contacts --tag ~flaky --tag ~new'
+
 stop: kill
 
 .PHONY: all $(APPS) clone kill build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
 	test-collections-publisher test-publisher test-manuals-publisher \
-	test-frontend pull
+	test-frontend test-content-tagger test-contacts pull
