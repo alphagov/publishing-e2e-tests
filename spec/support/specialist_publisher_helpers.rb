@@ -37,7 +37,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_aaib_report_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
       date_of_occurance: Faker::Date.backward,
@@ -53,7 +53,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_asylum_support_decision_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
       reference_number: Faker::Number.number(10),
@@ -74,7 +74,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_business_finance_support_scheme_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
       continuation_link: Faker::Internet.url,
@@ -92,7 +92,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_cma_case_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
     }.merge(options)
@@ -105,7 +105,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_countryside_stewardship_grant_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
     }.merge(options)
@@ -117,7 +117,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_dfid_research_output_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
       first_published_at: Faker::Date.backward,
@@ -135,7 +135,7 @@ module SpecialistPublisherHelpers
 
   def fill_in_eat_decision_form(options = {})
     options = {
-      title: title_with_timestamp,
+      title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
       decision_date: Faker::Date.backward,

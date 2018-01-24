@@ -1,7 +1,7 @@
 feature "Removing content by redirecting it from Publisher", publisher: true do
   include PublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { unique_title }
   let(:slug) { "removing-content-with-redirect-publisher-#{SecureRandom.uuid}" }
   let(:redirect_url) { "https://www.gov.uk/help" }
 
@@ -16,8 +16,8 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
 
   def given_there_is_a_published_artefact_with_subpages
     create_publisher_artefact(slug: slug, title: title, format: "Guide")
-    add_part_to_artefact(title: title_with_timestamp)
-    @subpart_slug = add_part_to_artefact(title: title_with_timestamp)
+    add_part_to_artefact(title: unique_title)
+    @subpart_slug = add_part_to_artefact(title: unique_title)
 
     publish_artefact
     @published_url = find_link("View this on the GOV.UK website")[:href]

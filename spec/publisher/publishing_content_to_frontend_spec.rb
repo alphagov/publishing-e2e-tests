@@ -1,9 +1,9 @@
 feature "Publishing content from Publisher to Frontend", flaky: true, publisher: true, frontend: true do
   include PublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { unique_title }
   let(:slug) { "publishing-content-publisher-to-frontend-#{SecureRandom.uuid}" }
-  let(:subpart_title) { title_with_timestamp }
+  let(:subpart_title) { unique_title }
 
   scenario "Publishing an artefact" do
     given_there_is_a_draft_artefact_with_subpage
@@ -16,7 +16,7 @@ feature "Publishing content from Publisher to Frontend", flaky: true, publisher:
 
   def given_there_is_a_draft_artefact_with_subpage
     create_publisher_artefact(slug: slug, title: title, format: "Guide")
-    add_part_to_artefact(title: title_with_timestamp)
+    add_part_to_artefact(title: unique_title)
     @subpart_slug = add_part_to_artefact(title: subpart_title)
   end
 

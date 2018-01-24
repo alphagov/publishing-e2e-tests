@@ -3,7 +3,7 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
 
   let(:country) { "Chad" }
   let(:summary) { paragraph_with_timestamp }
-  let(:part_title) { title_with_timestamp }
+  let(:part_title) { unique_title }
   let(:part_body) { Faker::Lorem.sentence }
 
   scenario "Creating a draft of Chad" do

@@ -53,7 +53,7 @@ module TravelAdvicePublisherHelpers
     }.merge(options)
 
     options[:parts] = options[:parts].map do |item|
-      title = title_with_timestamp
+      title = unique_title
       {
         title: title,
         body: Faker::Lorem.sentence,

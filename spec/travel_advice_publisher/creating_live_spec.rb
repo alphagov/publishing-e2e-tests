@@ -3,7 +3,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
 
   let(:country) { "Malta" }
   let(:summary) { paragraph_with_timestamp }
-  let(:part_title) { title_with_timestamp }
+  let(:part_title) { unique_title }
   let(:part_body) { Faker::Lorem.sentence }
 
   scenario "Creating a live edition of Malta" do

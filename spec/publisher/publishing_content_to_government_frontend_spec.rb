@@ -1,7 +1,7 @@
 feature "Publishing content from Publisher to Government Frontend", publisher: true, government_frontend: true do
   include PublisherHelpers
 
-  let(:title) { title_with_timestamp }
+  let(:title) { unique_title }
   let(:slug) { "help/publishing-content-publisher-to-government-frontend-#{SecureRandom.uuid}" }
 
   scenario "Publishing a Help guide" do
