@@ -40,7 +40,8 @@ setup:
 	$(DOCKER_COMPOSE_CMD) run draft-content-store bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run asset-manager bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rake setup_rabbitmq_rummager
+	$(DOCKER_COMPOSE_CMD) run publishing-api bundle exec rake setup_exchange
+	$(DOCKER_COMPOSE_CMD) run rummager bundle exec rake message_queue:create_queues
 	$(DOCKER_COMPOSE_CMD) run -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
 	$(DOCKER_COMPOSE_CMD) run publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) run whitehall bundle exec rake db:create db:purge db:setup

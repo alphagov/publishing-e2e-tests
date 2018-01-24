@@ -96,12 +96,8 @@ services:
     depends_on:
       - diet-error-handler
       - rabbitmq
-    environment: &rummager-worker-env
+    environment:
       << : *govuk-app
-      RABBITMQ_HOSTS: rabbitmq
-      RABBITMQ_VHOST: /
-      RABBITMQ_USER: guest
-      RABBITMQ_PASSWORD: guest
       GOVUK_APP_NAME: rummager-worker
       SENTRY_CURRENT_ENV: rummager-worker
     ports: []
@@ -113,7 +109,7 @@ services:
       - diet-error-handler
       - rabbitmq
     environment:
-      << : *rummager-worker-env
+      << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-publishing-queue
       SENTRY_CURRENT_ENV: rummager-listener-publishing-queue
     ports: []
@@ -125,7 +121,7 @@ services:
       - diet-error-handler
       - rabbitmq
     environment:
-      << : *rummager-worker-env
+      << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-insert-data
       SENTRY_CURRENT_ENV: rummager-listener-insert-data
     ports: []
@@ -137,7 +133,7 @@ services:
       - diet-error-handler
       - rabbitmq
     environment:
-      << : *rummager-worker-env
+      << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-bulk-insert-data
       SENTRY_CURRENT_ENV: rummager-listener-bulk-insert-data
     ports: []
