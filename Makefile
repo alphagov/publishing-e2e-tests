@@ -34,7 +34,6 @@ build: kill
 
 setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
-	$(DOCKER_COMPOSE_CMD) up -d elasticsearch
 	$(DOCKER_COMPOSE_CMD) run --rm router-api bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run --rm draft-router-api bundle exec rake db:purge
 	$(DOCKER_COMPOSE_CMD) run --rm content-store bundle exec rake db:purge
