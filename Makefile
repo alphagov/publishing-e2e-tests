@@ -97,6 +97,9 @@ test-content-tagger:
 test-contacts:
 	$(TEST_CMD) -o '--tag contacts --tag ~flaky --tag ~new'
 
+test-whitehall:
+	$(TEST_CMD) -o '--tag whitehall --tag ~flaky --tag ~new'
+
 stop: kill
 
 .PHONY: all $(APPS) clone kill build setup start up test stop \

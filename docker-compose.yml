@@ -962,5 +962,6 @@ services:
       - nginx-proxy:manuals-publisher.dev.gov.uk
       - nginx-proxy:content-tagger.dev.gov.uk
       - nginx-proxy:contacts-admin.dev.gov.uk
+      - nginx-proxy:whitehall-admin.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
