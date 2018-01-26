@@ -85,6 +85,9 @@ test-manuals-publisher:
 test-collections:
 	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~new'
 
+test-finder-frontend:
+	$(TEST_CMD) -o '--tag finder-frontend --tag ~flaky --tag ~new'
+
 test-frontend:
 	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~new'
 
@@ -105,4 +108,5 @@ stop: kill
 .PHONY: all $(APPS) clone kill build setup start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
 	test-collections-publisher test-publisher test-manuals-publisher \
-	test-frontend test-content-tagger test-contacts pull
+	test-frontend test-content-tagger test-contacts test-finder-frontend \
+	pull
