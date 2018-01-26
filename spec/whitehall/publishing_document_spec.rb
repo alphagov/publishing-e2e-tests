@@ -11,25 +11,11 @@ feature "Publishing a document with Whitehall", new: true, whitehall: true, gove
   end
 
   def given_i_have_a_draft_document
-    visit(Plek.find("whitehall-admin") + "/government/admin/consultations/new")
-
-    fill_in "Title", with: title
-    fill_in "Summary", with: sentence
-    fill_in "Body", with: paragraph_with_timestamp
-    fill_in_opening_date(Date.today)
-    fill_in_closing_date(Date.today.next_year)
-    select_from_chosen "Test Policy Area", id: "edition_topic_ids"
-
-    click_button("Save")
-    expect(page).to have_text("The document has been saved")
+    create_consultation(title: title)
   end
 
   def when_i_publish_it
-    click_link("Force publish")
-    fill_in "Reason for force publishing", with: "End to end test"
-    click_button("Force publish")
-
-    expect(page).to have_text("has been published")
+    force_publish_document
   end
 
   def then_i_can_view_it_on_gov_uk
