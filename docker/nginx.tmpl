@@ -293,6 +293,12 @@ server {
     proxy_set_header Host asset-manager.dev.gov.uk;
     proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
   }
+
+  # Ref: https://github.com/alphagov/govuk-puppet/blob/2535ae6fe00ad8d91ee0fc32b7c6e9bd8e86b911/modules/govuk/templates/static_extra_nginx_config.conf.erb#L30
+  location /government/uploads/system/uploads/image_data/file/ {
+    proxy_set_header Host asset-manager.dev.gov.uk;
+    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
+  }
   {{ end }}
 
   {{ end }}

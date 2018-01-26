@@ -6,10 +6,10 @@ module WhitehallHelpers
     expect(page).to have_text("The document has been saved")
   end
 
-  def fill_in_consultation_form(title:)
+  def fill_in_consultation_form(title:, body: paragraph_with_timestamp)
     fill_in "Title", with: title
     fill_in "Summary", with: sentence
-    fill_in "Body", with: paragraph_with_timestamp
+    fill_in "Body", with: body
     fill_in_opening_date(Date.today)
     fill_in_closing_date(Date.today.next_year)
     select_from_chosen "Test Policy Area", id: "edition_topic_ids"
