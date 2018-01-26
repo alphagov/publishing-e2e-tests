@@ -1,4 +1,4 @@
-feature "Updating a published taxon on Content Tagger", new: true, collections: true, content_tagger: true do
+feature "Updating a published taxon on Content Tagger", collections: true, content_tagger: true do
   include ContentTaggerHelpers
 
   let(:title) { "Updating a taxon" + SecureRandom.uuid }

@@ -1,4 +1,4 @@
-feature "Removing content from Content Tagger", new: true, collections: true, content_tagger: true do
+feature "Removing content from Content Tagger", collections: true, content_tagger: true do
   include ContentTaggerHelpers
 
   let(:redirection_destination_title) { "Removed taxon destination " + SecureRandom.uuid }

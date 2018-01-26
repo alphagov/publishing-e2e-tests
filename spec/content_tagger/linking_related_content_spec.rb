@@ -1,4 +1,4 @@
-feature "Adding related content to Publisher content", new: true, content_tagger: true, frontend: true, publisher: true do
+feature "Adding related content to Publisher content", content_tagger: true, frontend: true, publisher: true do
   include ContentTaggerHelpers
   include PublisherHelpers
 
