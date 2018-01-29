@@ -21,7 +21,7 @@ feature "Updating a contact", contacts: true, finder_frontend: true, government_
   end
 
   def when_i_update_the_contact
-    search_for_contact
+    search_for_contact(title: title)
 
     click_link "Edit contact"
     fill_in "contact_title", with: new_title
@@ -49,10 +49,5 @@ feature "Updating a contact", contacts: true, finder_frontend: true, government_
     expect_rendering_application("finder-frontend")
     expect(page).to have_content(new_title)
     expect(page).to have_content(new_description)
-  end
-
-  def search_for_contact
-    fill_in "contacts_search_q", with: title
-    click_button "Filter contacts"
   end
 end
