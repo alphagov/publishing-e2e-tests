@@ -60,13 +60,15 @@ services:
     image: rabbitmq
 
   elasticsearch:
-    image: elasticsearch:1.7.6
+    image: elasticsearch:2.4.6-alpine
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
     healthcheck:
       test: "curl --silent --fail localhost:9200/_cluster/health || exit 1"
+    volumes:
+      - ./docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   rummager: &rummager
     image: govuk/rummager:${RUMMAGER_COMMITISH:-master}
@@ -74,6 +76,7 @@ services:
     command: bundle exec unicorn -p 3009
     depends_on:
       - diet-error-handler
+      - publishing-api
       - rummager-worker
       - rummager-listener-publishing-queue
       - rummager-listener-insert-data
@@ -87,6 +90,7 @@ services:
       - elasticsearch
       - redis
       - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:publishing-api.dev.gov.uk
     ports:
       - "3009"
     volumes:
