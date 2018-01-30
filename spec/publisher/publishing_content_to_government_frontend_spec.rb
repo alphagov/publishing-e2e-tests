@@ -1,4 +1,4 @@
-feature "Publishing content from Publisher to Government Frontend", publisher: true, government_frontend: true do
+feature "Publishing content from Publisher to Government Frontend", new: true, finder_frontend: true, publisher: true, government_frontend: true do
   include PublisherHelpers
 
   let(:title) { unique_title }
@@ -8,7 +8,7 @@ feature "Publishing content from Publisher to Government Frontend", publisher: t
     given_there_is_a_draft_help_guide
     and_i_publish_it
     then_i_can_view_it_on_gov_uk
-    and_it_was_rendered_by_government_frontend
+    and_i_can_view_it_on_finder
   end
 
   private
@@ -27,10 +27,15 @@ feature "Publishing content from Publisher to Government Frontend", publisher: t
     click_link("View this on the GOV.UK website")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk
+    expect_rendering_application("government-frontend")
   end
 
-  def and_it_was_rendered_by_government_frontend
-    expect_rendering_application("government-frontend")
+  def and_i_can_view_it_on_finder
+    fill_in "Search", with: title
+    click_button "Search"
+
+    expect_rendering_application("finder-frontend")
+    expect(page).to have_content(title)
   end
 
   def wait_for_artefact_to_be_published
