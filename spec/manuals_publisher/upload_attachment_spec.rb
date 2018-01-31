@@ -38,11 +38,7 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
   end
 
   def then_i_can_access_the_attachment_through_the_draft
-    url = find_link("Preview draft")[:href]
-
-    reload_url_until_status_code(url, 200)
-
-    click_link("Preview draft")
+    visit_draft_manual
 
     section_url = find_link(section_title)[:href]
     reload_url_until_match(section_url, :has_text?, attachment_title)
@@ -55,5 +51,13 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
     reload_url_until_status_code(attachment_link, 200)
 
     expect_matching_uploaded_file(attachment_link, file)
+  end
+
+  def visit_draft_manual
+    url = find_link("Preview draft")[:href]
+    reload_url_until_status_code(url, 200)
+
+    click_link("Preview draft")
+    expect_rendering_application("manuals-frontend")
   end
 end
