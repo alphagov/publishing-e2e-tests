@@ -32,30 +32,85 @@ kill:
 build: kill
 	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
+	
 setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
-	$(DOCKER_COMPOSE_CMD) run --rm router-api bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm draft-router-api bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm content-store bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm draft-content-store bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm asset-manager bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm publishing-api bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run --rm publishing-api bundle exec rake setup_exchange
-	$(DOCKER_COMPOSE_CMD) run --rm rummager-worker bundle exec rake message_queue:create_queues
-	$(DOCKER_COMPOSE_CMD) run --rm -e RUMMAGER_INDEX=all rummager bundle exec rake rummager:create_all_indices
-	$(DOCKER_COMPOSE_CMD) run --rm rummager bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run --rm publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
-	$(DOCKER_COMPOSE_CMD) run --rm whitehall-admin bundle exec rake db:create db:purge db:setup publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run --rm -e RUN_SEEDS_IN_PRODUCTION=true specialist-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run --rm specialist-publisher bundle exec rake publishing_api:publish_finders
-	$(DOCKER_COMPOSE_CMD) run --rm travel-advice-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run --rm manuals-publisher bundle exec rake db:seed
-	$(DOCKER_COMPOSE_CMD) run --rm collections-publisher bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run --rm contacts-admin bundle exec rake db:setup finders:publish
-	$(DOCKER_COMPOSE_CMD) run --rm publisher bundle exec rake db:setup
-	$(DOCKER_COMPOSE_CMD) run --rm frontend bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) run --rm content-tagger bundle exec rake db:setup
+	$(MAKE) setup_dbs
+	$(MAKE) setup_queues
+	$(MAKE) clean_logs
+	$(MAKE) publish_routes
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake wait_for_router
+
+setup_dbs: router_setup content_store_setup asset_manager_setup \
+  publishing_api_setup travel_advice_setup whitehall_setup \
+  content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
+  publisher_setup collections_publisher_setup rummager_setup contacts_admin_setup
+
+router_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) exec -T draft-router-api bundle exec rake db:purge
+
+content_store_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) exec -T draft-content-store bundle exec rake db:purge
+
+asset_manager_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T asset-manager bundle exec rake db:purge
+	
+publishing_api_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T publishing-api bundle exec rake db:setup
+
+travel_advice_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T travel-advice-publisher bundle exec rake db:seed
+
+whitehall_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake db:create db:purge db:setup
+
+content_tagger_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T content-tagger bundle exec rake db:setup
+
+manuals_publisher_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T manuals-publisher bundle exec rake db:seed
+
+specialist_publisher_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T specialist-publisher env RUN_SEEDS_IN_PRODUCTION=true bundle exec rake db:seed
+
+publisher_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T publisher bundle exec rake db:setup
+
+collections_publisher_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake db:setup
+
+rummager_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T rummager env RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
+
+contacts_admin_setup:
+	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:setup
+
+setup_queues:
+	$(DOCKER_COMPOSE_CMD) exec -T publishing-api bundle exec rake setup_exchange
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
+	$(DOCKER_COMPOSE_CMD) exec -T rummager-worker bundle exec rake message_queue:create_queues
+
+publish_routes: publish_rummager publish_specialist publish_frontend \
+  publish_contacts_admin publish_whitehall
+
+publish_rummager:
+	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
+
+publish_specialist:
+	$(DOCKER_COMPOSE_CMD) exec -T specialist-publisher bundle exec rake publishing_api:publish_finders
+
+publish_frontend:
+	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_special_routes
+
+publish_contacts_admin:
+	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake finders:publish
+
+publish_whitehall:
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
+
+clean_logs:
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
 
 up:
 	$(DOCKER_COMPOSE_CMD) up -d
@@ -63,7 +118,7 @@ up:
 pull:
 	$(DOCKER_COMPOSE_CMD) pull --parallel --ignore-pull-failures
 
-start: setup up
+start: up setup
 
 test:
 	$(TEST_CMD)
@@ -110,4 +165,10 @@ stop: kill
 	test-specialist-publisher test-travel-advice-publisher \
 	test-collections-publisher test-publisher test-manuals-publisher \
 	test-frontend test-content-tagger test-contacts-admin test-finder-frontend \
-	pull
+	router_setup content_store_setup asset_manager_setup \
+	publishing_api_setup travel_advice_setup whitehall_setup \
+	content_tagger_setup manuals_publisher_setup \
+	specialist_publisher_setup publisher_setup collections_publisher_setup \
+	rummager_setup publish_rummager publish_specialist publish_frontend \
+	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
+	contacts_admin_setup pull
