@@ -31,22 +31,18 @@ module PublisherHelpers
   end
 
   def confirm_dialog_action(link:, button:)
-    reload_options = {
-      fail_reason: "\"#{link}\" link not opening confirmation dialog with button \"#{button}\"",
-    }
-
-    # There exists a race hazard here whereby the browser is adding the modal event handler to the link in one thread.
-    # While capybara is simultaneously trying to click the link.
-    # If capybara clicks the link before the modal event handler is registered then it won't bring up the modal.
-    # This loop exists to ensure the modal dialog box is brought up.
-    retry_while_false(reload_options) do
-      click_link link
-      is_button_visible? button
-    end
-
-    click_button button
+    wait_for_link link
+    submit_button button
 
     expect(page).to have_text("edition was successfully updated.")
+  end
+
+  def wait_for_link(link)
+    find(:xpath, "//a[text()=\"#{link}\"][not(contains(@class, \"disabled\"))]")
+  end
+
+  def submit_button(button)
+    find(:xpath, "//input[@value=\"#{button}\"]", visible: false).trigger("click")
   end
 
   def is_button_visible?(button)
