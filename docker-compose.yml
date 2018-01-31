@@ -73,21 +73,21 @@ services:
   rummager: &rummager
     image: govuk/rummager:${RUMMAGER_COMMITISH:-master}
     build: apps/rummager
-    command: bundle exec unicorn -p 3009
     depends_on:
       - diet-error-handler
       - publishing-api
+      - elasticsearch
       - rummager-worker
       - rummager-listener-publishing-queue
       - rummager-listener-insert-data
       - rummager-listener-bulk-insert-data
+    command: ["./wait-for-it.sh", "elasticsearch:9200", "--", "bundle", "exec", "unicorn", "-p", "3009"]
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager
       SENTRY_CURRENT_ENV: rummager
       VIRTUAL_HOST: rummager.dev.gov.uk
     links:
-      - elasticsearch
       - redis
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -95,14 +95,16 @@ services:
       - "3009"
     volumes:
       - ./apps/rummager/log:/app/log
+      - ./docker/wait-for-it.sh:/app/wait-for-it.sh
 
   rummager-worker:
     << : *rummager
-    command: bundle exec foreman run worker
     depends_on:
       - diet-error-handler
+      - elasticsearch
       - publishing-api
       - rabbitmq
+    command: ["./wait-for-it.sh", "elasticsearch:9200", "--", "bundle", "exec", "foreman", "run", "worker"]
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
