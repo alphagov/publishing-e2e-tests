@@ -1,4 +1,3 @@
-require "bunny"
 require "httparty"
 require "plek"
 require_relative "lib/retry_while_false"
