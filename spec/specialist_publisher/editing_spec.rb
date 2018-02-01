@@ -35,6 +35,7 @@ feature "Editing with Specialist Publisher", specialist_publisher: true, governm
     reload_url_until_status_code(url, 200)
 
     click_link("Preview draft")
+    expect_rendering_application("government-frontend")
     expect_url_matches_draft_gov_uk
     expect(page).to have_content(new_title)
   end

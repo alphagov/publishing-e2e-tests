@@ -53,6 +53,7 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true, gove
     reload_url_until_match(url, :has_text?, ignore_quotes_regex(new_body))
 
     click_link("View on website")
+    expect_rendering_application("government-frontend")
     expect_url_matches_live_gov_uk
     click_link("show all updates")
     within("#full-history") do
