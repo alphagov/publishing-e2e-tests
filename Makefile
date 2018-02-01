@@ -34,6 +34,7 @@ build: kill
 
 	
 setup:
+	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
 	$(MAKE) setup_queues
 	$(MAKE) clean_logs

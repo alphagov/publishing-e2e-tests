@@ -2,6 +2,8 @@ require "httparty"
 require "plek"
 require_relative "lib/retry_while_false"
 
+import "lib/tasks/docker.rake"
+
 task :wait_for_router do
   outcome = RetryWhileFalse.call(reload_seconds: 60, interval_seconds: 1) do
     live = HTTParty.head(Plek.find("www")).code
