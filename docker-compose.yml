@@ -60,7 +60,7 @@ services:
     image: rabbitmq
 
   elasticsearch:
-    image: elasticsearch:2.4.6-alpine
+    image: elasticsearch:2.4.6
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1

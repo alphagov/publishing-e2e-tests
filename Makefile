@@ -40,6 +40,7 @@ setup:
 	$(MAKE) clean_logs
 	$(MAKE) publish_routes
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake wait_for_router
+	bundle exec rake docker:wait_for_apps
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
   publishing_api_setup travel_advice_setup whitehall_setup \
