@@ -55,7 +55,15 @@ module PublisherHelpers
   end
 
   def add_part_to_artefact(title:, body: sentence)
-    click_link "Add new part"
+    # There exists a race hazard here between the browser adding the event handler to the "Add new part" link and
+    # Capybara trying to click that link.
+
+    # If capybara clicks the link before the event handler is registered then it won't open up the new part form.
+    # This loop exists to ensure that the "Add new part" link is clicked until the form appears.
+    retry_while_false(fail_reason: "Unable to open up new part form") do
+      click_link "Add new part"
+      !all("div#untitled-part").empty?
+    end
 
     slug = within("div#untitled-part") do
       fill_in "Title", with: title
