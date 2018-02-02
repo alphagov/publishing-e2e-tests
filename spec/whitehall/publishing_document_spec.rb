@@ -1,4 +1,4 @@
-feature "Publishing a document with Whitehall", new: true, whitehall: true, government_frontend: true do
+feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }

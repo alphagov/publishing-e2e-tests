@@ -1,4 +1,4 @@
-feature "Publishing a person on Whitehall", new: true, whitehall: true do
+feature "Publishing a person on Whitehall", whitehall: true do
   include WhitehallHelpers
 
   let(:forename) { "Adrian #{SecureRandom.uuid}" }
