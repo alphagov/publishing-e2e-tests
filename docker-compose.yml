@@ -58,6 +58,8 @@ services:
 
   rabbitmq:
     image: rabbitmq
+    healthcheck:
+      test: "rabbitmqctl node_health_check"
 
   elasticsearch:
     image: elasticsearch:2.4.6
@@ -81,7 +83,7 @@ services:
       - rummager-listener-publishing-queue
       - rummager-listener-insert-data
       - rummager-listener-bulk-insert-data
-    command: ["./wait-for-it.sh", "elasticsearch:9200", "--", "bundle", "exec", "unicorn", "-p", "3009"]
+    command: bundle exec unicorn -p 3009
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager
@@ -95,7 +97,6 @@ services:
       - "3009"
     volumes:
       - ./apps/rummager/log:/app/log
-      - ./docker/wait-for-it.sh:/app/wait-for-it.sh
 
   rummager-worker:
     << : *rummager
@@ -104,7 +105,7 @@ services:
       - elasticsearch
       - publishing-api
       - rabbitmq
-    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "bundle", "exec", "foreman", "run", "worker"]
+    command: bundle exec foreman run worker
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
@@ -116,7 +117,7 @@ services:
 
   rummager-listener-publishing-queue:
     << : *rummager
-    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "bundle", "exec", "foreman", "run", "publishing-queue-listener"]
+    command: bundle exec foreman run publishing-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -128,7 +129,7 @@ services:
 
   rummager-listener-insert-data:
     << : *rummager
-    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "bundle", "exec", "foreman", "run", "govuk-index-queue-listener"]
+    command: bundle exec foreman run govuk-index-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -140,7 +141,7 @@ services:
 
   rummager-listener-bulk-insert-data:
     << : *rummager
-    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "bundle", "exec", "foreman", "run", "bulk-reindex-queue-listener"]
+    command: bundle exec foreman run bulk-reindex-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq

@@ -36,6 +36,7 @@ build: kill
 setup:
 	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
+	bundle exec rake docker:wait_for_rabbitmq
 	$(MAKE) setup_queues
 	$(MAKE) clean_logs
 	$(MAKE) publish_routes
