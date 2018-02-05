@@ -1,4 +1,4 @@
-feature "Updating a contact", contacts: true, finder_frontend: true, government_frontend: true do
+feature "Updating a contact", contacts_admin: true, finder_frontend: true, government_frontend: true do
   include ContactsHelpers
 
   let(:title) { "Updating a contact #{SecureRandom.uuid}" }
