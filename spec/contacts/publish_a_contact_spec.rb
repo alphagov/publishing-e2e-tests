@@ -1,4 +1,4 @@
-feature "Publishing a contact", contacts: true, new: true, finder_frontend: true, government_frontend: true do
+feature "Publishing a contact", contacts: true, finder_frontend: true, government_frontend: true do
   include ContactsHelpers
 
   let(:title) { "Creating a contact #{SecureRandom.uuid}" }
