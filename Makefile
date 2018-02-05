@@ -87,7 +87,7 @@ test-collections:
 	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~new'
 
 test-finder-frontend:
-	$(TEST_CMD) -o '--tag finder-frontend --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag finder_frontend --tag ~flaky --tag ~new'
 
 test-frontend:
 	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~new'
