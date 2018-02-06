@@ -87,7 +87,10 @@ collections_publisher_setup:
 rummager_setup:
 	$(DOCKER_COMPOSE_CMD) exec -T rummager env RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
 
-contacts_admin_setup:
+wait_for_whitehall_admin:
+	bundle exec rake docker:wait_for_whitehall_admin
+
+contacts_admin_setup: wait_for_whitehall_admin
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:setup
 
 setup_queues:
@@ -175,4 +178,4 @@ stop: kill
 	specialist_publisher_setup publisher_setup collections_publisher_setup \
 	rummager_setup publish_rummager publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
-	contacts_admin_setup pull
+	wait_for_whitehall_admin contacts_admin_setup pull
