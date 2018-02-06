@@ -39,6 +39,7 @@ setup:
 	bundle exec rake docker:wait_for_rabbitmq
 	$(MAKE) setup_queues
 	$(MAKE) clean_logs
+	bundle exec rake docker:wait_for_publishing_api
 	$(MAKE) publish_routes
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake wait_for_router
 	bundle exec rake docker:wait_for_apps
