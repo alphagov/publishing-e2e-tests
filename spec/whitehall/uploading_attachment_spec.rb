@@ -1,4 +1,4 @@
-feature "Uploading an attachment on Whitehall", new: true, whitehall: true, government_frontend: true do
+feature "Uploading an attachment on Whitehall", whitehall: true, government_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Attachment Whitehall #{SecureRandom.uuid}" }

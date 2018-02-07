@@ -1,4 +1,4 @@
-feature "Unpublishing a document by consolidating into another page on Whitehall", new: true, whitehall: true, government_frontend: true do
+feature "Unpublishing a document by consolidating into another page on Whitehall", whitehall: true, government_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Unpublishing Whitehall #{SecureRandom.uuid}" }
