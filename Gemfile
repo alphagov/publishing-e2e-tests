@@ -1,11 +1,12 @@
 source "https://rubygems.org"
 
-gem "bunny"
 gem "byebug"
 gem "capybara"
 gem "capybara-screenshot"
 gem "capybara-select2"
 # gem "capybara-webkit"
+gem "docker-api", "~> 1.34"
+gem "docker-compose", "~> 1.1"
 gem "faker", "~> 1.6"
 gem "govuk-lint"
 gem "httparty"

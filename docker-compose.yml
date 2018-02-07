@@ -58,9 +58,11 @@ services:
 
   rabbitmq:
     image: rabbitmq
+    healthcheck:
+      test: "rabbitmqctl node_health_check"
 
   elasticsearch:
-    image: elasticsearch:2.4.6-alpine
+    image: elasticsearch:2.4.6
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
@@ -81,7 +83,7 @@ services:
       - rummager-listener-publishing-queue
       - rummager-listener-insert-data
       - rummager-listener-bulk-insert-data
-    command: ["./wait-for-it.sh", "elasticsearch:9200", "--", "bundle", "exec", "unicorn", "-p", "3009"]
+    command: bundle exec unicorn -p 3009
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager
@@ -95,7 +97,6 @@ services:
       - "3009"
     volumes:
       - ./apps/rummager/log:/app/log
-      - ./docker/wait-for-it.sh:/app/wait-for-it.sh
 
   rummager-worker:
     << : *rummager
@@ -104,7 +105,7 @@ services:
       - elasticsearch
       - publishing-api
       - rabbitmq
-    command: ["./wait-for-it.sh", "elasticsearch:9200", "--", "bundle", "exec", "foreman", "run", "worker"]
+    command: bundle exec foreman run worker
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
