@@ -765,6 +765,7 @@ services:
     << : *whitehall
     environment:
       << : *govuk-app
+      MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: whitehall-frontend
 
@@ -772,6 +773,7 @@ services:
     << : *whitehall
     environment:
       << : *govuk-app
+      MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: draft-whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
 
