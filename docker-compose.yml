@@ -833,6 +833,7 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       << : *govuk-app
+      ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
       VIRTUAL_HOST: asset-manager.dev.gov.uk
@@ -852,6 +853,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1
