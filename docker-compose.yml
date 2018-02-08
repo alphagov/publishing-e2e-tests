@@ -75,13 +75,14 @@ services:
     image: govuk/rummager:${RUMMAGER_COMMITISH:-master}
     build: apps/rummager
     depends_on:
-      - diet-error-handler
-      - publishing-api
+      - redis
       - elasticsearch
+      - publishing-api
       - rummager-worker
       - rummager-listener-publishing-queue
       - rummager-listener-insert-data
       - rummager-listener-bulk-insert-data
+      - diet-error-handler
     command: bundle exec unicorn -p 3009
     environment:
       << : *govuk-app
@@ -89,7 +90,6 @@ services:
       SENTRY_CURRENT_ENV: rummager
       VIRTUAL_HOST: rummager.dev.gov.uk
     links:
-      - redis
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
     ports:
@@ -100,10 +100,10 @@ services:
   rummager-worker:
     << : *rummager
     depends_on:
-      - diet-error-handler
       - elasticsearch
-      - publishing-api
       - rabbitmq
+      - publishing-api
+      - diet-error-handler
     command: bundle exec foreman run worker
     environment:
       << : *govuk-app
@@ -162,12 +162,13 @@ services:
   router: &router
     image: govuk/router:${ROUTER_COMMITISH:-master}
     build: apps/router
+    depends_on:
+      - mongo
     environment:
       VIRTUAL_HOST: www.dev.gov.uk
       VIRTUAL_PORT: 3054
       ROUTER_BACKEND_HEADER_TIMEOUT: 60s
     links:
-      - mongo
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
@@ -191,7 +192,6 @@ services:
       VIRTUAL_HOST: draft-origin.dev.gov.uk
       VIRTUAL_PORT: 3154
     links:
-      - mongo
       - nginx-proxy:draft-government-frontend.dev.gov.uk
       - nginx-proxy:draft-collections.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
@@ -206,14 +206,14 @@ services:
     build: apps/router-api
     command: bundle exec unicorn -p 3056
     depends_on:
+      - mongo
+      - router
       - diet-error-handler
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: router-api
       VIRTUAL_HOST: router-api.dev.gov.uk
     links:
-      - mongo
-      - router
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
       - "3056"
@@ -223,6 +223,10 @@ services:
   draft-router-api:
     << : *router-api
     command: bundle exec unicorn -p 3156
+    depends_on:
+      - mongo
+      - draft-router
+      - diet-error-handler
     environment:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-router-api
@@ -233,8 +237,6 @@ services:
       TEST_MONGODB_URI: mongodb://mongo/draft-router-test
       VIRTUAL_HOST: draft-router-api.dev.gov.uk
     links:
-      - mongo
-      - draft-router
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
       - "3156"
@@ -244,6 +246,7 @@ services:
     build: apps/content-store
     command: bundle exec unicorn -p 3068
     depends_on:
+      - mongo
       - router-api
       - diet-error-handler
     environment:
@@ -252,7 +255,6 @@ services:
       SENTRY_CURRENT_ENV: content-store
       VIRTUAL_HOST: content-store.dev.gov.uk
     links:
-      - mongo
       - nginx-proxy:router-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -265,6 +267,7 @@ services:
     << : *content-store
     command: bundle exec unicorn -p 3100
     depends_on:
+      - mongo
       - draft-router-api
       - diet-error-handler
     environment:
@@ -276,7 +279,6 @@ services:
       SENTRY_CURRENT_ENV: draft-content-store
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
     links:
-      - mongo
       - nginx-proxy:draft-router-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -287,18 +289,18 @@ services:
     build: apps/publishing-api
     command: bundle exec unicorn -p 3093
     depends_on:
-      - publishing-api-worker
-      - diet-error-handler
+      - postgres
+      - redis
       - memcached
       - rabbitmq
+      - publishing-api-worker
+      - diet-error-handler
     environment:
       << : *govuk-app
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
-      - postgres
-      - redis
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
       - "3093"
@@ -310,6 +312,8 @@ services:
     << : *publishing-api
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - postgres
+      - redis
       - content-store
       - draft-content-store
       - diet-error-handler
@@ -322,8 +326,6 @@ services:
     healthcheck:
       disable: true
     links:
-      - postgres
-      - redis
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -335,6 +337,8 @@ services:
       context: apps/specialist-publisher
     command: bundle exec unicorn -p 3064
     depends_on:
+      - mongo
+      - redis
       - publishing-api
       - asset-manager
       - diet-error-handler
@@ -344,8 +348,6 @@ services:
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
     links:
-      - mongo
-      - redis
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -360,6 +362,8 @@ services:
       context: apps/travel-advice-publisher
     command: bundle exec unicorn -p 3035
     depends_on:
+      - mongo
+      - redis
       - publishing-api
       - asset-manager
       - static
@@ -371,8 +375,6 @@ services:
       SENTRY_CURRENT_ENV: travel-advice-publisher
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
     links:
-      - mongo
-      - redis
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
@@ -412,7 +414,6 @@ services:
       SENTRY_CURRENT_ENV: collections-publisher
       VIRTUAL_HOST: collections-publisher.dev.gov.uk
     links:
-      - mysql
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -536,6 +537,8 @@ services:
       - publisher-worker
       - diet-error-handler
       - calendars
+      - redis
+      - mongo
     environment:
       << : *govuk-app
       DISABLE_SECURE_COOKIES: "true"
@@ -547,8 +550,6 @@ services:
     volumes:
       - apps/govuk-content-schemas/:/govuk-content-schemas/
     links:
-      - redis
-      - mongo
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:calendars.dev.gov.uk
@@ -635,7 +636,6 @@ services:
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
     links:
-      - mongo
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -793,6 +793,8 @@ services:
       - content-tagger-worker
       - diet-error-handler
       - publishing-api
+      - postgres
+      - redis
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: content-tagger
@@ -800,8 +802,6 @@ services:
     links:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
-      - postgres
-      - redis
     ports:
       - "3116"
     volumes:
@@ -826,9 +826,9 @@ services:
     depends_on:
       - asset-manager-worker
       - diet-error-handler
-    links:
       - mongo
       - redis
+    links:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       << : *govuk-app
@@ -888,10 +888,6 @@ services:
       VIRTUAL_HOST: draft-static.dev.gov.uk
     ports:
       - "3113"
-
-  # I think we might need these finder apps running to publish finders
-  # finder-frontend:
-  # draft-finder-frontend:
 
   government-frontend: &government-frontend
     image: govuk/government-frontend:${GOVERNMENT_FRONTEND_COMMITISH:-master}
