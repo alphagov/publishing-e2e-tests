@@ -41,7 +41,7 @@ setup:
 	$(MAKE) clean_logs
 	bundle exec rake docker:wait_for_publishing_api
 	$(MAKE) publish_routes
-	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake wait_for_router
+	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
 	bundle exec rake docker:wait_for_apps
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
