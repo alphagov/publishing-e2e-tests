@@ -15,6 +15,7 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
     force_publish_document
     click_link title
     @published_url = find_link("View on website")[:href]
+    reload_url_until_status_code(@published_url, 200)
   end
 
   def when_i_unpublish_it_and_redirect_to_another_page
