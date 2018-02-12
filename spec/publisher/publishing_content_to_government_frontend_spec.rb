@@ -1,4 +1,4 @@
-feature "Publishing content from Publisher to Government Frontend", new: true, finder_frontend: true, publisher: true, government_frontend: true do
+feature "Publishing content from Publisher to Government Frontend", finder_frontend: true, publisher: true, government_frontend: true do
   include PublisherHelpers
 
   let(:title) { unique_title }

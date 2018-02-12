@@ -764,6 +764,7 @@ services:
     << : *whitehall
     environment:
       << : *govuk-app
+      MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: whitehall-frontend
 
@@ -771,6 +772,7 @@ services:
     << : *whitehall
     environment:
       << : *govuk-app
+      MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: draft-whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
 
@@ -832,6 +834,7 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       << : *govuk-app
+      ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager
       VIRTUAL_HOST: asset-manager.dev.gov.uk
@@ -851,6 +854,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1

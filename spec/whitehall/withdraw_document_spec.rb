@@ -1,4 +1,4 @@
-feature "Withdraw a document with Whitehall", new: true, whitehall: true, government_frontend: true do
+feature "Withdraw a document with Whitehall", whitehall: true, government_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Withdraw Whitehall #{SecureRandom.uuid}" }

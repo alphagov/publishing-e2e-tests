@@ -1,4 +1,4 @@
-feature "Creating a new edition of a document with Whitehall", new: true, whitehall: true, government_frontend: true do
+feature "Creating a new edition of a document with Whitehall", whitehall: true, government_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Updating Whitehall Before #{SecureRandom.uuid}" }
@@ -37,7 +37,7 @@ feature "Creating a new edition of a document with Whitehall", new: true, whiteh
   def and_it_is_updated_on_the_publication_finder
     publication_finder = find('a', text: "Publications", match: :first)[:href]
     reload_url_until_match(publication_finder, :has_text?, updated_title)
-    visit(publication_finder)
+    click_link("Publications", match: :first)
 
     expect_rendering_application("whitehall")
     expect(page).to have_content(updated_title)
