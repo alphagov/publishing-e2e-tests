@@ -28,8 +28,8 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
   def then_visiting_the_removed_taxon_redirects_to_the_other_taxon
     reload_url_until_status_code(@redirected_taxon_url, 301, keep_retrying_while: [200])
     visit @redirected_taxon_url
-    expect(current_url).to eq(@redirection_destination_url)
     expect_rendering_application("collections")
+    expect(current_url).to eq(@redirection_destination_url)
   end
 
   private

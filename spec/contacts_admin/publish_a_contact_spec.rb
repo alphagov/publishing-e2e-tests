@@ -19,9 +19,9 @@ feature "Publishing a contact", contacts_admin: true, finder_frontend: true, gov
     reload_url_until_match(url, :has_text?, "Contact HMRC")
 
     click_link title
+    expect_rendering_application("government-frontend")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("government-frontend")
   end
 
   def and_i_can_view_it_on_finder

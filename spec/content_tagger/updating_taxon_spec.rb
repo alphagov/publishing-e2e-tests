@@ -32,9 +32,9 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
     reload_url_until_match(url, :has_text?, updated_content)
 
     click_link "/" + slug
+    expect_rendering_application("collections")
     expect(page).to have_content(title)
     expect(page).to have_content(updated_content)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("collections")
   end
 end

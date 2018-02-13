@@ -25,9 +25,9 @@ feature "Publishing content from Publisher to Government Frontend", finder_front
     wait_for_artefact_to_be_published
 
     click_link("View this on the GOV.UK website")
+    expect_rendering_application("government-frontend")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("government-frontend")
   end
 
   def and_i_can_view_it_on_finder
