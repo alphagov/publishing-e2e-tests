@@ -33,11 +33,11 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
     reload_url_until_match(@guide_url, :has_text?, related_content_title)
     visit(@guide_url)
 
+    expect_rendering_application("frontend")
     related_content_link = find_link(related_content_title)[:href]
 
     expect(related_content_link).to eq(@related_content_url)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("frontend")
   end
 
   def create_and_publish_guide(slug:, title:)

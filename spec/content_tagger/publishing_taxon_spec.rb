@@ -23,8 +23,8 @@ feature "Publishing a taxon on Content Tagger", collections: true, content_tagge
     reload_url_until_status_code(url, 200)
 
     click_link "/" + slug
+    expect_rendering_application("collections")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("collections")
   end
 end

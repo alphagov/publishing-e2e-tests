@@ -36,9 +36,9 @@ feature "Updating a contact", contacts_admin: true, finder_frontend: true, gover
     reload_url_until_match(url, :has_text?, "Contact HMRC")
 
     click_link new_title
+    expect_rendering_application("government-frontend")
     expect(page).to have_content(new_title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("government-frontend")
   end
 
   def and_i_can_view_it_on_finder

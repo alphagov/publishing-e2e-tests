@@ -17,8 +17,8 @@ feature "Creating a draft on Manuals Publisher", manuals_publisher: true do
     reload_url_until_status_code(url, 200)
 
     click_link "Preview draft"
+    expect_rendering_application("manuals-frontend")
     expect(page).to have_content(title)
     expect_url_matches_draft_gov_uk
-    expect_rendering_application("manuals-frontend")
   end
 end

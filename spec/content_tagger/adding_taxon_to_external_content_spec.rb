@@ -38,9 +38,9 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   def then_the_taxon_on_gov_uk_links_to_the_guide
     reload_url_until_match(@taxon_url, :has_text?, guide_title)
     visit(@taxon_url)
+    expect_rendering_application("collections")
     expect(page).to have_content(taxon_title)
     expect(page).to have_content(guide_title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("collections")
   end
 end

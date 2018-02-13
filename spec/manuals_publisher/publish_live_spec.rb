@@ -23,8 +23,8 @@ feature "Publishing content on Manuals Publisher", manuals_publisher: true do
     reload_url_until_status_code(url, 200)
 
     click_link "View on website"
+    expect_rendering_application("manuals-frontend")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk
-    expect_rendering_application("manuals-frontend")
   end
 end

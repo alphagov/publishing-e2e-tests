@@ -19,9 +19,9 @@ feature "Creating draft content on Publisher", publisher: true, frontend: true d
     wait_for_draft_to_be_published
 
     click_link("Preview")
+    expect_rendering_application("frontend")
     expect(page).to have_content(title)
     expect_url_matches_draft_gov_uk
-    expect_rendering_application("frontend")
   end
 
   def wait_for_draft_to_be_published
