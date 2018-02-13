@@ -41,6 +41,6 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true, go
 
     visit(@url)
     expect_url_matches_live_gov_uk
-    expect(page).to have_content("gone")
+    expect(page).to have_content(/gone/i)
   end
 end
