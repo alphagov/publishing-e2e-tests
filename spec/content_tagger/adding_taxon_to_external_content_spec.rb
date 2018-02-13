@@ -18,6 +18,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
     create_publisher_artefact(slug: guide_slug, title: guide_title, format: "Guide")
     add_part_to_artefact(title: unique_title)
     publish_artefact
+    @published_guide_url = find_link("View this on the GOV.UK website")[:href]
   end
 
   def and_there_is_a_published_taxon
@@ -28,6 +29,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   end
 
   def when_i_tag_the_guide_with_the_taxon
+    wait_for_artefact_to_be_viewable(@published_guide_url)
     visit_tag_external_content_page(slug: guide_slug)
     select2(taxon_title, css: "#s2id_tagging_tagging_update_form_taxons")
     click_button "Update tagging"
