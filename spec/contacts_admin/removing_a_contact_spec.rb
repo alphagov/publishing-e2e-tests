@@ -30,7 +30,7 @@ feature "Removing a contact", contacts_admin: true, finder_frontend: true, gover
     reload_url_until_status_code(@url, 410, keep_retrying_while: [404, 200])
 
     visit(@url)
-    expect(page).to have_content("gone")
+    expect(page).to have_content(/gone/i)
   end
 
   def and_it_is_not_shown_on_finder
