@@ -134,6 +134,12 @@ timestamps {
       try {
         originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
 
+        stage("Clean workspace") {
+          checkout(scm)
+          sh("make -j clean_tmp clean_apps")
+          cleanWs()
+        }
+
         stage("Checkout") {
           checkout(scm)
         }
