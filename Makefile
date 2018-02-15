@@ -5,6 +5,8 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	manuals-publisher manuals-frontend whitehall content-tagger \
 	contacts-admin finder-frontend
 
+RUBY_VERSION = `cat .ruby-version`
+DOCKER_RUN = docker run --rm -v `pwd`:/app ruby:$(RUBY_VERSION)
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
 TEST_PROCESSES := 1
 
@@ -18,7 +20,7 @@ endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
 
-all: clone pull build start test stop
+all: clean clone pull build start test stop
 
 $(APPS):
 	bin/clone-app $@
@@ -38,7 +40,7 @@ setup:
 	$(MAKE) setup_dbs
 	bundle exec rake docker:wait_for_rabbitmq
 	$(MAKE) setup_queues
-	$(MAKE) clean_logs
+	$(MAKE) clean_tmp
 	bundle exec rake docker:wait_for_publishing_api
 	$(MAKE) publish_routes
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
@@ -116,8 +118,13 @@ publish_contacts_admin:
 publish_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
 
-clean_logs:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-e2e-tests bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
+clean_apps:
+	$(DOCKER_RUN) bash -c 'rm -rf /app/apps/*'
+
+clean_tmp:
+	$(DOCKER_RUN) bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
+
+clean: clean_tmp clean_apps
 
 up:
 	$(DOCKER_COMPOSE_CMD) up -d
@@ -178,4 +185,5 @@ stop: kill
 	specialist_publisher_setup publisher_setup collections_publisher_setup \
 	rummager_setup publish_rummager publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
-	wait_for_whitehall_admin contacts_admin_setup pull
+	wait_for_whitehall_admin contacts_admin_setup pull \
+	clean_apps clean_tmp clean

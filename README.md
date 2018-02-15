@@ -33,8 +33,8 @@ $ make
 ```
 
 Running this command executes the following targets in order, which you can
-choose to run separately to speed up development: `clone`, `pull`, `build`, `start`,
-`test` and `stop`.
+choose to run separately to speed up development: `clean`, `clone`, `pull`, `build`,
+`start`, `test` and `stop`.
 
 For example, to run only the tests for the specialist publisher, you need only
 do:
@@ -45,11 +45,10 @@ $ make pull build start test-specialist-publisher stop
 ```
 
 If you need to run the tests against a branch of an application other than
-deployed-to-production you can specify it to be built as below:
+deployed-to-production you need to explicitly build it as below:
 
 ```bash
-$ make -j4 clone
-$ make pull
+$ make -j4 clone pull
 $ docker-compose build publisher
 $ make start test-publisher stop
 ```
