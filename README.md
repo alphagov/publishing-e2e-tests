@@ -61,10 +61,12 @@ $ docker-compose build publisher
 ```
 
 When you have finished testing against your branch version and want to switch back
-to the deployed-to-production version you will need to untag the built image before you can re-pull.
+to the deployed-to-production version you will need to untag the built image before
+you can re-pull.  The `clean_docker` make recipe will untag all locally built images.
 
 ```bash
-$ docker rmi publisher:master
+$ make clean_docker
+$ make pull
 ```
 
 See [docs/docker.md](docs/docker.md) for more information

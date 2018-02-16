@@ -121,10 +121,13 @@ publish_whitehall:
 clean_apps:
 	$(DOCKER_RUN) bash -c 'rm -rf /app/apps/*'
 
+clean_docker:
+	bundle exec rake docker:remove_built_app_images
+
 clean_tmp:
 	$(DOCKER_RUN) bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
 
-clean: clean_tmp clean_apps
+clean: clean_tmp clean_apps clean_docker
 
 up:
 	$(DOCKER_COMPOSE_CMD) up -d
@@ -186,4 +189,4 @@ stop: kill
 	rummager_setup publish_rummager publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
 	wait_for_whitehall_admin contacts_admin_setup pull \
-	clean_apps clean_tmp clean
+	clean_apps clean_docker clean_tmp clean
