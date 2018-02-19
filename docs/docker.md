@@ -9,7 +9,7 @@
 
 ## Configuration
 
-We recommend that you configure Docker to use at least 4 CPUs with 4 GB of
+We recommend that you configure Docker to use at least 4 CPUs with 6 GB of
 memory, otherwise you may find the apps struggle to run well enough to pass the
 tests.
 
@@ -47,3 +47,7 @@ containers and images.
 docker rmi $(docker images -f dangling=true -q)
 docker volume rm $(docker volume ls -q -f dangling=true)
 ```
+
+Docker for Mac will start comsuming vast amounts of CPU when it isn't given
+enough RAM.   If you find the apps aren't booting within the 60 second timeout
+then I'd recommend increasing the memory limit by at least 1GB.
