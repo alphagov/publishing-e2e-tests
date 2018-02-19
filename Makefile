@@ -20,7 +20,13 @@ endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
 
-all: clean clone pull build start test stop
+all:
+	$(MAKE) clean
+	$(MAKE) clone
+	$(MAKE) pull build
+	$(MAKE) start
+	$(MAKE) test
+	$(MAKE) stop
 
 $(APPS):
 	bin/clone-app $@
@@ -34,7 +40,6 @@ kill:
 build: kill
 	$(DOCKER_COMPOSE_CMD) build diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
-	
 setup:
 	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
@@ -100,8 +105,7 @@ setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) exec -T rummager-worker bundle exec rake message_queue:create_queues
 
-publish_routes: publish_rummager publish_specialist publish_frontend \
-  publish_contacts_admin publish_whitehall
+publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall
 
 publish_rummager:
 	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
@@ -135,7 +139,9 @@ up:
 pull:
 	$(DOCKER_COMPOSE_CMD) pull --parallel --ignore-pull-failures
 
-start: up setup
+start:
+	$(MAKE) up
+	$(MAKE) setup
 
 test:
 	$(TEST_CMD)

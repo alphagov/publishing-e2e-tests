@@ -29,7 +29,7 @@ Once you have [installed Docker][install-docker] you can build and run the test
 suite with:
 
 ```
-$ make
+$ make -j4
 ```
 
 Running this command executes the following targets in order, which you can
