@@ -16,6 +16,10 @@ x-govuk-app-env: &govuk-app
   SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
   SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
 
+x-default-healthcheck: &default-healthcheck
+  interval: 2s
+  timeout: 2s
+
 x-draft-govuk-app-env: &draft-govuk-app
   << : *govuk-app
   LOG_PATH: log/draft.log
@@ -33,6 +37,7 @@ services:
   postgres:
     image: postgres:9.6
     healthcheck:
+      << : *default-healthcheck
       test: "psql --username 'postgres' -c 'SELECT 1'"
 
   memcached:
@@ -43,21 +48,25 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     healthcheck:
+      << : *default-healthcheck
       test: "mysql --user=root --password=root -e 'SELECT 1'"
 
   mongo:
     image: mongo:2.4
     healthcheck:
+      << : *default-healthcheck
       test: "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"
 
   redis:
     image: redis
     healthcheck:
+      << : *default-healthcheck
       test: "redis-cli ping"
 
   rabbitmq:
     image: rabbitmq
     healthcheck:
+      << : *default-healthcheck
       test: "rabbitmqctl node_health_check"
 
   elasticsearch:
@@ -67,6 +76,7 @@ services:
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
     healthcheck:
+      << : *default-healthcheck
       test: "curl --silent --fail localhost:9200/_cluster/health || exit 1"
     volumes:
       - ./docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
@@ -347,6 +357,8 @@ services:
       MONGO_WRITE_CONCERN: 1
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
@@ -374,6 +386,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: travel-advice-publisher
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -413,6 +427,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: collections-publisher
       VIRTUAL_HOST: collections-publisher.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -494,6 +510,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: contacts-admin
       VIRTUAL_HOST: contacts-admin.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -517,6 +535,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: finder-frontend
       VIRTUAL_HOST: finder-frontend.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
@@ -547,6 +567,8 @@ services:
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
+    healthcheck:
+      << : *default-healthcheck
     volumes:
       - apps/govuk-content-schemas/:/govuk-content-schemas/
     links:
@@ -586,6 +608,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: frontend
       VIRTUAL_HOST: frontend.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
@@ -747,6 +771,8 @@ services:
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: whitehall-admin
       GOVUK_ASSET_ROOT: http://whitehall-admin.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
@@ -801,6 +827,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: content-tagger
       VIRTUAL_HOST: content-tagger.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -840,6 +868,8 @@ services:
       VIRTUAL_HOST: asset-manager.dev.gov.uk
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
+    healthcheck:
+      << : *default-healthcheck
     ports:
       - "3037"
     volumes:
@@ -908,6 +938,8 @@ services:
       SENTRY_CURRENT_ENV: government-frontend
       VIRTUAL_HOST: government-frontend.dev.gov.uk
       VIRTUAL_PORT: 3090
+    healthcheck:
+      << : *default-healthcheck
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
