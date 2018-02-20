@@ -18,7 +18,7 @@ def apps = [
   [constantPrefix: "MANUALS_PUBLISHER", app: "manuals-publisher", name: "Manuals Publisher"],
   [constantPrefix: "PUBLISHER", app: "publisher", name: "Publisher"],
   [constantPrefix: "PUBLISHING_API", app: "publishing-api", name: "Publishing API"],
-  [constantPrefix: "ROUTER", app: "router", name: "Router", defaultCommitish: "master"],
+  [constantPrefix: "ROUTER", app: "router", name: "Router"],
   [constantPrefix: "ROUTER_API", app: "router-api", name: "Router API"],
   [constantPrefix: "RUMMAGER", app: "rummager", name: "Rummager"],
   [constantPrefix: "SPECIALIST_PUBLISHER", app: "specialist-publisher", name: "Specialist Publisher"],
