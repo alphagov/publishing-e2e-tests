@@ -17,8 +17,8 @@ x-govuk-app-env: &govuk-app
   SENTRY_DSN: http://user:password@error-handler.dev.gov.uk/123
 
 x-default-healthcheck: &default-healthcheck
-  interval: 2s
-  timeout: 2s
+  interval: 10s
+  timeout: 20s
 
 x-draft-govuk-app-env: &draft-govuk-app
   << : *govuk-app
