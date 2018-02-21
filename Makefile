@@ -21,8 +21,10 @@ endif
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
 
 all:
-	$(MAKE) clean
+	$(MAKE) clean_apps clean_tmp
 	$(MAKE) clone
+	$(MAKE) stop
+	$(MAKE) clean_docker
 	$(MAKE) pull build
 	$(MAKE) start
 	$(MAKE) test
