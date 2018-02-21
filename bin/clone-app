@@ -70,7 +70,7 @@ private
   end
 
   def commitish
-    ENV.fetch("#{upper_name}_COMMITISH", "master")
+    ENV.fetch("#{upper_name}_COMMITISH", "deployed-to-production")
   end
 
   def detached?
