@@ -180,31 +180,37 @@ timestamps {
           }
         }
 
-        stage("Run flaky/new tests") {
-          echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
-          try {
-            sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
-          } catch(err) {
-            // Send a slack message just when tests fail within docker context
-            def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
-            message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-            slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
-          }
-        }
+        try {
+            stage("Run flaky/new tests") {
+              echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
+              try {
+                sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
+              } catch(err) {
+                // Send a slack message just when tests fail within docker context
+                def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
+                message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+                slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+              }
+            }
 
-        stage("Run tests") {
-          echo "Running tests with `make ${params.TEST_COMMAND}`"
-          sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
-        }
+            stage("Run tests") {
+              echo "Running tests with `make ${params.TEST_COMMAND}`"
+              sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
+            }
 
-        if (env.BRANCH_NAME == "master") {
-          echo 'Pushing to test-against branch'
-          sshagent(['govuk-ci-ssh-key']) {
-            sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
-          }
-        }
+            if (env.BRANCH_NAME == "master") {
+              echo 'Pushing to test-against branch'
+              sshagent(['govuk-ci-ssh-key']) {
+                sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
+              }
+            }
 
-        originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
+            originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
+        } finally {
+            stage("JUnit") {
+              junit 'tmp/rspec*.xml'
+            }
+        }
 
       } catch (e) {
         failBuild()
@@ -234,10 +240,6 @@ timestamps {
 
         stage("Stop Docker") {
           sh("make stop")
-        }
-
-        stage("JUnit") {
-          junit 'tmp/rspec*.xml'
         }
       }
     }
