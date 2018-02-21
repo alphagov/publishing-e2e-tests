@@ -113,6 +113,10 @@ RSpec.configure do |config|
 =end
 
   config.add_setting :reload_page_wait_time, default: 60
+
+  config.before(:each) do
+    page.driver.clear_memory_cache
+  end
 end
 
 Capybara.configure do |config|
