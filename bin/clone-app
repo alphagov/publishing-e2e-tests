@@ -32,7 +32,7 @@ private
 
   def checkout
     unless system "git checkout -f #{commitish}"
-      raise "git failed to checkout #{commitish}"
+      raise "git failed to checkout #{commitish} for #{name}"
     end
   end
 
@@ -45,7 +45,7 @@ private
   def merge
     return if detached?
     unless system "git merge --ff-only origin/#{commitish}"
-      raise "merge failed for #{commitish}"
+      raise "merging #{name} failed for #{commitish}"
     end
   end
 
