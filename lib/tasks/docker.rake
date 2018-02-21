@@ -14,7 +14,7 @@ namespace :docker do
   end
 
   task :wait_for_whitehall_admin do
-    DockerService.wait_for_healthy_services(services: %w(whitehall-admin))
+    DockerService.wait_for_healthy_services(services: %w(whitehall-admin), reload_seconds: 180)
   end
 
   task :wait_for_apps do
