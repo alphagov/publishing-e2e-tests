@@ -18,6 +18,7 @@ the details of all the apps involved check
 - [How to run the tests](#how-to-run-the-tests)
 - [Dealing with a flaky test](#dealing-with-a-flaky-test)
 - [Contributing](#contributing)
+- [Help with debugging a Jenkins failure](./docs/debugging-failures.md)
 - [Gotchas](#gotchas)
 - [License](#license)
 
