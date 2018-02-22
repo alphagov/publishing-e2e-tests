@@ -16,6 +16,7 @@ the details of all the apps involved check
 ## Contents
 
 - [How to run the tests](#how-to-run-the-tests)
+- [Failing Jenkins builds](#failing-jenkins-builds)
 - [Dealing with a flaky test](#dealing-with-a-flaky-test)
 - [Contributing](#contributing)
 - [Gotchas](#gotchas)
@@ -94,6 +95,17 @@ on `*.dev.gov.uk`. The tests can then be run with:
 ```
 bundle exec rspec
 ```
+## Failing Jenkins builds
+
+We have detailed guidance to help with [debugging the reason][debugging-fails]
+for a Jenkins failure inside the docs folder.
+
+Additionally, if you are making a change to an E2E tested application which 
+requires a change one of these tests, we have
+[detailed guidance][breaking-app-change] on how to achieve that.
+
+[debugging-fails]: ./docs/debugging-failures.md
+[breaking-app-change]: ./docs/breaking-app-change.md
 
 ## Dealing with a flaky test
 
