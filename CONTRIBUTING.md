@@ -37,10 +37,14 @@ introduction so they're
 
 Common reasons for a flaky tests can include:
 
-  - Applications not in a suitable state to be tested - Docker
-    [healthcheck][docker-healthcheck] can be useful
+  - Applications not in a suitable state to be tested - Adding a Docker
+    [healthcheck][docker-healthcheck] can alieviate this because it is syncronised
+    on as part of the [wait_for_apps][docker_rake] rake task run during
+    `make setup`
   - Checking conditions on pages that haven't yet been updated -
     [RetryHelpers][retry-helpers] can be used for this
+  - Not waiting for a unique element to appear when moving between web pages.
+    An example of this can be found in [fb24c2][fb24c2]
 
 Tests should be tagged to the publishing and rendering applications they are
 testing using [rspec tags][] to only run tests that concern that application.
@@ -54,6 +58,8 @@ This allows for a chance to build confidence in new tests without impacting the 
 [docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
 [retry-helpers]: ./spec/support/retry_helpers.rb
 [rspec tags]: https://relishapp.com/rspec/rspec-core/v/3-7/docs/command-line/tag-option
+[docker_rake]: ./lib/tasks/docker.rake
+[fb24c2]: https://github.com/alphagov/publishing-e2e-tests/commit/fb24c281c728424656410fb2e6c7d173e75ff2c3
 
 ## Dealing with flaky tests
 
