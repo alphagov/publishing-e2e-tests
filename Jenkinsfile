@@ -44,12 +44,9 @@ timestamps {
     }
 
     properties([
-      [$class: "BuildDiscarderProperty",
-       strategy: [$class: "LogRotator",
-                  artifactDaysToKeepStr: "",
-                  artifactDaysToKeepStr: "",
-                  daysToKeepStr: "30",
-                  numToKeepStr: ""]],
+      buildDiscarder(
+        logRotator(artifactDaysToKeepStr: "3", daysToKeepStr: "14", numToKeepStr: "400")
+      ),
       parameters([
         stringParam(
           defaultValue: "",
