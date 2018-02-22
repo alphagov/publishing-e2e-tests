@@ -28,9 +28,22 @@ the details of all the apps involved check
 Once you have [installed Docker][install-docker] you can build and run the test
 suite with:
 
-```
+```bash
 $ make -j4
 ```
+
+If it has been some time since you last worked on the E2E project it is recommended
+to instead run:
+
+```bash
+$ make clean
+$ make -j4
+```
+
+This will remove all your local apps, clone them, check them out to the latest
+deployed-to-production branch. This has been a problem in the past due to stale
+branches being checked out and either being unbuildable or causing false test
+failures.
 
 Running this command executes the following targets in order, which you can
 choose to run separately to speed up development: `clean`, `clone`, `pull`, `build`,
