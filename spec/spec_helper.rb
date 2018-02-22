@@ -126,6 +126,10 @@ Capybara.configure do |config|
   config.default_max_wait_time = 4
 end
 
+Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
+  "screenshot-#{example.description.downcase.gsub(/\W/, '-').gsub(/^.*\/spec\//, '')}"
+end
+
 # Capybara::Webkit.configure do |config|
 #   config.allow_url("*.dev.gov.uk")
 #   config.block_unknown_urls
