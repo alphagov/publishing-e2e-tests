@@ -771,6 +771,7 @@ services:
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: whitehall-admin
       GOVUK_ASSET_ROOT: http://whitehall-admin.dev.gov.uk
+      LOG_PATH: log/admin.log
     healthcheck:
       << : *default-healthcheck
     links:
@@ -793,6 +794,7 @@ services:
       MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: whitehall-frontend
+      LOG_PATH: log/frontend.log
 
   draft-whitehall-frontend:
     << : *whitehall
@@ -801,6 +803,7 @@ services:
       MEMCACHE_SERVERS: memcached
       VIRTUAL_HOST: draft-whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
+      LOG_PATH: log/draft-frontend.log
 
   whitehall-worker:
     << : *whitehall
