@@ -14,7 +14,15 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
     then_the_taxon_on_gov_uk_links_to_the_guide
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+      "Content Tagger" => ["GDS Editor"],
+    )
+  end
+
   def given_there_is_a_published_guide
+    signin_to_signon if use_signon?
     create_publisher_artefact(slug: guide_slug, title: guide_title, format: "Guide")
     add_part_to_artefact(title: unique_title)
     publish_artefact

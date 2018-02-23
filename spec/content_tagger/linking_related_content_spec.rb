@@ -13,7 +13,15 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
     then_the_related_content_is_linked_to_from_the_guide
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+      "Content Tagger" => ["GDS Editor"],
+    )
+  end
+
   def given_there_is_a_published_guide
+    signin_to_signon if use_signon?
     @guide_url = create_and_publish_guide(slug: guide_slug, title: guide_title)
   end
 

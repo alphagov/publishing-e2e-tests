@@ -14,7 +14,14 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Content Tagger" => ["GDS Editor"],
+    )
+  end
+
   def given_there_is_a_published_taxon
+    signin_to_signon if use_signon?
     create_draft_taxon(base_path: base_path, title: title)
     publish_taxon
 
