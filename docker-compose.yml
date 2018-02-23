@@ -114,7 +114,7 @@ services:
       - rabbitmq
       - publishing-api
       - diet-error-handler
-    command: bundle exec foreman run worker
+    command: foreman run worker
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
@@ -126,7 +126,7 @@ services:
 
   rummager-listener-publishing-queue:
     << : *rummager
-    command: bundle exec foreman run publishing-queue-listener
+    command: foreman run publishing-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -138,7 +138,7 @@ services:
 
   rummager-listener-insert-data:
     << : *rummager
-    command: bundle exec foreman run govuk-index-queue-listener
+    command: foreman run govuk-index-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -150,7 +150,7 @@ services:
 
   rummager-listener-bulk-insert-data:
     << : *rummager
-    command: bundle exec foreman run bulk-reindex-queue-listener
+    command: foreman run bulk-reindex-queue-listener
     depends_on:
       - diet-error-handler
       - rabbitmq
