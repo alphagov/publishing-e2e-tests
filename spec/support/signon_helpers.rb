@@ -166,6 +166,13 @@ module SignonHelpers
     click_button('Update User')
   end
 
+  def signin_with_next_user(app_permissions = {})
+    user = get_next_user(app_permissions)
+    signin_with_user(user)
+
+    user
+  end
+
   def visit_signon(path = '/')
     visit(signon_url + path)
   end
