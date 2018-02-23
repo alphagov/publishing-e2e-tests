@@ -73,7 +73,8 @@ module SignonHelpers
   end
 
   def signin_with_user(user)
-    visit_signon('/users/sign_in')
+    visit_signon('/users/sign_in') unless
+      has_current_path?("#{signon_url}/users/signin")
 
     # If some user is already signed in
     if current_path == '/'
