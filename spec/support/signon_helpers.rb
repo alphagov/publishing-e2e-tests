@@ -68,7 +68,7 @@ module SignonHelpers
     user
   end
 
-  def self.use_signon?
+  def use_signon?
     !User::available_user_count.nil?
   end
 
