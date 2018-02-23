@@ -13,7 +13,15 @@ feature "Updating content on Manuals Publisher", manuals_publisher: true do
     and_the_update_log_has_the_change_note
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Manuals Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_published_manual_with_a_section
+    signin_to_signon if use_signon?
+
     create_draft_manual(title: title)
     create_manual_section
     publish_manual
