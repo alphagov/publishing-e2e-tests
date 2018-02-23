@@ -10,7 +10,14 @@ feature "Withdraw a document with Whitehall", whitehall: true, government_fronte
     then_i_can_view_the_withdrawal_notice_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_published_document
+    signin_to_signon if use_signon?
     create_consultation(title: title)
     force_publish_document
     click_link title

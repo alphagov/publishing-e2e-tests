@@ -10,7 +10,14 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     and_it_is_displayed_on_the_publication_finder
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_draft_document
+    signin_to_signon if use_signon?
     create_consultation(title: title)
   end
 

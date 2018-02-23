@@ -10,7 +10,14 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
     then_i_am_redirected_when_i_visit_the_page_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_published_document
+    signin_to_signon if use_signon?
     create_consultation(title: title)
     force_publish_document
     click_link title

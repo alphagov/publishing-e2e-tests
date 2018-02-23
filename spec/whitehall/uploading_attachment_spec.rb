@@ -11,7 +11,14 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
     then_i_can_view_the_image
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_draft_document_with_attachment
+    signin_to_signon if use_signon?
     visit(Plek.find("whitehall-admin") + "/government/admin/consultations/new")
     within(:css, ".file_upload") do
       attach_file("File", attachment_file)

@@ -11,7 +11,14 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     and_it_is_updated_on_the_publication_finder
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_published_document
+    signin_to_signon if use_signon?
     create_consultation(title: title)
     force_publish_document
   end

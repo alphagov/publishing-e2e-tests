@@ -8,7 +8,14 @@ feature "Publishing a person on Whitehall", whitehall: true do
     then_i_can_view_them_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Whitehall" => ["Editor"],
+    )
+  end
+
   def given_i_have_a_person
+    signin_to_signon if use_signon?
     visit(Plek.find("whitehall-admin") + "/government/admin/people/new")
     fill_in "Forename", with: forename
     click_button "Save"
