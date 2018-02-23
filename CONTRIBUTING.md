@@ -104,11 +104,30 @@ If a flaky test cannot be fixed it should be removed from the suite.
 
 ## Testing new applications
 
-To test new applications you have to follow a similar process to
-[adding new tests](#adding-new-tests) however you will also need to configure
-this application to run the application through [docker compose][]
+To test new applications you will need to follow the
+[process for adding containers](docs/docker.md#adding-containers)
+to the [docker compose][].
 
-A brief guide to setting this up is available in
-[docs/docker.md](docs/docker.md#adding-containers).
+Once these are running inside of docker you should follow the
+[adding new tests](#adding-new-tests) process.
+
+When adding a new app you should add a RSpec tag to associate tests with that
+app, and a step in the Makefile to run those tests. E.g. if you were adding
+whitehall as an app you would tag the tests with `whitehall: true` and create a
+step in the make file called `test-whitehall`.
+
+To run against specific revisions of the applications (such as commits and branches),
+you'll need to add an entry for the application being tested to the apps array in
+the Jenkinsfile.
+
+Once you have merged your tests into this repository and removed the `new: true` 
+tag, because you are confident in them, you'll want to enable the tests to be
+run on every commit to the applications repositories.  The Jenkinsfile for 
+most applications uses the `buildProject` which  has a `publishingE2ETests` 
+parameter that enables this functionality. The Publisher Jenkinsfile has an
+[example of enabling][publishing-jenkinsfile] the E2E tests, 
+and using the `PUBLISHING_E2E_TESTS_COMMAND` variable to only run
+`publisher: true` tagged specs.
 
 [docker compose]: https://docs.docker.com/compose/
+[publishing-jenkinsfile]: https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3 
