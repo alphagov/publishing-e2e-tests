@@ -22,13 +22,17 @@ module RetryHelpers
       o[:wait] = 0.5 unless o[:wait]
     end
 
-    code = HTTParty.head(url).code
+    code = HTTParty.head(
+      url,
+      headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) }
+    ).code
     unless status_codes.include?(code)
       raise "#{url} returned a status code of #{code}"
     end
 
     retry_while_false(reload_options) do
       session = Capybara::Session.new(Capybara.default_driver)
+      set_session_cookies(URI(url).host, session)
       session.visit(url)
       if within_selector
         session.witin(within_selector, wait: capybara_options[:wait]) do
@@ -56,7 +60,12 @@ module RetryHelpers
     }
 
     retry_while_false(reload_options) do
-      code = HTTParty.head(url, follow_redirects: false).code
+      code = HTTParty.head(
+        url,
+        follow_redirects: false,
+        headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) }
+      ).code
+
       unless (keep_retrying_while + status_codes).include?(code)
         raise "Aborting reloading #{url} as a #{code} was returned"
       end
@@ -73,6 +82,40 @@ module RetryHelpers
     success = RetryWhileFalse.(reload_seconds: reload_seconds, interval_seconds: interval_seconds, &block)
     fail_reason ||= "the expectation was not met"
     raise TimeoutError, "After #{reload_seconds} seconds, #{fail_reason}" unless success
+  end
+
+  def store_cookies_for_retry_helpers
+    @_retry_helper_cookies ||= {}
+    @_retry_helper_cookies[URI(current_url).host] =
+      Capybara.current_session.driver.cookies
+  end
+
+  def set_session_cookies(host, session)
+    @_retry_helper_cookies ||= {}
+    @_retry_helper_cookies.fetch(host, {}).each_value do |cookie|
+      options = {
+        domain: cookie.domain,
+        path: cookie.path,
+        secure: cookie.secure?,
+        httponly: cookie.httponly?,
+        samesite: cookie.samesite,
+        expires: cookie.expires
+      }
+
+      session.driver.set_cookie(
+        cookie.name,
+        cookie.value,
+        options
+      )
+    end
+  end
+
+  def retry_helpers_cookies_string(host)
+    cookies = (@_retry_helper_cookies || {}).fetch(host, {}).values.map do |cookie|
+      cookie.name + "=" + cookie.value
+    end
+
+    cookies.join(";")
   end
 
   RSpec.configuration.include RetryHelpers
