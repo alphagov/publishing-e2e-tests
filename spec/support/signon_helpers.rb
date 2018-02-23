@@ -90,6 +90,10 @@ module SignonHelpers
 
     if current_path == '/users/two_step_verification/prompt'
       click_link('Start set up')
+
+      # Disable animation, as this makes the following steps fail
+      # often
+      execute_script('$.support.transition = false')
       click_link('Next')
 
       paragraph = find('p', text: 'Enter the code manually:')
