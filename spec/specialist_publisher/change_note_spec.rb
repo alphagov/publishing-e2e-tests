@@ -13,7 +13,14 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true, gove
     then_i_can_view_the_change_note_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Specialist Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_published_countryside_stewardship_grant
+    signin_to_signon if use_signon?
     visit_specialist_publisher("/countryside-stewardship-grants/new")
 
     fill_in_countryside_stewardship_grant_form(title: title, body: old_body)
