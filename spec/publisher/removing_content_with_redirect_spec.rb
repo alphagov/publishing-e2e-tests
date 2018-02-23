@@ -14,7 +14,14 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+    )
+  end
+
   def given_there_is_a_published_artefact_with_subpages
+    signin_to_signon if use_signon?
     create_publisher_artefact(slug: slug, title: title, format: "Guide")
     add_part_to_artefact(title: unique_title)
     @subpart_slug = add_part_to_artefact(title: unique_title)

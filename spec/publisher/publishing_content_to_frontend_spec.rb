@@ -14,7 +14,14 @@ feature "Publishing content from Publisher to Frontend", publisher: true, fronte
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+    )
+  end
+
   def given_there_is_a_draft_artefact_with_subpage
+    signin_to_signon if use_signon?
     create_publisher_artefact(slug: slug, title: title, format: "Guide")
     add_part_to_artefact(title: unique_title)
     @subpart_slug = add_part_to_artefact(title: subpart_title)

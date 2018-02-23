@@ -82,18 +82,4 @@ module PublisherHelpers
   def wait_for_artefact_to_be_viewable(url)
     reload_url_until_status_code(url, 200)
   end
-
-  def self.included(base)
-    return unless SignonHelpers::use_signon?
-
-    default_permissions = %w[skip_review]
-
-    base.before(:each) do |example|
-      @user = get_next_user(
-        "Publisher" =>
-        example.metadata.fetch(:permissions, default_permissions)
-      )
-      signin_with_user(@user)
-    end
-  end
 end

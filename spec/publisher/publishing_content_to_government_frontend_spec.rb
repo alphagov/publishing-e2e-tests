@@ -13,7 +13,14 @@ feature "Publishing content from Publisher to Government Frontend", finder_front
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+    )
+  end
+
   def given_there_is_a_draft_help_guide
+    signin_to_signon if use_signon?
     create_publisher_artefact(slug: slug, title: title, format: "Help page")
   end
 

@@ -11,7 +11,15 @@ feature "Creating draft content on Publisher", publisher: true, frontend: true d
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Publisher" => ["skip_review"],
+      "Content Preview" => [],
+    )
+  end
+
   def when_i_create_a_new_artefact
+    signin_to_signon if use_signon?
     create_publisher_artefact(slug: slug, title: title)
   end
 
@@ -25,6 +33,7 @@ feature "Creating draft content on Publisher", publisher: true, frontend: true d
   end
 
   def wait_for_draft_to_be_published
+    signin_to_draft_origin(@user) if use_signon?
     draft_url = find_link("Preview")[:href]
     wait_for_artefact_to_be_viewable(draft_url)
   end
