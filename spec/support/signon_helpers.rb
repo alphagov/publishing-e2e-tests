@@ -125,8 +125,6 @@ module SignonHelpers
   end
 
   def set_user_permissions(email, app_permissions)
-    return if app_permissions.empty?
-
     visit_signon('/users')
     fill_in('Name or email', with: email)
     click_button('Search')
