@@ -14,7 +14,15 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
 
   after { delete_draft_edition(country) }
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Travel Advice Publisher" => ["gds_editor"],
+      "Content Preview" => []
+    )
+  end
+
   def when_i_create_a_draft_of_chad
+    signin_to_signon if use_signon?
     visit_travel_advice_publisher("/admin")
     click_link(country)
 
@@ -32,6 +40,8 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
   end
 
   def then_i_can_preview_it_on_draft_gov_uk
+    signin_to_draft_origin(@user) if use_signon?
+
     url = find_link("Preview saved version")[:href]
     reload_until_travel_advice_summary_displayed(url, summary)
 

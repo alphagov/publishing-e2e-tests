@@ -14,7 +14,15 @@ feature "Upload attachments on Travel Advice Publisher", feature: true, travel_a
 
   after { delete_draft_edition(country) }
 
+  def signin_to_signon
+    signin_with_next_user(
+      "Travel Advice Publisher" => ["gds_editor"],
+      "Content Preview" => [],
+    )
+  end
+
   def when_i_create_a_draft_of_congo
+    signin_to_signon if use_signon?
     visit_travel_advice_publisher("/admin")
     click_link(country)
 

@@ -70,18 +70,4 @@ module TravelAdvicePublisherHelpers
     reload_url_until_status_code(url, 200)
     reload_url_until_match(url, :has_text?, ignore_quotes_regex(summary))
   end
-
-  def self.included(base)
-    return unless SignonHelpers::use_signon?
-
-    default_permissions = %w[gds_editor]
-
-    base.before(:each) do |example|
-      @user = get_next_user(
-        "Travel Advice Publisher" =>
-        example.metadata.fetch(:permissions, default_permissions)
-      )
-      signin_with_user(@user)
-    end
-  end
 end

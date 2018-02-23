@@ -12,7 +12,12 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
     and_i_can_view_parts_of_it
   end
 
+  def signin_to_signon
+    signin_with_next_user("Travel Advice Publisher" => ["gds_editor"])
+  end
+
   def when_i_create_a_live_edition_of_malta
+    signin_to_signon if use_signon?
     visit_travel_advice_publisher("/admin")
     click_link(country)
 
