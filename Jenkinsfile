@@ -13,6 +13,7 @@ def apps = [
   [constantPrefix: "CONTENT_TAGGER", app: "content-tagger", name: "Content Tagger"],
   [constantPrefix: "FINDER_FRONTEND", app: "finder-frontend", name: "Finder Frontend"],
   [constantPrefix: "FRONTEND", app: "frontend", name: "Frontend"],
+  [constantPrefix: "GOVUK_CONTENT_SCHEMAS", app: "govuk-content-schemas", name: "GOV.UK Content Schemas"],
   [constantPrefix: "GOVERNMENT_FRONTEND", app: "government-frontend", name: "Government Frontend"],
   [constantPrefix: "MANUALS_FRONTEND", app: "manuals-frontend", name: "Manuals Frontend"],
   [constantPrefix: "MANUALS_PUBLISHER", app: "manuals-publisher", name: "Manuals Publisher"],
