@@ -1,8 +1,11 @@
 # coding: utf-8
 
 require 'rotp'
+require_relative 'javascript_helpers'
 
 module SignonHelpers
+  include JavascriptHelpers
+
   class User
     attr_reader :email, :passphrase, :number
 
@@ -91,9 +94,9 @@ module SignonHelpers
     if current_path == '/users/two_step_verification/prompt'
       click_link('Start set up')
 
-      # Disable animation, as this makes the following steps fail
+      # Disable transitions, as this makes the following steps fail
       # often
-      execute_script('$.support.transition = false')
+      disable_jquery_transitions
       click_link('Next')
 
       paragraph = find('p', text: 'Enter the code manually:')
