@@ -17,7 +17,7 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
     create_draft_taxon(slug: slug, title: title)
     publish_taxon
 
-    url = find_link("/" + slug)[:href]
+    url = find_link("View on GOV.UK")[:href]
     reload_url_until_status_code(url, 200)
   end
 
@@ -28,10 +28,10 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
   end
 
   def then_i_can_view_it_on_gov_uk
-    url = find_link("/" + slug)[:href]
+    url = find_link("View on GOV.UK")[:href]
     reload_url_until_match(url, :has_text?, updated_content)
 
-    click_link "/" + slug
+    click_link "View on GOV.UK"
     expect_rendering_application("collections")
     expect(page).to have_content(title)
     expect(page).to have_content(updated_content)

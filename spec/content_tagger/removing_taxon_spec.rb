@@ -37,6 +37,6 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
   def create_and_publish_taxon(slug:, title:)
     create_draft_taxon(slug: slug, title: title)
     publish_taxon
-    find_link("/" + slug)[:href]
+    find_link("View on GOV.UK")[:href]
   end
 end
