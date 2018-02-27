@@ -63,6 +63,10 @@ module PublisherHelpers
   end
 
   def add_part_to_artefact(title:, body: sentence)
+    # The parts collapse is animated, so disable this to avoid the
+    # test not being able to find the parts
+    disable_jquery_transitions
+
     wait_for_jquery_ready_event
     click_link "Add new part"
 
