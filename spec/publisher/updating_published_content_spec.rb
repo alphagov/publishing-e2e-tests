@@ -36,9 +36,9 @@ feature "Updating published content from Publisher", publisher: true, frontend: 
   end
 
   def and_i_visit_the_transaction_on_gov_uk
-    url = find_link("View on GOV.UK")[:href]
+    url = find_link("/" + slug)[:href]
     reload_url_until_match(url, :has_text?, @downtime_message)
-    click_link "View on GOV.UK"
+    click_link("/" + slug)
   end
 
   def then_the_downtime_message_is_shown
