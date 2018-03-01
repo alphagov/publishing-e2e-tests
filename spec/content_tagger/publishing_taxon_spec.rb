@@ -19,10 +19,10 @@ feature "Publishing a taxon on Content Tagger", collections: true, content_tagge
   end
 
   def then_i_can_view_it_on_gov_uk
-    url = find_link("/" + slug)[:href]
+    url = find_link("View on GOV.UK")[:href]
     reload_url_until_status_code(url, 200)
 
-    click_link "/" + slug
+    click_link "View on GOV.UK"
     expect_rendering_application("collections")
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk

@@ -24,7 +24,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   def and_there_is_a_published_taxon
     create_draft_taxon(slug: taxon_slug, title: taxon_title)
     publish_taxon
-    @taxon_url = find_link("/" + taxon_slug)[:href]
+    @taxon_url = find_link("View on GOV.UK")[:href]
     reload_url_until_status_code(@taxon_url, 200)
   end
 
