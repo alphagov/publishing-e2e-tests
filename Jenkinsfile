@@ -1,5 +1,7 @@
 #!/usr/bin/env groovy
 
+library("govuk")
+
 REPOSITORY = "publishing-e2e-tests"
 DEFAULT_COMMITISH = "deployed-to-production"
 
@@ -31,7 +33,6 @@ def apps = [
 timestamps {
   node("publishing-e2e-tests") {
 
-    def govuk = load("/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy")
 
     appDefaultCommits = [:]
     appParams = apps.collect { app ->
