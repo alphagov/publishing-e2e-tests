@@ -2,8 +2,8 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
   include ContentTaggerHelpers
 
   let(:redirection_destination_title) { "Removed taxon destination " + SecureRandom.uuid }
-  let(:redirection_destination_slug) { "redirection-taxon-" + SecureRandom.uuid }
-  let(:removed_slug) { "removed-taxon-" + SecureRandom.uuid }
+  let(:redirection_destination_base_path) { "/redirection-taxon-" + SecureRandom.uuid }
+  let(:removed_base_path) { "/removed-taxon-" + SecureRandom.uuid }
 
   scenario "Unpublishing a taxon" do
     given_there_are_two_published_taxons
@@ -12,10 +12,14 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
   end
 
   def given_there_are_two_published_taxons
-    @redirection_destination_url = create_and_publish_taxon(slug: redirection_destination_slug, title: redirection_destination_title)
+    @redirection_destination_url = create_and_publish_taxon(
+      base_path: redirection_destination_base_path, title: redirection_destination_title
+    )
     reload_url_until_status_code(@redirection_destination_url, 200)
 
-    @redirected_taxon_url = create_and_publish_taxon(slug: removed_slug, title: "Removed taxon " + SecureRandom.uuid)
+    @redirected_taxon_url = create_and_publish_taxon(
+      base_path: removed_base_path, title: "Removed taxon " + SecureRandom.uuid
+    )
     reload_url_until_status_code(@redirected_taxon_url, 200)
   end
 
@@ -34,8 +38,8 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
 
   private
 
-  def create_and_publish_taxon(slug:, title:)
-    create_draft_taxon(slug: slug, title: title)
+  def create_and_publish_taxon(base_path:, title:)
+    create_draft_taxon(base_path: base_path, title: title)
     publish_taxon
     find_link("View on GOV.UK")[:href]
   end

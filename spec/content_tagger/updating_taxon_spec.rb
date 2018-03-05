@@ -2,7 +2,7 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
   include ContentTaggerHelpers
 
   let(:title) { "Updating a taxon" + SecureRandom.uuid }
-  let(:slug) { "updating-taxon" + SecureRandom.uuid }
+  let(:base_path) { "/updating-taxon" + SecureRandom.uuid }
   let(:updated_content) { "Updated content" + SecureRandom.uuid }
 
   scenario "Updating a taxon" do
@@ -14,7 +14,7 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
   private
 
   def given_there_is_a_published_taxon
-    create_draft_taxon(slug: slug, title: title)
+    create_draft_taxon(base_path: base_path, title: title)
     publish_taxon
 
     url = find_link("View on GOV.UK")[:href]
