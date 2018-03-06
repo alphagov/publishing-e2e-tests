@@ -1,7 +1,7 @@
 module ContentTaggerHelpers
-  def create_draft_taxon(slug:, title:)
+  def create_draft_taxon(base_path:, title:)
     visit(Plek.find("content-tagger") + "/taxons/new")
-    fill_in "Path", with: slug
+    fill_in "Base path", with: base_path
     fill_in "Internal taxon name", with: title
     fill_in "External taxon name", with: title
     fill_in "Description", with: Faker::Lorem.paragraph

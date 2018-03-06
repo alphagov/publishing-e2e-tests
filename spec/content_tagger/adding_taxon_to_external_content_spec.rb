@@ -3,7 +3,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   include PublisherHelpers
 
   let(:taxon_title) { "Tagging external content taxon " + SecureRandom.uuid }
-  let(:taxon_slug) { "tagging-taxon-" + SecureRandom.uuid }
+  let(:taxon_base_path) { "/tagging-taxon-" + SecureRandom.uuid }
   let(:guide_title) { "Tagging external content guide " + SecureRandom.uuid }
   let(:guide_slug) { "tagging-taxon-guide-" + SecureRandom.uuid }
 
@@ -22,7 +22,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   end
 
   def and_there_is_a_published_taxon
-    create_draft_taxon(slug: taxon_slug, title: taxon_title)
+    create_draft_taxon(base_path: taxon_base_path, title: taxon_title)
     publish_taxon
     @taxon_url = find_link("View on GOV.UK")[:href]
     reload_url_until_status_code(@taxon_url, 200)

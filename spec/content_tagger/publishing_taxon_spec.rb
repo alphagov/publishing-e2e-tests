@@ -2,7 +2,7 @@ feature "Publishing a taxon on Content Tagger", collections: true, content_tagge
   include ContentTaggerHelpers
 
   let(:title) { "Publishing a taxon #{SecureRandom.uuid}" }
-  let(:slug) { "publishing-taxon-#{SecureRandom.uuid}" }
+  let(:base_path) { "/publishing-taxon-#{SecureRandom.uuid}" }
 
   scenario "Publishing a taxon" do
     given_there_is_a_draft_taxon
@@ -11,7 +11,7 @@ feature "Publishing a taxon on Content Tagger", collections: true, content_tagge
   end
 
   def given_there_is_a_draft_taxon
-    create_draft_taxon(slug: slug, title: title)
+    create_draft_taxon(base_path: base_path, title: title)
   end
 
   def when_i_publish_the_taxon
