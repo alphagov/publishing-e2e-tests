@@ -1,4 +1,4 @@
-feature "Publishing content from Publisher to Frontend", publisher: true, frontend: true do
+feature "Publishing content from Publisher to Frontend", publisher: true, frontend: true, flaky: true do
   include PublisherHelpers
 
   let(:title) { unique_title }
