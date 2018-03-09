@@ -8,6 +8,7 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
   scenario "Updating a taxon" do
     given_there_is_a_published_taxon
     when_i_update_the_taxon
+    and_i_publish_the_taxon
     then_i_can_view_it_on_gov_uk
   end
 
@@ -24,7 +25,12 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
   def when_i_update_the_taxon
     click_link "Edit taxon"
     fill_in "Description", with: updated_content
-    click_button "Save & publish"
+    click_button "Save draft"
+  end
+
+  def and_i_publish_the_taxon
+    click_link "Publish"
+    click_button "Confirm publish"
   end
 
   def then_i_can_view_it_on_gov_uk
