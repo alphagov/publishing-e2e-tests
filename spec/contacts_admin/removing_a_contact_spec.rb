@@ -1,4 +1,4 @@
-feature "Removing a contact", contacts_admin: true, finder_frontend: true, government_frontend: true do
+feature "Removing a contact", flaky: true, contacts_admin: true, finder_frontend: true, government_frontend: true do
   include ContactsHelpers
 
   let(:title) { "Removing a contact #{SecureRandom.uuid}" }
