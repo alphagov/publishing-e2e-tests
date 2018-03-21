@@ -33,7 +33,7 @@ feature "Updating a contact", contacts_admin: true, finder_frontend: true, gover
   def then_i_can_view_it_on_gov_uk
     url = find_link(new_title)[:href]
     reload_url_until_status_code(url, 200)
-    reload_url_until_match(url, :has_text?, "Contact HMRC")
+    reload_url_until_match(url, :has_text?, "Contact HM Revenue & Customs")
 
     click_link new_title
     expect_rendering_application("government-frontend")
@@ -42,10 +42,10 @@ feature "Updating a contact", contacts_admin: true, finder_frontend: true, gover
   end
 
   def and_i_can_view_it_on_finder
-    contact_finder_url = find_link("Contact HMRC")[:href]
+    contact_finder_url = find_link("Contact HM Revenue & Customs")[:href]
     reload_url_until_match(contact_finder_url, :has_text?, new_title)
 
-    click_link "Contact HMRC"
+    click_link "Contact HM Revenue & Customs"
     expect_rendering_application("finder-frontend")
     expect(page).to have_content(new_title)
     expect(page).to have_content(new_description)
