@@ -245,10 +245,6 @@ def runTests(params) {
       currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
                                  "<p>We have <a href=\"${GUIDE_URL}\">flaky test advice available</a> to help.</p>"
       throw e
-    } finally {
-      stage("JUnit") {
-        junit 'tmp/rspec*.xml'
-      }
     }
   }
 }
@@ -263,7 +259,7 @@ def pushTestAgainstBranch() {
 }
 
 def makeLogsAvailable() {
-  stage("Make logs available") {
+  stage("Output Error log") {
     errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
     if (errors == 0) {
       echo("The following errors were logged with sentry/errbit:")
@@ -271,11 +267,23 @@ def makeLogsAvailable() {
     } else {
       echo("No errors were sent to sentry/errbit")
     }
+  }
 
-    echo("dumping docker log")
+  stage("Dump docker log") {
     sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
+  }
 
+  stage("Archive Artifacts") {
     archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
+  }
+
+  stage("JUnit") {
+    def hasJUnitFiles = sh(script: "ls tmp/rspec*.xml 1> /dev/null 2>&1", returnStatus: true)
+    if (hasJUnitFiles == 0) {
+      junit("tmp/rspec*.xml")
+    } else {
+      echo("No Junit files to log")
+    }
   }
 }
 
