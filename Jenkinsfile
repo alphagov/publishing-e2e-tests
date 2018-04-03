@@ -64,17 +64,20 @@ timestamps {
       cloneApplications()
       buildDockerEnvironmnet()
 
+      // a map to store whether tests are failed despite exception flows
+      def testStatus = [flakyNewFailed: false, mainFailed: false]
+
       try {
         startDockerApps()
-        runFlakyNewTests(params)
-        runTests(params)
+        runFlakyNewTests(params, testStatus)
+        runTests(params, testStatus)
         pushTestAgainstBranch()
       } catch(e) {
         failBuild(params)
-        slackFailMessage(params)
         throw e
       } finally {
         makeLogsAvailable()
+        alertTestOutcome(params, testStatus)
         stopDocker()
       }
     }
@@ -162,8 +165,6 @@ def originBuildStatus(message, status, params) {
   }
 }
 
-
-
 def failBuild(params) {
   currentBuild.result = "FAILED"
   step([$class: "Mailer",
@@ -214,36 +215,22 @@ def startDockerApps() {
   }
 }
 
-def slackFlakyMessage(params) {
-  def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
-  message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-  slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
-}
-
-def slackFailMessage(params) {
-  def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
-  message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-  slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
-}
-
-def runFlakyNewTests(params) {
+def runFlakyNewTests(params, testStatus) {
   echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
   try {
     sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
   } catch(err) {
-    slackFlakyMessage(params)
+    testStatus.flakyNewFailed = true
   }
 }
 
-def runTests(params) {
+def runTests(params, testStatus) {
   stage("Run tests") {
     try {
       echo "Running tests with `make ${params.TEST_COMMAND}`"
       sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
     } catch (e) {
-      def GUIDE_URL = "https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md#dealing-with-flaky-tests"
-      currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
-                                 "<p>We have <a href=\"${GUIDE_URL}\">flaky test advice available</a> to help.</p>"
+      testStatus.mainFailed = true
       throw e
     }
   }
@@ -290,5 +277,27 @@ def makeLogsAvailable() {
 def stopDocker() {
   stage("Stop Docker") {
     sh("make stop")
+  }
+}
+
+def alertTestOutcome(params, testStatus) {
+  // post to slack just when it's an important branch
+  if (env.BRANCH_NAME == "master" && testStatus.mainFailed) {
+    def message = "Publishing end-to-end tests <${BUILD_URL}|failed> for master branch, changes not pushed to test-against"
+    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+  } else if (env.BRANCH_NAME == "test-against" && testStatus.mainFailed) {
+    def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
+    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+  } else if (env.BRANCH_NAME == "test-against" && testStatus.flakyNewFailed) {
+    def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
+    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+    slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+  }
+
+  if (testStatus.mainFailed) {
+    def guideUrl = "https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md#dealing-with-flaky-tests"
+    currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
+                               "<p>We have <a href=\"${guideUrl}\">flaky test advice available</a> to help.</p>"
   }
 }
