@@ -32,106 +32,11 @@ def apps = [
 
 timestamps {
   node("publishing-e2e-tests") {
-
-
-    appDefaultCommits = [:]
-    appParams = apps.collect { app ->
-      appDefaultCommits["${app.constantPrefix}_COMMITISH"] = app.defaultCommitish
-
-      stringParam(
-        defaultValue: app.defaultCommitish,
-        description: "Which commit/branch/tag of ${app.name} to clone",
-        name: "${app.constantPrefix}_COMMITISH"
-      )
-    }
-
-    properties([
-      buildDiscarder(
-        logRotator(artifactDaysToKeepStr: "3", daysToKeepStr: "14", numToKeepStr: "400")
-      ),
-      parameters([
-        stringParam(
-          defaultValue: "",
-          description: "Which repo (if any) triggered this build. eg publishing-api",
-          name: "ORIGIN_REPO"
-        ),
-        stringParam(
-          defaultValue: "",
-          description: "The full SHA1 hash of the commit from ORIGIN_REPO which triggered this build",
-          name: "ORIGIN_COMMIT"
-        ),
-        stringParam(
-          defaultValue: "test",
-          description: "The command used to initiate tests, defaults to 'test' which tests all apps",
-          name: "TEST_COMMAND"
-        ),
-        stringParam(
-          defaultValue: "",
-          description: "Allows for overriding the default arguments following rspec such as the path to spec or spec directory used to focus on the test(s), useful for flaky tests.",
-          name: "TEST_ARGS"
-        ),
-        stringParam(
-          defaultValue: "6",
-          description: "Set number of processes for parallel testing",
-          name: "TEST_PROCESSES"
-        )
-      ] + appParams)
-    ])
-
-    govuk.initializeParameters([
-      "ORIGIN_REPO": "",
-      "ORIGIN_COMMIT": "",
-      "TEST_COMMAND": "test",
-      "TEST_ARGS": "",
-      "TEST_PROCESSES": "6"] + appDefaultCommits
-    )
-
-    def originBuildStatus = { message, status ->
-      if (params.ORIGIN_REPO && params.ORIGIN_COMMIT) {
-        step([
-            $class: "GitHubCommitStatusSetter",
-            commitShaSource: [$class: "ManuallyEnteredShaSource", sha: params.ORIGIN_COMMIT],
-            reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/alphagov/${params.ORIGIN_REPO}"],
-            contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "continuous-integration/jenkins/publishing-e2e-tests"],
-            errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-            statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: status]] ]
-        ]);
-      }
-    }
-
-    def failBuild = {
-      currentBuild.result = "FAILED"
-      step([$class: "Mailer",
-            notifyEveryUnstableBuild: true,
-            recipients: "govuk-ci-notifications@digital.cabinet-office.gov.uk",
-            sendToIndividuals: true])
-
-      originBuildStatus("Publishing end-to-end tests failed on Jenkins", "FAILED")
-    }
-
-    def abortBuild = { reason ->
-       currentBuild.result = "ABORTED"
-       originBuildStatus(reason, "ERROR")
-       error(reason)
-    }
-
-    appsToBuild = []
-    apps.each { app ->
-      commitishConstant = "${app.constantPrefix}_COMMITISH"
-
-      commitish = params[commitishConstant].trim()
-      govuk.setEnvar(commitishConstant, commitish)
-
-      if (commitish != app.defaultCommitish) {
-        appsToBuild << app.app
-      }
-    }
-
-    govuk.setEnvar("APPS_TO_BUILD", appsToBuild.join(" "))
+    initializeParameters(govuk, apps)
 
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {
-        originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING")
+        originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
 
         stage("Clean workspace") {
           checkout(scm)
@@ -152,105 +57,247 @@ timestamps {
         }
 
       } catch(e) {
-        failBuild()
+        failBuild(params)
         throw e
       }
 
+      cloneApplications()
+      buildDockerEnvironmnet()
+
+      // a map to store whether tests are failed despite exception flows
+      def testStatus = [flakyNewFailed: false, mainFailed: false]
+
       try {
-        stage("Clone applications") {
-          sh("make clone -j4")
-        }
+        startDockerApps()
+        runFlakyNewTests(params, testStatus)
+        runTests(params, testStatus)
+        pushTestAgainstBranch()
       } catch(e) {
-        abortBuild("Publishing end-to-end tests could not clone all repositories")
-      }
-
-      try {
-        stage("Build docker environment") {
-          sh("make pull")
-          sh("make build")
-        }
-      } catch(e) {
-        failBuild()
-        throw e
-      }
-
-      try {
-        stage("Start docker apps") {
-          try {
-            sh("make up")
-            sh("make setup -j12")
-          } catch(e) {
-            echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
-            throw e
-          }
-        }
-
-        try {
-          stage("Run flaky/new tests") {
-            echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
-            try {
-              sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
-            } catch(err) {
-              // Send a slack message just when tests fail within docker context
-              def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
-              message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-              slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
-            }
-          }
-
-          stage("Run tests") {
-            echo "Running tests with `make ${params.TEST_COMMAND}`"
-            sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
-          }
-
-          if (env.BRANCH_NAME == "master") {
-            echo 'Pushing to test-against branch'
-            sshagent(['govuk-ci-ssh-key']) {
-              sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
-            }
-          }
-
-          originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS")
-        } catch (e) {
-          def GUIDE_URL = "https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md#dealing-with-flaky-tests"
-          currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
-                                     "<p>We have <a href=\"${GUIDE_URL}\">flaky test advice available</a> to help.</p>"
-          throw e
-        } finally {
-            stage("JUnit") {
-              junit 'tmp/rspec*.xml'
-            }
-        }
-
-      } catch (e) {
-        failBuild()
-
-        // Send a slack message just when tests fail within docker context
-        def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
-        message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-        slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
-
+        failBuild(params)
         throw e
       } finally {
-        stage("Make logs available") {
-          errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
-          if (errors == 0) {
-            echo("The following errors were logged with sentry/errbit:")
-            sh("cat tmp/errors.log")
-          } else {
-            echo("No errors were sent to sentry/errbit")
-          }
-
-          echo("dumping docker log")
-          sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
-
-          archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
-        }
-
-        stage("Stop Docker") {
-          sh("make stop")
-        }
+        makeLogsAvailable()
+        alertTestOutcome(params, testStatus)
+        stopDocker()
       }
     }
+  }
+}
+
+def initializeParameters(govuk, appsCollection) {
+  appDefaultCommits = [:]
+  appParams = appsCollection.collect { app ->
+    appDefaultCommits["${app.constantPrefix}_COMMITISH"] = app.defaultCommitish
+
+    stringParam(
+      defaultValue: app.defaultCommitish,
+      description: "Which commit/branch/tag of ${app.name} to clone",
+      name: "${app.constantPrefix}_COMMITISH"
+    )
+  }
+
+  properties([
+    buildDiscarder(
+      logRotator(artifactDaysToKeepStr: "3", daysToKeepStr: "14", numToKeepStr: "400")
+    ),
+    parameters([
+      stringParam(
+        defaultValue: "",
+        description: "Which repo (if any) triggered this build. eg publishing-api",
+        name: "ORIGIN_REPO"
+      ),
+      stringParam(
+        defaultValue: "",
+        description: "The full SHA1 hash of the commit from ORIGIN_REPO which triggered this build",
+        name: "ORIGIN_COMMIT"
+      ),
+      stringParam(
+        defaultValue: "test",
+        description: "The command used to initiate tests, defaults to 'test' which tests all apps",
+        name: "TEST_COMMAND"
+      ),
+      stringParam(
+        defaultValue: "",
+        description: "Allows for overriding the default arguments following rspec such as the path to spec or spec directory used to focus on the test(s), useful for flaky tests.",
+        name: "TEST_ARGS"
+      ),
+      stringParam(
+        defaultValue: "6",
+        description: "Set number of processes for parallel testing",
+        name: "TEST_PROCESSES"
+      )
+    ] + appParams)
+  ])
+
+  govuk.initializeParameters([
+    "ORIGIN_REPO": "",
+    "ORIGIN_COMMIT": "",
+    "TEST_COMMAND": "test",
+    "TEST_ARGS": "",
+    "TEST_PROCESSES": "6"] + appDefaultCommits
+  )
+
+  appsToBuild = []
+  appsCollection.each { app ->
+    commitishConstant = "${app.constantPrefix}_COMMITISH"
+
+    commitish = params[commitishConstant].trim()
+    govuk.setEnvar(commitishConstant, commitish)
+
+    if (commitish != app.defaultCommitish) {
+      appsToBuild << app.app
+    }
+  }
+
+  govuk.setEnvar("APPS_TO_BUILD", appsToBuild.join(" "))
+}
+
+def originBuildStatus(message, status, params) {
+  if (params.ORIGIN_REPO && params.ORIGIN_COMMIT) {
+    step([
+        $class: "GitHubCommitStatusSetter",
+        commitShaSource: [$class: "ManuallyEnteredShaSource", sha: params.ORIGIN_COMMIT],
+        reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/alphagov/${params.ORIGIN_REPO}"],
+        contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "continuous-integration/jenkins/publishing-e2e-tests"],
+        errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+        statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: status]] ]
+    ]);
+  }
+}
+
+def failBuild(params) {
+  currentBuild.result = "FAILED"
+  step([$class: "Mailer",
+        notifyEveryUnstableBuild: true,
+        recipients: "govuk-ci-notifications@digital.cabinet-office.gov.uk",
+        sendToIndividuals: true])
+
+  originBuildStatus("Publishing end-to-end tests failed on Jenkins", "FAILED", params)
+}
+
+def abortBuild(reason, params) {
+  currentBuild.result = "ABORTED"
+  originBuildStatus(reason, "ERROR", params)
+  error(reason)
+}
+
+def cloneApplications() {
+  stage("Clone applications") {
+    try {
+      sh("make clone -j4")
+    } catch(e) {
+      abortBuild("Publishing end-to-end tests could not clone all repositories")
+    }
+  }
+}
+
+def buildDockerEnvironmnet() {
+  stage("Build docker environment") {
+    try {
+      sh("make pull")
+      sh("make build")
+    } catch(e) {
+      failBuild()
+      throw e
+    }
+  }
+}
+
+def startDockerApps() {
+  stage("Start docker apps") {
+    try {
+      sh("make up")
+      sh("make setup -j12")
+    } catch(e) {
+      echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
+      throw e
+    }
+  }
+}
+
+def runFlakyNewTests(params, testStatus) {
+  echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
+  try {
+    sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
+  } catch(err) {
+    testStatus.flakyNewFailed = true
+  }
+}
+
+def runTests(params, testStatus) {
+  stage("Run tests") {
+    try {
+      echo "Running tests with `make ${params.TEST_COMMAND}`"
+      sh("make ${params.TEST_COMMAND} TEST_PROCESSES=${params.TEST_PROCESSES}")
+    } catch (e) {
+      testStatus.mainFailed = true
+      throw e
+    }
+  }
+}
+
+def pushTestAgainstBranch() {
+  if (env.BRANCH_NAME == "master") {
+    echo 'Pushing to test-against branch'
+    sshagent(['govuk-ci-ssh-key']) {
+      sh("git push git@github.com:alphagov/publishing-e2e-tests.git HEAD:refs/heads/test-against --force")
+    }
+  }
+}
+
+def makeLogsAvailable() {
+  stage("Output Error log") {
+    errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
+    if (errors == 0) {
+      echo("The following errors were logged with sentry/errbit:")
+      sh("cat tmp/errors.log")
+    } else {
+      echo("No errors were sent to sentry/errbit")
+    }
+  }
+
+  stage("Dump docker log") {
+    sh("docker-compose logs --timestamps | sort -t '|' -k 2.2,2.31 > docker.log")
+  }
+
+  stage("Archive Artifacts") {
+    archiveArtifacts(artifacts: "docker.log,tmp/errors-verbose.log,tmp/screenshot*.png", fingerprint: true)
+  }
+
+  stage("JUnit") {
+    def hasJUnitFiles = sh(script: "ls tmp/rspec*.xml 1> /dev/null 2>&1", returnStatus: true)
+    if (hasJUnitFiles == 0) {
+      junit("tmp/rspec*.xml")
+    } else {
+      echo("No Junit files to log")
+    }
+  }
+}
+
+def stopDocker() {
+  stage("Stop Docker") {
+    sh("make stop")
+  }
+}
+
+def alertTestOutcome(params, testStatus) {
+  // post to slack just when it's an important branch
+  if (env.BRANCH_NAME == "master" && testStatus.mainFailed) {
+    def message = "Publishing end-to-end tests <${BUILD_URL}|failed> for master branch, changes not pushed to test-against"
+    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+  } else if (env.BRANCH_NAME == "test-against" && testStatus.mainFailed) {
+    def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
+    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+  } else if (env.BRANCH_NAME == "test-against" && testStatus.flakyNewFailed) {
+    def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
+    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
+    slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+  }
+
+  if (testStatus.mainFailed) {
+    def guideUrl = "https://github.com/alphagov/publishing-e2e-tests/blob/master/CONTRIBUTING.md#dealing-with-flaky-tests"
+    currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
+                               "<p>We have <a href=\"${guideUrl}\">flaky test advice available</a> to help.</p>"
   }
 }
