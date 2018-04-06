@@ -72,6 +72,7 @@ timestamps {
         runFlakyNewTests(params, testStatus)
         runTests(params, testStatus)
         pushTestAgainstBranch()
+        originBuildStatus("Publishing end-to-end tests succeeded on Jenkins", "SUCCESS", params)
       } catch(e) {
         failBuild(params)
         throw e
