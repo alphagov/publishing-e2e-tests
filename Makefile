@@ -67,7 +67,7 @@ content_store_setup:
 
 asset_manager_setup:
 	$(DOCKER_COMPOSE_CMD) exec -T asset-manager bundle exec rake db:purge
-	
+
 publishing_api_setup:
 	$(DOCKER_COMPOSE_CMD) exec -T publishing-api bundle exec rake db:setup
 
@@ -130,7 +130,8 @@ clean_docker:
 	bundle exec rake docker:remove_built_app_images
 
 clean_tmp:
-	$(DOCKER_RUN) bash -c 'find /app/tmp -name .keep -prune -o -type f -exec rm {} \;'
+	$(DOCKER_RUN) bash -c 'find /app/tmp -not -name .keep -type f -delete'
+	$(DOCKER_RUN) bash -c 'find /app/tmp -depth -empty -type d -delete'
 
 clean: clean_tmp clean_apps clean_docker
 
