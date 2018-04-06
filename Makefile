@@ -67,7 +67,7 @@ content_store_setup:
 
 asset_manager_setup:
 	$(DOCKER_COMPOSE_CMD) exec -T asset-manager bundle exec rake db:purge
-	
+
 publishing_api_setup:
 	$(DOCKER_COMPOSE_CMD) exec -T publishing-api bundle exec rake db:setup
 
