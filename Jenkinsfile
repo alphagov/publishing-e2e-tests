@@ -85,7 +85,7 @@ timestamps {
         // Docker leaves these owned by root which makes it difficult for
         // Jenkins to clean them up
         stage("Clean temporary files") {
-          sh("make clean_tmp")
+          sh("make -j clean_tmp clean_apps")
         }
       }
     }
