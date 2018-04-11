@@ -2,10 +2,10 @@ require 'docker'
 require 'docker/compose'
 
 class DockerService
-  def self.wait_for_healthy_services(services: [], except: [])
+  def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 60, interval_seconds: 10)
     unhealthy_containers = get_services_containers(only: services, except: except)
 
-    RetryWhileFalse.call(reload_seconds: 60, interval_seconds: 1) do
+    RetryWhileFalse.call(reload_seconds: reload_seconds, interval_seconds: interval_seconds) do
       unhealthy_containers = unhealthy_containers.reject { |service_container| container_is_healthy(service_container) }
       unhealthy_containers.empty?
     end
