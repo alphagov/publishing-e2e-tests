@@ -61,8 +61,8 @@ timestamps {
         throw e
       }
 
-      cloneApplications()
-      buildDockerEnvironmnet()
+      cloneApplications(params)
+      buildDockerEnvironmnet(params)
 
       // a map to store whether tests are failed despite exception flows
       def testStatus = [flakyNewFailed: false, mainFailed: false]
@@ -189,23 +189,23 @@ def abortBuild(reason, params) {
   error(reason)
 }
 
-def cloneApplications() {
+def cloneApplications(params) {
   stage("Clone applications") {
     try {
       sh("make clone -j4")
     } catch(e) {
-      abortBuild("Publishing end-to-end tests could not clone all repositories")
+      abortBuild("Publishing end-to-end tests could not clone all repositories", params)
     }
   }
 }
 
-def buildDockerEnvironmnet() {
+def buildDockerEnvironmnet(params) {
   stage("Build docker environment") {
     try {
       sh("make pull")
       sh("make build")
     } catch(e) {
-      failBuild()
+      failBuild(params)
       throw e
     }
   }
