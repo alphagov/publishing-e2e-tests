@@ -13,6 +13,7 @@ module WhitehallHelpers
     fill_in_opening_date(Date.today)
     fill_in_closing_date(Date.today.next_year)
     select_from_chosen "Test Policy Area", id: "edition_topic_ids"
+    check id: "edition_read_consultation_principles"
   end
 
   def force_publish_document
