@@ -290,18 +290,19 @@ def stopDocker() {
 }
 
 def alertTestOutcome(params, testStatus) {
+  def channel = "#govuk-e2e-tests"
   // post to slack just when it's an important branch
   if (env.BRANCH_NAME == "master" && testStatus.mainFailed) {
     def message = "Publishing end-to-end tests <${BUILD_URL}|failed> for master branch, changes not pushed to test-against"
-    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+    slackSend(color: "#d40100", channel: channel, message: message)
   } else if (env.BRANCH_NAME == "test-against" && testStatus.mainFailed) {
     def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
     message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-    slackSend(color: "#d40100", channel: "#end-to-end-tests", message: message)
+    slackSend(color: "#d40100", channel: channel, message: message)
   } else if (env.BRANCH_NAME == "test-against" && testStatus.flakyNewFailed) {
     def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
     message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-    slackSend(color: "#ffff94", channel: "#end-to-end-tests", message: message)
+    slackSend(color: "#ffff94", channel: channel, message: message)
   }
 
   if (testStatus.mainFailed) {
