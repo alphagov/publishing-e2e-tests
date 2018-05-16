@@ -110,12 +110,12 @@ requires a change one of these tests, we have
 ## Dealing with a flaky test
 
 A key aim of these tests is to be as reliable as possible, however this can be
-difficult - particularly early in a tests introduction - therefore we have a
+difficult - particularly early in a test's introduction - therefore we have a
 [strategy](CONTRIBUTING.md#dealing-with-flaky-tests) to deal with flaky tests.
 
 ## Contributing
 
-There is information on the coding standards, how to ad tests and how to add
+There is information on the coding standards, how to add tests and how to add
 applications to this project in the [contributing guidelines](CONTRIBUTING.md).
 
 ## Gotchas
