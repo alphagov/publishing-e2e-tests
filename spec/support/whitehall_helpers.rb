@@ -2,8 +2,10 @@ module WhitehallHelpers
   def create_consultation(title:)
     visit(Plek.find("whitehall-admin") + "/government/admin/consultations/new")
     fill_in_consultation_form(title: title)
-    click_button("Save")
+    click_button("Save and continue")
     expect(page).to have_text("The document has been saved")
+    click_button("Save")
+    expect(page).to have_text("The associations have been saved")
   end
 
   def fill_in_consultation_form(title:, body: paragraph_with_timestamp)
