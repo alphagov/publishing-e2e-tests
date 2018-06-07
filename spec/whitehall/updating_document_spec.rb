@@ -49,8 +49,8 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
     fill_in "Title", with: updated_title
     fill_in "Public change note", with: "Testing update behaviour"
+    click_button("Save and continue")
     click_button("Save")
-
-    expect(page).to have_text("The document has been saved")
+    expect(page).to have_text("The associations have been saved")
   end
 end
