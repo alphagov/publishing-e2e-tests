@@ -916,6 +916,24 @@ services:
       disable: true
     ports: []
 
+  email-alert-service:
+    image: govuk/email-alert-service:${EMAIL_ALERT_SERVICE_COMMITISH:-deployed-to-production}
+    build: apps/email-alert-service
+    depends_on:
+      - diet-error-handler
+      - email-alert-api
+      - rabbitmq
+      - redis
+    links:
+      - nginx-proxy:email-alert-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    environment:
+      << : *govuk-app
+      GOVUK_ENV: production
+      SENTRY_CURRENT_ENV: email-alert-service
+    volumes:
+      - ./apps/email-alert-service/log:/app/log
+
   static: &static
     image: govuk/static:${STATIC_COMMITISH:-deployed-to-production}
     build: apps/static
