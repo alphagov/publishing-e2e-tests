@@ -3,7 +3,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher calendars \
 	manuals-publisher manuals-frontend whitehall content-tagger \
-	contacts-admin finder-frontend
+	contacts-admin finder-frontend email-alert-api email-alert-service
 
 RUBY_VERSION = `cat .ruby-version`
 DOCKER_RUN = docker run --rm -v `pwd`:/app ruby:$(RUBY_VERSION)
@@ -56,9 +56,10 @@ setup_apps:
 	bundle exec rake docker:wait_for_apps
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
-  publishing_api_setup travel_advice_setup whitehall_setup \
-  content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
-  publisher_setup collections_publisher_setup rummager_setup contacts_admin_setup
+	publishing_api_setup travel_advice_setup whitehall_setup \
+	content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
+	publisher_setup collections_publisher_setup rummager_setup \
+	contacts_admin_setup email_alert_api_setup
 
 router_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps router-api bundle exec rake db:purge
@@ -97,6 +98,9 @@ collections_publisher_setup:
 
 rummager_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager env RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
+
+email_alert_api_setup:
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:setup
 
 wait_for_whitehall_admin:
 	bundle exec rake docker:wait_for_whitehall_admin

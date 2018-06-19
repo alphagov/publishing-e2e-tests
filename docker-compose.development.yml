@@ -124,6 +124,10 @@ services:
     ports:
       - "33037:3037"
 
+  email-alert-api:
+    ports:
+      - "33088:3088"
+
   static:
     ports:
       - "33013:3013"

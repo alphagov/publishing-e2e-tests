@@ -805,6 +805,7 @@ services:
     depends_on:
       - content-tagger-worker
       - diet-error-handler
+      - email-alert-api
       - publishing-api
       - postgres
       - redis
@@ -815,6 +816,7 @@ services:
     healthcheck:
       << : *default-healthcheck
     links:
+      - nginx-proxy:email-alert-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
     ports:
@@ -876,6 +878,61 @@ services:
     healthcheck:
       disable: true
     ports: []
+
+  email-alert-api: &email-alert-api
+    image: govuk/email-alert-api:${EMAIL_ALERT_API_COMMITISH:-deployed-to-production}
+    build: apps/email-alert-api
+    depends_on:
+      - diet-error-handler
+      - email-alert-api-worker
+      - postgres
+      - redis
+    links:
+      - nginx-proxy:error-handler.dev.gov.uk
+    environment:
+      << : *govuk-app
+      EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
+      REDIS_HOST: redis
+      SENTRY_CURRENT_ENV: email-alert-api
+      VIRTUAL_HOST: email-alert-api.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
+    ports:
+      - "3088"
+    volumes:
+      - ./apps/email-alert-api/log:/app/log
+
+  email-alert-api-worker:
+    << : *email-alert-api
+    command: foreman run worker
+    depends_on:
+      - diet-error-handler
+    environment:
+      << : *govuk-app
+      EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
+      REDIS_HOST: redis
+      SENTRY_CURRENT_ENV: email-alert-api-worker
+    healthcheck:
+      disable: true
+    ports: []
+
+  email-alert-service:
+    image: govuk/email-alert-service:${EMAIL_ALERT_SERVICE_COMMITISH:-deployed-to-production}
+    build: apps/email-alert-service
+    depends_on:
+      - diet-error-handler
+      - email-alert-api
+      - rabbitmq
+      - redis
+    links:
+      - nginx-proxy:email-alert-api.dev.gov.uk
+      - nginx-proxy:error-handler.dev.gov.uk
+    environment:
+      << : *govuk-app
+      GOVUK_ENV: production
+      SENTRY_CURRENT_ENV: email-alert-service
+    volumes:
+      - ./apps/email-alert-service/log:/app/log
 
   static: &static
     image: govuk/static:${STATIC_COMMITISH:-deployed-to-production}
