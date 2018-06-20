@@ -743,6 +743,7 @@ services:
       - diet-error-handler
       - mysql
       - publishing-api
+      - redis
       - rummager
       - static
       - whitehall-worker
@@ -754,6 +755,7 @@ services:
       SENTRY_CURRENT_ENV: whitehall-admin
       GOVUK_ASSET_ROOT: http://whitehall-admin.dev.gov.uk
       LOG_PATH: log/admin.log
+      REDIS_URL: redis://redis/1
     healthcheck:
       << : *default-healthcheck
     links:
@@ -794,6 +796,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: whitehall-worker
     healthcheck:
       disable: true
