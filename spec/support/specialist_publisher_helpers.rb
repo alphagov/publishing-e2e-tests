@@ -88,6 +88,7 @@ module SpecialistPublisherHelpers
     find("#business_finance_support_scheme_business_sizes option:first-of-type", visible: :all).select_option
     find("#business_finance_support_scheme_industries option:first-of-type", visible: :all).select_option
     find("#business_finance_support_scheme_business_stages option:first-of-type", visible: :all).select_option
+    find("#business_finance_support_scheme_regions option:first-of-type", visible: :all).select_option
   end
 
   def fill_in_cma_case_form(options = {})
