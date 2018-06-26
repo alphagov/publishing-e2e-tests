@@ -14,10 +14,10 @@ feature "Creating a draft taxon on Content Tagger", collections: true, content_t
   end
 
   def then_i_can_preview_it_on_draft_gov_uk
-    url = find_link("View on GOV.UK")[:href]
+    url = find_link("Preview changes on GOV.UK")[:href]
     reload_url_until_status_code(url, 200)
 
-    click_link "View on GOV.UK"
+    click_link "Preview changes on GOV.UK"
     expect_rendering_application("collections")
     expect(page).to have_content(title)
     expect_url_matches_draft_gov_uk
