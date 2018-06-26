@@ -147,9 +147,6 @@ def initializeParameters(govuk, appsCollection) {
     "TEST_PROCESSES": "6"] + appDefaultCommits
   )
 
-  unbuildableApps = [
-    "govuk-content-schemas",
-  ]
   appsToBuild = []
   appsCollection.each { app ->
     commitishConstant = "${app.constantPrefix}_COMMITISH"
@@ -157,7 +154,7 @@ def initializeParameters(govuk, appsCollection) {
     commitish = params[commitishConstant].trim()
     govuk.setEnvar(commitishConstant, commitish)
 
-    if (commitish != app.defaultCommitish && !unbuildableApps.contains(app.app)) {
+    if (commitish != app.defaultCommitish) {
       appsToBuild << app.app
     }
   }
