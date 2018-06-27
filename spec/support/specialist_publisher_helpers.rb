@@ -88,6 +88,7 @@ module SpecialistPublisherHelpers
     select_all_select2("business_finance_support_scheme_business_sizes")
     select_all_select2("business_finance_support_scheme_industries")
     select_all_select2("business_finance_support_scheme_business_stages")
+    select_all_select2("business_finance_support_scheme_regions")
   end
 
   def fill_in_cma_case_form(options = {})
