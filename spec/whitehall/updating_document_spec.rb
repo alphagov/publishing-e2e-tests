@@ -50,6 +50,8 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     fill_in "Title", with: updated_title
     fill_in "Public change note", with: "Testing update behaviour"
     click_button("Save and continue")
+    check "Test taxon"
+    click_button("Save and review legacy tagging")
     click_button("Save")
     expect(page).to have_text("The associations have been saved")
   end

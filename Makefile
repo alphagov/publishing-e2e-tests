@@ -52,6 +52,7 @@ setup_apps:
 	bundle exec rake docker:wait_for_publishing_api
 	$(MAKE) contacts_admin_seed
 	$(MAKE) publish_routes
+	$(MAKE) populate_end_to_end_test_data_from_whitehall
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
 	bundle exec rake docker:wait_for_apps
 
@@ -134,6 +135,9 @@ publish_contacts_admin:
 
 publish_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
+
+populate_end_to_end_test_data_from_whitehall:
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake taxonomy:populate_end_to_end_test_data
 
 clean_apps:
 	$(DOCKER_RUN) bash -c 'rm -rf /app/apps/*'
