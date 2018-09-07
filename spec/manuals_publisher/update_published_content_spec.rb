@@ -41,6 +41,7 @@ feature "Updating content on Manuals Publisher", manuals_publisher: true do
 
   def and_the_update_log_has_the_change_note
     click_link "see all updates"
+    first(".section-content a", text: "Open all").click
 
     expect(page).to have_content(change_note)
   end
