@@ -63,9 +63,9 @@ module SpecialistPublisherHelpers
     fill_in("Title", with: options[:title])
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
-    find("#asylum_support_decision_tribunal_decision_categories option:first-of-type", visible: :all).select_option
-    find("#asylum_support_decision_tribunal_decision_sub_categories option:first-of-type", visible: :all).select_option
-    find("#asylum_support_decision_tribunal_decision_judges option:first-of-type", visible: :all).select_option
+    select_all_select2("asylum_support_decision_tribunal_decision_categories")
+    select_all_select2("asylum_support_decision_tribunal_decision_sub_categories")
+    select_all_select2("asylum_support_decision_tribunal_decision_judges")
     fill_in("Tribunal decision reference number", with: options[:reference_number])
     fill_in("asylum_support_decision_tribunal_decision_decision_date_year", with: options[:decision_date].year)
     fill_in("asylum_support_decision_tribunal_decision_decision_date_month", with: options[:decision_date].month)
@@ -84,10 +84,10 @@ module SpecialistPublisherHelpers
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
     fill_in("Continuation link", with: options[:continuation_link])
-    find("#business_finance_support_scheme_types_of_support option:first-of-type", visible: :all).select_option
-    find("#business_finance_support_scheme_business_sizes option:first-of-type", visible: :all).select_option
-    find("#business_finance_support_scheme_industries option:first-of-type", visible: :all).select_option
-    find("#business_finance_support_scheme_business_stages option:first-of-type", visible: :all).select_option
+    select_all_select2("business_finance_support_scheme_types_of_support")
+    select_all_select2("business_finance_support_scheme_business_sizes")
+    select_all_select2("business_finance_support_scheme_industries")
+    select_all_select2("business_finance_support_scheme_business_stages")
   end
 
   def fill_in_cma_case_form(options = {})
@@ -100,7 +100,7 @@ module SpecialistPublisherHelpers
     fill_in("Title", with: options[:title])
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
-    find("#cma_case_market_sector option:first-of-type", visible: :all).select_option
+    select_all_select2("cma_case_market_sector")
   end
 
   def fill_in_countryside_stewardship_grant_form(options = {})
@@ -126,8 +126,8 @@ module SpecialistPublisherHelpers
     fill_in("Title", with: options[:title])
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
-    find("#dfid_research_output_dfid_document_type option:nth-of-type(2)", visible: :all).select_option
-    find("#dfid_research_output_dfid_theme option:first-of-type", visible: :all).select_option
+    select2("dfid_research_output_dfid_document_type", "Book")
+    select_all_select2("dfid_research_output_dfid_theme")
     fill_in("dfid_research_output_first_published_at_year", with: options[:first_published_at].year)
     fill_in("dfid_research_output_first_published_at_month", with: options[:first_published_at].month)
     fill_in("dfid_research_output_first_published_at_day", with: options[:first_published_at].day)
@@ -144,7 +144,7 @@ module SpecialistPublisherHelpers
     fill_in("Title", with: options[:title])
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
-    find("#employment_appeal_tribunal_decision_tribunal_decision_categories option:first-of-type", visible: :all).select_option
+    select_all_select2("employment_appeal_tribunal_decision_tribunal_decision_categories")
     fill_in("employment_appeal_tribunal_decision_tribunal_decision_decision_date_year", with: options[:decision_date].year)
     fill_in("employment_appeal_tribunal_decision_tribunal_decision_decision_date_month", with: options[:decision_date].month)
     fill_in("employment_appeal_tribunal_decision_tribunal_decision_decision_date_day", with: options[:decision_date].day)
@@ -167,5 +167,17 @@ module SpecialistPublisherHelpers
       )
       signin_with_user(@user)
     end
+  end
+
+  def select_all_select2(id)
+    first("a[data-select-id='##{id}']").click
+  end
+
+  def select2(scope, value)
+    select2_container = first("#s2id_#{scope}.select2-container")
+    select2_container.click
+
+    page.execute_script("$('##{scope}').value = '#{value}'");
+    find(:xpath, "//body").first(".select2-results li", text: value).click
   end
 end
