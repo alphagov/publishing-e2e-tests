@@ -46,7 +46,11 @@ module PublisherHelpers
   end
 
   def submit_button(button)
-    find(:xpath, "//input[@value=\"#{button}\"]", visible: false).click
+    if is_button_visible?(button)
+      click_button(button)
+    else
+      page.execute_script(%($("input[value='#{button}']").trigger("click");))
+    end
   end
 
   def is_button_visible?(button)
