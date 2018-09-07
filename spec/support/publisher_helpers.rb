@@ -46,7 +46,7 @@ module PublisherHelpers
   end
 
   def submit_button(button)
-    find(:xpath, "//input[@value=\"#{button}\"]", visible: false).trigger("click")
+    find(:xpath, "//input[@value=\"#{button}\"]", visible: false).click
   end
 
   def is_button_visible?(button)
