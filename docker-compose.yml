@@ -973,6 +973,7 @@ services:
       - static
       - diet-error-handler
       - memcached
+      - rummager
     environment:
       << : *govuk-app
       MEMCACHE_SERVERS: memcached
@@ -985,6 +986,7 @@ services:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:rummager.dev.gov.uk
     ports:
       - "3090"
     volumes:
@@ -997,6 +999,7 @@ services:
       - draft-static
       - diet-error-handler
       - memcached
+      - rummager
     environment:
       << : *draft-govuk-app
       MEMCACHE_SERVERS: memcached
@@ -1008,6 +1011,7 @@ services:
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
+      - nginx-proxy:rummager.dev.gov.uk
     ports:
       - "3190"
 
