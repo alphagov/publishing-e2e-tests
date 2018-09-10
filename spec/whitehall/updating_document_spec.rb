@@ -40,6 +40,10 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     visit(publication_finder)
 
     expect_rendering_application("whitehall")
+    # Session#find waits until an element appears
+    # this seems to make a difference to the outcome
+    # of this spec.
+    find("a", text: updated_title)
     expect(page).to have_content(updated_title)
   end
 

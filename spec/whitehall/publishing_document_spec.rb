@@ -36,6 +36,9 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     visit(publication_finder)
 
     expect_rendering_application("whitehall")
+    # Session#find waits until an element is visible
+    # this appears to influence the outcome of this spec.
+    page.find("a", text: title)
     expect(page).to have_content(title)
   end
 end

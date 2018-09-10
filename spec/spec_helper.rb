@@ -20,10 +20,10 @@
 require "capybara/rspec"
 require "capybara-screenshot/rspec"
 # require "capybara/webkit"
-require "capybara/poltergeist"
 require "capybara-select2"
 require "faker"
 require "plek"
+require "selenium-webdriver"
 
 Dir["./spec/support/*.rb"].each { |f| require f }
 
@@ -113,21 +113,46 @@ RSpec.configure do |config|
 =end
 
   config.add_setting :reload_page_wait_time, default: 60
-
-  config.before(:each) do
-    page.driver.clear_memory_cache
-  end
 end
 
-Capybara.configure do |config|
-  config.run_server = false
-  config.default_driver = :poltergeist
-  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
-  config.default_max_wait_time = 4
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: {
+      args: %w(
+        --disable-dev-shm-usage
+        --disable-gpu
+        --disable-infobars
+        --disable-notifications
+        --headless
+        --no-sandbox
+        --window-size=1400,1400
+      )
+    }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
+end
+
+Capybara.javascript_driver = :headless_chrome
+
+# Add support for Headless Chrome screenshots.
+Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
+  driver.browser.save_screenshot(path)
 end
 
 Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
   "screenshot-#{example.description.downcase.gsub(/\W/, '-').gsub(/^.*\/spec\//, '')}"
+end
+
+Capybara.configure do |config|
+  config.run_server = false
+  config.default_driver = :headless_chrome
+  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
+  config.default_max_wait_time = 4
 end
 
 # Capybara::Webkit.configure do |config|
