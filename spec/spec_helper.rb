@@ -23,6 +23,7 @@ require "capybara-screenshot/rspec"
 require "capybara-select2"
 require "faker"
 require "plek"
+require "chromedriver-helper"
 require "selenium-webdriver"
 
 Dir["./spec/support/*.rb"].each { |f| require f }
