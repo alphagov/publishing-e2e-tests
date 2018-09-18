@@ -18,7 +18,7 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
   private
 
   def visit_create_topic
-    visit_collections_publisher("/specialist-sector-pages/new")
+    visit_collections_publisher("/topics/new")
   end
 
   def given_i_have_a_published_topic
@@ -43,7 +43,7 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
   end
 
   def and_i_publish_it
-    click_link("Publish")
+    click_link("Publish topic")
     expect(page).to have_text("published")
   end
 
