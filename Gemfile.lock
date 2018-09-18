@@ -8,7 +8,7 @@ GEM
     ast (2.4.0)
     backticks (1.0.2)
     byebug (10.0.2)
-    capybara (3.7.1)
+    capybara (3.7.2)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -23,7 +23,7 @@ GEM
       rspec
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (1.2.0)
+    chromedriver-helper (2.0.1)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
     concurrent-ruby (1.0.5)
@@ -34,18 +34,24 @@ GEM
     docker-compose (1.1.9)
       backticks (~> 1.0)
     excon (0.62.0)
-    faker (1.8.7)
+    faker (1.9.1)
       i18n (>= 0.7)
     ffi (1.9.25)
-    govuk-lint (3.8.0)
-      rubocop (~> 0.52.0)
-      rubocop-rspec (~> 1.19.0)
+    govuk-lint (3.9.0)
+      rubocop (~> 0.58)
+      rubocop-rspec (~> 1.28)
       scss_lint
+    govuk_test (0.2.1)
+      capybara
+      chromedriver-helper
+      puma
+      selenium-webdriver
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
-    i18n (1.0.1)
+    i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     io-like (0.3.0)
+    jaro_winkler (1.5.1)
     launchy (2.4.3)
       addressable (~> 2.3)
     mini_mime (1.0.1)
@@ -55,13 +61,14 @@ GEM
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     parallel (1.12.1)
-    parallel_tests (2.21.3)
+    parallel_tests (2.23.0)
       parallel
-    parser (2.5.1.0)
+    parser (2.5.1.2)
       ast (~> 2.4.0)
     plek (2.1.1)
     powerpack (0.1.2)
     public_suffix (3.0.3)
+    puma (3.12.0)
     rack (2.0.5)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -71,33 +78,34 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     rotp (3.3.1)
-    rspec (3.7.0)
-      rspec-core (~> 3.7.0)
-      rspec-expectations (~> 3.7.0)
-      rspec-mocks (~> 3.7.0)
-    rspec-core (3.7.1)
-      rspec-support (~> 3.7.0)
-    rspec-expectations (3.7.0)
+    rspec (3.8.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+    rspec-core (3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-expectations (3.8.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.7.0)
-    rspec-mocks (3.7.0)
+      rspec-support (~> 3.8.0)
+    rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.7.0)
-    rspec-support (3.7.1)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.52.1)
+    rubocop (0.59.1)
+      jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.4.0.2, < 3.0)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    rubocop-rspec (1.19.0)
-      rubocop (>= 0.51.0)
-    ruby-progressbar (1.9.0)
+    rubocop-rspec (1.29.1)
+      rubocop (>= 0.58.0)
+    ruby-progressbar (1.10.0)
     rubyzip (1.2.2)
-    sass (3.5.6)
+    sass (3.5.7)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -117,14 +125,13 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  capybara
   capybara-screenshot
   capybara-select2
-  chromedriver-helper
   docker-api (~> 1.34)
   docker-compose (~> 1.1)
   faker (~> 1.6)
   govuk-lint
+  govuk_test (~> 0.2.1)
   httparty
   parallel_tests
   plek (~> 2.0)
@@ -132,7 +139,6 @@ DEPENDENCIES
   rotp
   rspec
   rspec_junit_formatter
-  selenium-webdriver
 
 BUNDLED WITH
    1.16.4
