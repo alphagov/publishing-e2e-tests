@@ -8,7 +8,7 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
   let(:child_slug) { "archiving-collections-publisher-child-#{SecureRandom.uuid}" }
   let(:link) { ["/topic", parent_slug, child_slug].join("/") }
 
-  scenario "Archiving a child specialist sector" do
+  scenario "Archiving a child topic" do
     given_there_is_a_published_child_topic
     and_i_archive_it
     then_when_i_visit_the_child_on_gov_uk_i_am_redirected_to_the_parent
@@ -22,9 +22,9 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
   end
 
   def and_i_archive_it
-    click_link("Archive")
-    select2(parent_title, from: "Choose a specialist sector to redirect to")
-    click_button "Archive and redirect to a specialist sector"
+    click_link("Archive topic")
+    select2(parent_title, from: "Choose a topic to redirect to")
+    click_button "Archive and redirect to a topic"
     expect(page).to have_text("archived")
   end
 
@@ -41,7 +41,7 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
   end
 
   def visit_create_topic
-    visit_collections_publisher("/specialist-sector-pages/new")
+    visit_collections_publisher("/topics/new")
   end
 
   def create_and_publish_parent_topic
@@ -64,7 +64,7 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
   end
 
   def publish_topic
-    click_link("Publish")
+    click_link("Publish topic")
     expect(page).to have_text("published")
   end
 
