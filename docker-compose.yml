@@ -779,6 +779,7 @@ services:
       VIRTUAL_HOST: whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: whitehall-frontend
       LOG_PATH: log/frontend.log
+      REDIS_URL: redis://redis/1
 
   draft-whitehall-frontend:
     << : *whitehall
@@ -788,6 +789,7 @@ services:
       VIRTUAL_HOST: draft-whitehall-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
       LOG_PATH: log/draft-frontend.log
+      REDIS_URL: redis://redis/1
 
   whitehall-worker:
     << : *whitehall
