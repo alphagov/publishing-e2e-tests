@@ -10,7 +10,15 @@ feature "Editing with Specialist Publisher", specialist_publisher: true, governm
     then_i_can_see_the_edits_on_draft_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Specialist Publisher" => %w[editor gds_editor],
+      "Content Preview" => [],
+    )
+  end
+
   def given_there_is_an_asylum_support_decision
+    signin_to_signon if use_signon?
     visit_specialist_publisher("/asylum-support-decisions/new")
 
     fill_in_asylum_support_decision_form(title: old_title)
@@ -31,6 +39,8 @@ feature "Editing with Specialist Publisher", specialist_publisher: true, governm
   end
 
   def then_i_can_see_the_edits_on_draft_gov_uk
+    signin_to_draft_origin(@user) if use_signon?
+
     url = find_link("Preview draft")[:href]
     reload_url_until_status_code(url, 200)
 

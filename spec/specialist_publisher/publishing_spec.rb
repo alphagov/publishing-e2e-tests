@@ -9,7 +9,14 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true, gove
     then_i_can_view_it_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Specialist Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_draft_aaib_report
+    signin_to_signon if use_signon?
     visit(Plek.find("specialist-publisher") + "/aaib-reports/new")
 
     fill_in_aaib_report_form(title: title)

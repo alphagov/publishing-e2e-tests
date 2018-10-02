@@ -9,7 +9,14 @@ feature "Publishing a contact", contacts_admin: true, finder_frontend: true, gov
     and_i_can_view_it_on_finder
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Contacts Admin" => [],
+    )
+  end
+
   def when_i_create_a_contact
+    signin_to_signon if use_signon?
     publish_contact(title: title)
   end
 

@@ -1,8 +1,11 @@
 # coding: utf-8
 
 require 'rotp'
+require_relative 'javascript_helpers'
 
 module SignonHelpers
+  include JavascriptHelpers
+
   class User
     attr_reader :email, :passphrase, :number
 
@@ -68,12 +71,13 @@ module SignonHelpers
     user
   end
 
-  def self.use_signon?
+  def use_signon?
     !User::available_user_count.nil?
   end
 
   def signin_with_user(user)
-    visit_signon('/users/sign_in')
+    visit_signon('/users/sign_in') unless
+      has_current_path?("#{signon_url}/users/signin")
 
     # If some user is already signed in
     if current_path == '/'
@@ -89,6 +93,10 @@ module SignonHelpers
 
     if current_path == '/users/two_step_verification/prompt'
       click_link('Start set up')
+
+      # Disable transitions, as this makes the following steps fail
+      # often
+      disable_jquery_transitions
       click_link('Next')
 
       paragraph = find('p', text: 'Enter the code manually:')
@@ -120,8 +128,6 @@ module SignonHelpers
   end
 
   def set_user_permissions(email, app_permissions)
-    return if app_permissions.empty?
-
     visit_signon('/users')
     fill_in('Name or email', with: email)
     click_button('Search')
@@ -161,6 +167,13 @@ module SignonHelpers
     end
 
     click_button('Update User')
+  end
+
+  def signin_with_next_user(app_permissions = {})
+    user = get_next_user(app_permissions)
+    signin_with_user(user)
+
+    user
   end
 
   def visit_signon(path = '/')

@@ -9,7 +9,14 @@ feature "Publishing content on Manuals Publisher", manuals_publisher: true do
     then_i_can_view_it_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Manuals Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_draft_manual_with_a_section
+    signin_to_signon if use_signon?
     create_draft_manual(title: title)
     create_manual_section
   end

@@ -13,7 +13,15 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
     then_i_can_access_the_attachment_through_the_draft
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Manuals Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_draft_manual_with_a_section
+    signin_to_signon if use_signon?
+
     create_draft_manual(title: title)
     create_manual_section(title: section_title)
   end
@@ -54,6 +62,8 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
   end
 
   def visit_draft_manual
+    signin_to_draft_origin(@user) if use_signon?
+
     url = find_link("Preview draft")[:href]
     reload_url_until_status_code(url, 200)
 

@@ -17,11 +17,16 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
 
   private
 
+  def signin_to_signon
+    signin_with_next_user("Collections Publisher" => ["GDS Editor"])
+  end
+
   def visit_create_topic
     visit_collections_publisher("/specialist-sector-pages/new")
   end
 
   def given_i_have_a_published_topic
+    signin_to_signon if use_signon?
     create_topic
     and_i_publish_it
   end

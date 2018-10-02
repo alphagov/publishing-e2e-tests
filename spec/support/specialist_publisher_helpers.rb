@@ -154,21 +154,6 @@ module SpecialistPublisherHelpers
     visit(Plek.find("specialist-publisher") + path)
   end
 
-  def self.included(base)
-    return unless SignonHelpers::use_signon?
-
-    default_permissions = %w[editor gds_editor]
-
-    base.before(:each) do |example|
-      @user = get_next_user(
-        "Specialist Publisher" =>
-        example.metadata.fetch(:permissions, default_permissions),
-        "Content Preview" => %w[]
-      )
-      signin_with_user(@user)
-    end
-  end
-
   def select_all_select2(id)
     first("a[data-select-id='##{id}']").click
   end

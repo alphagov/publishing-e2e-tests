@@ -11,7 +11,15 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
     then_visiting_the_removed_taxon_redirects_to_the_other_taxon
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Content Tagger" => ["GDS Editor"],
+    )
+  end
+
   def given_there_are_two_published_taxons
+    signin_to_signon if use_signon?
+
     @redirection_destination_url = create_and_publish_taxon(
       base_path: redirection_destination_base_path, title: redirection_destination_title
     )

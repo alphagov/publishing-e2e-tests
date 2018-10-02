@@ -27,18 +27,4 @@ module ManualsPublisherHelpers
     reload_url_until_match(current_url, :has_text?, "View on website")
     visit current_url
   end
-
-  def self.included(base)
-    return unless SignonHelpers::use_signon?
-
-    default_permissions = %w[editor gds_editor]
-
-    base.before(:each) do |example|
-      @user = get_next_user(
-        "Manuals Publisher" =>
-        example.metadata.fetch(:permissions, default_permissions)
-      )
-      signin_with_user(@user)
-    end
-  end
 end

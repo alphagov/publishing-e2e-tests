@@ -12,7 +12,15 @@ feature "Removing content on Manuals Publisher", manuals_publisher: true do
     then_the_removed_section_redirects_to_the_root_page
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Manuals Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_published_manual_with_sections
+    signin_to_signon if use_signon?
+
     create_draft_manual(title: title)
     @edit_manual_url = current_url
 

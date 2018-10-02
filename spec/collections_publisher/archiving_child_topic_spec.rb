@@ -16,7 +16,12 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
 
   private
 
+  def signin_to_signon
+    signin_with_next_user("Collections Publisher" => ["GDS Editor"])
+  end
+
   def given_there_is_a_published_child_topic
+    signin_to_signon if use_signon?
     create_and_publish_parent_topic
     create_and_publish_child_topic
   end

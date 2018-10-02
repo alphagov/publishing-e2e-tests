@@ -9,7 +9,14 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true, go
     then_i_receive_a_410_on_gov_uk
   end
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Specialist Publisher" => %w[editor gds_editor],
+    )
+  end
+
   def given_there_is_a_published_dfid_research_output
+    signin_to_signon if use_signon?
     visit_specialist_publisher("/dfid-research-outputs/new")
 
     fill_in_dfid_research_output_form(title: title)

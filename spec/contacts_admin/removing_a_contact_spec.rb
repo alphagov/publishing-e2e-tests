@@ -12,7 +12,14 @@ feature "Removing a contact", contacts_admin: true, finder_frontend: true, gover
 
   private
 
+  def signin_to_signon
+    @user = signin_with_next_user(
+      "Contacts Admin" => [],
+    )
+  end
+
   def given_there_is_a_published_contact
+    signin_to_signon if use_signon?
     publish_contact(title: title)
     @url = find_link(title)[:href]
   end
