@@ -16,7 +16,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Publisher" => ["skip_review"],
+      "Publisher" => %w[skip_review],
       "Content Tagger" => ["GDS Editor"],
     )
   end

@@ -16,7 +16,7 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Publisher" => ["skip_review"],
+      "Publisher" => %w[skip_review],
     )
   end
 

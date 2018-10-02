@@ -12,7 +12,7 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Whitehall" => ["Editor"],
+      "Whitehall" => %w[Editor],
     )
   end
 

@@ -16,7 +16,7 @@ feature "Upload attachments on Travel Advice Publisher", feature: true, travel_a
 
   def signin_to_signon
     signin_with_next_user(
-      "Travel Advice Publisher" => ["gds_editor"],
+      "Travel Advice Publisher" => %w[gds_editor],
       "Content Preview" => [],
     )
   end

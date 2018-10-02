@@ -13,7 +13,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Whitehall" => ["Editor"],
+      "Whitehall" => %w[Editor],
     )
   end
 

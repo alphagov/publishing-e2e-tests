@@ -13,7 +13,7 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Whitehall" => ["Editor"],
+      "Whitehall" => %w[Editor],
     )
   end
 

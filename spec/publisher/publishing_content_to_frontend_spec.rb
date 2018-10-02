@@ -16,7 +16,7 @@ feature "Publishing content from Publisher to Frontend", publisher: true, fronte
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Publisher" => ["skip_review"],
+      "Publisher" => %w[skip_review],
     )
   end
 

@@ -15,7 +15,7 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Publisher" => ["skip_review"],
+      "Publisher" => %w[skip_review],
       "Content Tagger" => ["GDS Editor"],
     )
   end

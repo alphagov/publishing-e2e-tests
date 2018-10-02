@@ -10,7 +10,7 @@ feature "Publishing a person on Whitehall", whitehall: true do
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Whitehall" => ["Editor"],
+      "Whitehall" => %w[Editor],
     )
   end
 

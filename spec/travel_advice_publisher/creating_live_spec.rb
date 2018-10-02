@@ -13,7 +13,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
   end
 
   def signin_to_signon
-    signin_with_next_user("Travel Advice Publisher" => ["gds_editor"])
+    signin_with_next_user("Travel Advice Publisher" => %w[gds_editor])
   end
 
   def when_i_create_a_live_edition_of_malta

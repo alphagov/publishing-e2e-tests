@@ -13,7 +13,7 @@ feature "Creating draft content on Publisher", publisher: true, frontend: true d
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Publisher" => ["skip_review"],
+      "Publisher" => %w[skip_review],
       "Content Preview" => [],
     )
   end

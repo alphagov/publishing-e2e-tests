@@ -16,7 +16,7 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
 
   def signin_to_signon
     @user = signin_with_next_user(
-      "Travel Advice Publisher" => ["gds_editor"],
+      "Travel Advice Publisher" => %w[gds_editor],
       "Content Preview" => []
     )
   end
