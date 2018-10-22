@@ -88,7 +88,7 @@ module SignonHelpers
     end
 
     fill_in('Email', with: user.email)
-    fill_in('Passphrase', with: user.passphrase)
+    fill_in('Password', with: user.passphrase)
     click_button('Sign in')
 
     if current_path == '/users/two_step_verification/prompt'
@@ -113,7 +113,7 @@ module SignonHelpers
       click_button('submit_code')
     elsif current_path == '/users/two_step_verification/session/new'
       fill_in(
-        'Verification code',
+        'Your verification code',
         with: user.two_step_verification_code
       )
 
@@ -155,11 +155,14 @@ module SignonHelpers
             raise "#{app} does not support the #{unsupported_permissions} permissions, only #{supported_permissions}"
           end
 
-          options.each do |option|
-            if permissions.include?(option.text(:all))
-              option.select_option
-            else
-              option.unselect_option
+          within(".chosen-container") do
+            # Remove all existing permissions
+            all('.search-choice-close').each(&:click)
+
+            # Select the desired permissions
+            permissions.each do |permission|
+              find("input[type='text']").click
+              find("li", text: permission, match: :prefer_exact).click
             end
           end
         end
