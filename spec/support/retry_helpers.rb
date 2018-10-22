@@ -32,6 +32,12 @@ module RetryHelpers
 
     retry_while_false(reload_options) do
       session = Capybara::Session.new(Capybara.default_driver)
+      if URI(url).host != URI(session.current_url).host
+        # You can only set cookies when on the relevant domain, so
+        # visit the page before setting cookies if this isn't the
+        # case.
+        session.visit(url)
+      end
       set_session_cookies(URI(url).host, session)
       session.visit(url)
       if within_selector
@@ -87,32 +93,21 @@ module RetryHelpers
   def store_cookies_for_retry_helpers
     @_retry_helper_cookies ||= {}
     @_retry_helper_cookies[URI(current_url).host] =
-      Capybara.current_session.driver.cookies
+      Capybara.current_session.driver.browser.manage.all_cookies
   end
 
   def set_session_cookies(host, session)
     @_retry_helper_cookies ||= {}
-    @_retry_helper_cookies.fetch(host, {}).each_value do |cookie|
-      options = {
-        domain: cookie.domain,
-        path: cookie.path,
-        secure: cookie.secure?,
-        httponly: cookie.httponly?,
-        samesite: cookie.samesite,
-        expires: cookie.expires
-      }
+    @_retry_helper_cookies.fetch(host, {}).each do |cookie|
+      next unless cookie[:domain] == host
 
-      session.driver.set_cookie(
-        cookie.name,
-        cookie.value,
-        options
-      )
+      session.driver.browser.manage.add_cookie(cookie)
     end
   end
 
   def retry_helpers_cookies_string(host)
-    cookies = (@_retry_helper_cookies || {}).fetch(host, {}).values.map do |cookie|
-      cookie.name + "=" + cookie.value
+    cookies = (@_retry_helper_cookies || {}).fetch(host, []).map do |cookie|
+      cookie[:name] + "=" + cookie[:value]
     end
 
     cookies.join(";")
