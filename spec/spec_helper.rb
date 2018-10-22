@@ -127,10 +127,12 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    acceptInsecureCerts: true,
     chromeOptions: {
       args: %w(
         --disable-dev-shm-usage
         --disable-gpu
+        --disable-web-security
         --disable-infobars
         --disable-notifications
         --headless
