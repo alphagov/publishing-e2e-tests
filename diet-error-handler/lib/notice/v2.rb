@@ -25,7 +25,7 @@ module Notice
     end
 
     def dump
-      "---\ntimestamp: #{timestamp.to_s}\n#{xml.to_s}\n"
+      "---\ntimestamp: #{timestamp}\n#{xml}\n"
     end
   end
 end

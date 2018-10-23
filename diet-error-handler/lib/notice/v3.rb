@@ -26,7 +26,7 @@ module Notice
     end
 
     def dump
-      "---\ntimestamp: #{timestamp.to_s}\n#{json.to_yaml}\n"
+      "---\ntimestamp: #{timestamp}\n#{json.to_yaml}\n"
     end
   end
 end

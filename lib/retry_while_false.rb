@@ -6,6 +6,7 @@ class RetryWhileFalse
     loop do
       return true if yield
       break unless Time.now.utc - start_time <= reload_seconds
+
       sleep(interval_seconds)
     end
     false
