@@ -66,7 +66,7 @@ private
   end
 
   def upper_name
-    name.gsub(/\-/, "_").upcase
+    name.tr('-', "_").upcase
   end
 
   def commitish

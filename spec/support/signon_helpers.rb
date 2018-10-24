@@ -38,7 +38,7 @@ module SignonHelpers
     end
 
     def two_step_verification_secret
-      @_two_step_verification_secret ||=
+      @two_step_verification_secret ||=
         File.open(two_step_verification_secret_file_name, &:readline).strip
     end
 
@@ -58,7 +58,7 @@ module SignonHelpers
     end
 
     def self.superuser
-      @_superuser ||= User.new(superuser: true)
+      @superuser ||= User.new(superuser: true)
     end
   end
 
@@ -181,7 +181,7 @@ module SignonHelpers
   end
 
   def signon_url
-    @_signon_url ||= Plek.find('signon')
+    @signon_url ||= Plek.find('signon')
   end
 
   def self.included(base)
