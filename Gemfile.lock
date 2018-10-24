@@ -67,6 +67,7 @@ GEM
       ast (~> 2.4.0)
     plek (2.1.1)
     powerpack (0.1.2)
+    ptools (1.3.5)
     public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.5)
@@ -135,6 +136,7 @@ DEPENDENCIES
   httparty
   parallel_tests
   plek (~> 2.0)
+  ptools
   rake
   rotp
   rspec

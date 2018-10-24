@@ -23,7 +23,7 @@ require "capybara-screenshot/rspec"
 require "capybara-select2"
 require "faker"
 require "plek"
-require "chromedriver-helper"
+require "ptools"
 require "selenium-webdriver"
 
 Dir["./spec/support/*.rb"].each { |f| require f }
@@ -116,12 +116,23 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
+chromedriver_from_path = File.which("chromedriver")
+
+if chromedriver_from_path
+  # Use the installed chromedriver, rather than chromedriver-helper
+  Selenium::WebDriver::Chrome.driver_path = chromedriver_from_path
+else
+  require "chromedriver-helper"
+end
+
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    acceptInsecureCerts: true,
     chromeOptions: {
       args: %w(
         --disable-dev-shm-usage
         --disable-gpu
+        --disable-web-security
         --disable-infobars
         --disable-notifications
         --headless
