@@ -26,8 +26,13 @@ the details of all the apps involved check
 
 ### With Docker
 
-Once you have [installed Docker][install-docker] you can build and run the test
-suite with:
+If this is your first time running the E2E project make sure you have [installed Docker][install-docker] and run:
+
+```bash
+$ bundle install
+```
+
+Build and run the test suite with:
 
 ```bash
 $ make -j4
