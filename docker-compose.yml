@@ -9,6 +9,7 @@ x-govuk-app-env: &govuk-app
   GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
   GOVUK_ASSET_HOST: http://assets-origin.dev.gov.uk
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+  JWT_AUTH_SECRET: fakejwtsecret
   LOG_PATH: log/live.log
   PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
   RAILS_ENV: production
@@ -552,7 +553,6 @@ services:
       << : *govuk-app
       DISABLE_SECURE_COOKIES: "true"
       DISABLE_EMAIL: "true"
-      JWT_AUTH_SECRET: fakejwtsecret
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
