@@ -492,10 +492,12 @@ services:
     build:
       context: apps/contacts-admin
     depends_on:
-      - publishing-api
-      - mysql
-      - rummager
+      - collections
       - diet-error-handler
+      - mysql
+      - publishing-api
+      - router
+      - rummager
       - whitehall-admin
     environment:
       << : *govuk-app
@@ -508,6 +510,7 @@ services:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:whitehall-admin.dev.gov.uk
+      - nginx-proxy:www.dev.gov.uk
     ports:
       - "3051"
     volumes:
