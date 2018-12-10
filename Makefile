@@ -67,8 +67,8 @@ router_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-router-api bundle exec rake db:purge
 
 content_store_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-store bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-content-store bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-store bundle exec rake db:reset
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-content-store bundle exec rake db:reset
 
 asset_manager_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps asset-manager bundle exec rake db:purge
