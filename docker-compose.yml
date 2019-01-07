@@ -651,6 +651,7 @@ services:
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
     links:
+      - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:rummager.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
