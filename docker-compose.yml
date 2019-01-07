@@ -637,14 +637,12 @@ services:
     build:
       context: apps/manuals-publisher
     depends_on:
-      - asset-manager
-      - collections
-      - diet-error-handler
-      - manuals-publisher-worker
-      - mongo
       - publishing-api
-      - router
+      - mongo
       - rummager
+      - asset-manager
+      - manuals-publisher-worker
+      - diet-error-handler
       - whitehall-admin
     environment:
       << : *govuk-app
@@ -656,7 +654,6 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:whitehall-admin.dev.gov.uk
-      - nginx-proxy:www.dev.gov.uk
     ports:
       - "3205"
     volumes:
