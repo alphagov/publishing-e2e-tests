@@ -119,7 +119,7 @@ setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager-worker bundle exec rake message_queue:create_queues
 
-publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall
+publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
 
 publish_rummager:
 	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
@@ -129,6 +129,11 @@ publish_specialist:
 
 publish_frontend:
 	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_special_routes
+
+publish_collections_publisher:
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_finders
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_special_routes
 
 publish_contacts_admin:
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake finders:publish
