@@ -63,8 +63,8 @@ setup_dbs: router_setup content_store_setup asset_manager_setup \
 	contacts_admin_setup email_alert_api_setup
 
 router_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps router-api bundle exec rake db:purge
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-router-api bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps router-api bundle exec rake db:reset
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-router-api bundle exec rake db:reset
 
 content_store_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-store bundle exec rake db:reset
