@@ -44,7 +44,7 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
     expect(current_url).to eq(@redirection_destination_url)
   end
 
-  private
+private
 
   def create_and_publish_taxon(base_path:, title:)
     create_draft_taxon(base_path: base_path, title: title)

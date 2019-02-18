@@ -12,7 +12,7 @@ feature "Publishing content from Publisher to Frontend", publisher: true, fronte
     and_i_can_view_the_subpage_on_gov_uk
   end
 
-  private
+private
 
   def signin_to_signon
     @user = signin_with_next_user(
