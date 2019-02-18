@@ -14,7 +14,7 @@ feature "Archiving a child topic on Collections Publisher", collections: true, c
     then_when_i_visit_the_child_on_gov_uk_i_am_redirected_to_the_parent
   end
 
-  private
+private
 
   def signin_to_signon
     signin_with_next_user("Collections Publisher" => ["GDS Editor"])

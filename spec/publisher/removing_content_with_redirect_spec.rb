@@ -12,7 +12,7 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
     and_visiting_a_subpage_redirects_to_help_with_slug
   end
 
-  private
+private
 
   def signin_to_signon
     @user = signin_with_next_user(

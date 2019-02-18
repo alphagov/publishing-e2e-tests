@@ -11,7 +11,7 @@ feature "Removing content without a redirect from Publisher", publisher: true, g
     and_visiting_a_subpage_gives_a_404_on_gov_uk
   end
 
-  private
+private
 
   def signin_to_signon
     @user = signin_with_next_user(

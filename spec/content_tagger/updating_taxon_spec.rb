@@ -12,7 +12,7 @@ feature "Updating a published taxon on Content Tagger", collections: true, conte
     then_i_can_view_it_on_gov_uk
   end
 
-  private
+private
 
   def signin_to_signon
     @user = signin_with_next_user(

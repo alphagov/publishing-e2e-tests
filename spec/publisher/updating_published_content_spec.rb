@@ -11,7 +11,7 @@ feature "Updating published content from Publisher", publisher: true, frontend: 
     then_the_downtime_message_is_shown
   end
 
-  private
+private
 
   def signin_to_signon
     @user = signin_with_next_user(

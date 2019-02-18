@@ -15,7 +15,7 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
     then_i_can_view_both_on_gov_uk
   end
 
-  private
+private
 
   def signin_to_signon
     signin_with_next_user("Collections Publisher" => ["GDS Editor"])
