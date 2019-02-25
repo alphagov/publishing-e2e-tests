@@ -35,6 +35,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     expect_rendering_application("government-frontend")
     expect_url_matches_live_gov_uk
     expect(page).to have_content(title)
+    expect(page).to have_content("Test taxon")
   end
 
   def and_it_is_displayed_on_the_publication_finder

@@ -3,6 +3,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
   let(:title) { "Updating Whitehall Before #{SecureRandom.uuid}" }
   let(:updated_title) { "Updating Whitehall After #{SecureRandom.uuid}" }
+  let(:change_note) { "Testing update behaviour" }
 
   scenario "Creating a new edition of a document with Whitehall" do
     given_i_have_a_published_document
@@ -39,6 +40,10 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     expect_rendering_application("government-frontend")
     expect_url_matches_live_gov_uk
     expect(page).to have_content(updated_title)
+
+    page.find(:css, 'a[href="#full-history"]').click
+    expect(page).to have_content("First published.")
+    expect(page).to have_content(change_note)
   end
 
   def and_it_is_updated_on_the_publication_finder
@@ -59,7 +64,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     click_button "Create new edition to edit"
 
     fill_in "Title", with: updated_title
-    fill_in "Public change note", with: "Testing update behaviour"
+    fill_in "Public change note", with: change_note
     click_button("Save and continue")
     check "Test taxon"
     click_button("Save and review legacy tagging")
