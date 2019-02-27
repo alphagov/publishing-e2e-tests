@@ -42,7 +42,7 @@ build: kill
 	$(DOCKER_COMPOSE_CMD) build --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
 setup_dependencies:
-	$(DOCKER_COMPOSE_CMD) up -d elasticsearch mongo mysql postgres rabbitmq redis
+	$(DOCKER_COMPOSE_CMD) up -d elasticsearch elasticsearch5 mongo mysql postgres rabbitmq redis
 	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
 	bundle exec rake docker:wait_for_rabbitmq
