@@ -101,6 +101,7 @@ services:
     depends_on:
       - redis
       - elasticsearch
+      - elasticsearch5
       - publishing-api
       - rummager-worker
       - rummager-listener-publishing-queue
