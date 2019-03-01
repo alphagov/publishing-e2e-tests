@@ -42,6 +42,10 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     publication_finder = find('a', text: "Publications", match: :first)[:href]
     reload_url_until_match(publication_finder, :has_text?, title)
     visit(publication_finder)
+
+    # This test is pretty flakey, with the 'page.find' below often
+    # failing.  I don't really understand why, but reloading the page
+    # makes it work much more reliably..
     visit(publication_finder)
 
     expect_rendering_application("whitehall")
