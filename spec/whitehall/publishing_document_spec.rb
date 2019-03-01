@@ -42,6 +42,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     publication_finder = find('a', text: "Publications", match: :first)[:href]
     reload_url_until_match(publication_finder, :has_text?, title)
     visit(publication_finder)
+    visit(publication_finder)
 
     expect_rendering_application("whitehall")
     # Session#find waits until an element is visible
