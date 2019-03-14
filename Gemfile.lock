@@ -32,7 +32,7 @@ GEM
     docker-api (1.34.2)
       excon (>= 0.47.0)
       multi_json
-    docker-compose (1.1.9)
+    docker-compose (1.1.12)
       backticks (~> 1.0)
     excon (0.62.0)
     faker (1.9.1)
