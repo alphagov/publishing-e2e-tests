@@ -1,20 +1,21 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     archive-zip (0.12.0)
       io-like (~> 0.3.0)
     ast (2.4.0)
     backticks (1.0.2)
     byebug (10.0.2)
-    capybara (3.7.2)
+    capybara (3.14.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
-      xpath (~> 3.1)
+      regexp_parser (~> 1.2)
+      xpath (~> 3.2)
     capybara-screenshot (1.0.21)
       capybara (>= 1.0, < 4)
       launchy
@@ -36,12 +37,12 @@ GEM
     excon (0.62.0)
     faker (1.9.1)
       i18n (>= 0.7)
-    ffi (1.9.25)
+    ffi (1.10.0)
     govuk-lint (3.11.0)
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
-    govuk_test (0.2.1)
+    govuk_test (0.3.1)
       capybara
       chromedriver-helper
       puma
@@ -70,7 +71,7 @@ GEM
     ptools (1.3.5)
     public_suffix (3.0.3)
     puma (3.12.0)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rainbow (3.0.0)
@@ -78,6 +79,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    regexp_parser (1.3.0)
     rotp (3.3.1)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
@@ -114,11 +116,11 @@ GEM
     scss_lint (0.57.1)
       rake (>= 0.9, < 13)
       sass (~> 3.5, >= 3.5.5)
-    selenium-webdriver (3.14.0)
+    selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
-      rubyzip (~> 1.2)
+      rubyzip (~> 1.2, >= 1.2.2)
     unicode-display_width (1.4.1)
-    xpath (3.1.0)
+    xpath (3.2.0)
       nokogiri (~> 1.8)
 
 PLATFORMS
@@ -132,7 +134,7 @@ DEPENDENCIES
   docker-compose (~> 1.1)
   faker (~> 1.6)
   govuk-lint (~> 3.11.0)
-  govuk_test (~> 0.2.1)
+  govuk_test (~> 0.3.1)
   httparty
   parallel_tests
   plek (~> 2.0)
