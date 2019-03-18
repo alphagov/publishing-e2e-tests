@@ -1037,6 +1037,7 @@ services:
       - "3190"
 
   publishing-e2e-tests:
+    shm_size: 2G
     build: .
     depends_on:
       - specialist-publisher
