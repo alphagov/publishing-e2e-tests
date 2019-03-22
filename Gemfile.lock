@@ -7,7 +7,7 @@ GEM
       io-like (~> 0.3.0)
     ast (2.4.0)
     backticks (1.0.2)
-    byebug (11.0.0)
+    byebug (11.0.1)
     capybara (3.15.0)
       addressable
       mini_mime (>= 0.1.3)
