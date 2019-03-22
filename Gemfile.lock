@@ -8,7 +8,7 @@ GEM
     ast (2.4.0)
     backticks (1.0.2)
     byebug (11.0.0)
-    capybara (3.14.0)
+    capybara (3.15.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -42,9 +42,10 @@ GEM
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
-    govuk_test (0.3.1)
+    govuk_test (0.4.1)
       capybara
       chromedriver-helper
+      ptools
       puma
       selenium-webdriver
     httparty (0.16.4)
@@ -74,7 +75,7 @@ GEM
     powerpack (0.1.2)
     ptools (1.3.5)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.1)
     rack (2.0.6)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -139,7 +140,7 @@ DEPENDENCIES
   docker-compose (~> 1.1)
   faker (~> 1.9)
   govuk-lint (~> 3.11.0)
-  govuk_test (~> 0.3.1)
+  govuk_test (~> 0.4.1)
   httparty
   parallel_tests
   plek (~> 2.0)
