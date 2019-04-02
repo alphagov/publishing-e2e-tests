@@ -565,6 +565,7 @@ services:
       - calendars
       - redis
       - mongo
+      - router
     environment:
       << : *govuk-app
       DISABLE_SECURE_COOKIES: "true"
@@ -580,6 +581,7 @@ services:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:calendars.dev.gov.uk
+      - nginx-proxy:www.dev.gov.uk
     ports:
       - "3000"
     volumes:
