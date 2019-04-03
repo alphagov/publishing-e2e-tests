@@ -123,6 +123,7 @@ publish_routes: publish_rummager publish_specialist publish_frontend publish_con
 
 publish_rummager:
 	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_supergroup_finders
 
 publish_specialist:
 	$(DOCKER_COMPOSE_CMD) exec -T specialist-publisher bundle exec rake publishing_api:publish_finders
