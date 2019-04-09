@@ -38,8 +38,7 @@ private
   end
 
   def and_i_can_view_it_on_finder
-    fill_in "Search", with: title
-    click_button "Search"
+    visit "#{Plek.new.website_root}/search/all?keywords=#{CGI.escape(title)}"
 
     expect_rendering_application("finder-frontend")
     expect(page).to have_content(title)
