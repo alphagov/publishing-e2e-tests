@@ -1,4 +1,4 @@
-feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true do
+feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }
@@ -48,7 +48,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     # makes it work much more reliably..
     visit(publication_finder)
 
-    expect_rendering_application("whitehall")
+    expect_rendering_application("finder-frontend")
     # Session#find waits until an element is visible
     # this appears to influence the outcome of this spec.
     page.find("a", text: title)
