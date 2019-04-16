@@ -53,6 +53,7 @@ setup_apps:
 	$(MAKE) contacts_admin_seed
 	$(MAKE) publish_routes
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
+	$(MAKE) publish_facets
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
 	bundle exec rake docker:wait_for_apps
 
@@ -147,6 +148,11 @@ publish_calendars:
 
 populate_end_to_end_test_data_from_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake taxonomy:populate_end_to_end_test_data
+
+publish_facets:
+	$(DOCKER_COMPOSE_CMD) exec -T content-tagger bundle exec rake facets:import_facet_group[lib/data/find-eu-exit-guidance-business.yml]
+	$(DOCKER_COMPOSE_CMD) exec -T content-tagger bundle exec rake facets:publish_facet_group[lib/data/find-eu-exit-guidance-business.yml]
+	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_facet_group_eu_exit_business_finder
 
 clean_apps:
 	$(DOCKER_RUN) bash -c 'rm -rf /app/apps/*'

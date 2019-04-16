@@ -837,6 +837,8 @@ services:
       - publishing-api
       - postgres
       - redis
+      - rummager
+      - content-store
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: content-tagger
