@@ -117,7 +117,7 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
     ports:
-      - "3009"
+      - "3233"
     volumes:
       - ./apps/rummager/log:/app/log
 
