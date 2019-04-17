@@ -12,7 +12,7 @@ services:
 
   rummager:
     ports:
-      - "33009:3009"
+      - "33233:3233"
 
   diet-error-handler:
     ports:
