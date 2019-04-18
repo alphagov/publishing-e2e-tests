@@ -96,7 +96,7 @@ services:
       - ./docker/elasticsearch5.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   rummager: &rummager
-    image: govuk/rummager:${RUMMAGER_COMMITISH:-deployed-to-production}
+    image: govuk/search-api:${RUMMAGER_COMMITISH:-deployed-to-production}
     build: apps/rummager
     depends_on:
       - redis
