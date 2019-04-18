@@ -1,4 +1,4 @@
-feature "Creating a new edition of a document with Whitehall", whitehall: true, government_frontend: true do
+feature "Creating a new edition of a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flakey: true do
   include WhitehallHelpers
 
   let(:title) { "Updating Whitehall Before #{SecureRandom.uuid}" }
@@ -48,10 +48,10 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
   def and_it_is_updated_on_the_publication_finder
     publication_finder = find('a', text: "Publications", match: :first)[:href]
-    reload_url_until_match(publication_finder, :has_text?, updated_title)
+    reload_url_until_match(publication_finder, :has_text?, updated_title, reload_seconds: 120)
     visit(publication_finder)
 
-    expect_rendering_application("whitehall")
+    expect_rendering_application("finder-frontend")
     # Session#find waits until an element appears
     # this seems to make a difference to the outcome
     # of this spec.

@@ -1,4 +1,4 @@
-feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true do
+feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flakey: true do
   include WhitehallHelpers
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }
@@ -40,7 +40,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
 
   def and_it_is_displayed_on_the_publication_finder
     publication_finder = find('a', text: "Publications", match: :first)[:href]
-    reload_url_until_match(publication_finder, :has_text?, title)
+    reload_url_until_match(publication_finder, :has_text?, title, reload_seconds: 120)
     visit(publication_finder)
 
     # This test is pretty flakey, with the 'page.find' below often
@@ -48,7 +48,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     # makes it work much more reliably..
     visit(publication_finder)
 
-    expect_rendering_application("whitehall")
+    expect_rendering_application("finder-frontend")
     # Session#find waits until an element is visible
     # this appears to influence the outcome of this spec.
     page.find("a", text: title)
