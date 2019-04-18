@@ -67,7 +67,7 @@ If you need to run the tests against a branch of an application other than
 deployed-to-production you need to explicitly build it as below:
 
 ```bash
-$ make -j4 clone pull
+$ make -j4 clone pull PUBLISHER_COMMITISH=your_branch
 $ docker-compose build publisher
 $ make start test-publisher stop
 ```
