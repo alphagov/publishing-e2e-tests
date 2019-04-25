@@ -54,6 +54,10 @@ a flaky test.
 When adding a new test into the project it can also be tagged with `new: true`, tests that are tagged with `new` or `flaky` are executed in the new/flaky stage. This stage runs separately from the existing tests and will not fail the overall build. If this stage fails a notification is posted to the `#end-to-end-tests` slack channel to provide easy monitoring.
 This allows for a chance to build confidence in new tests without impacting the current suite should there be any flakiness as they run at a much higher volume than when being developed originally.
 
+### Tips
+- Starting up the docker containers is _slow_. Use `binding.pry` to pry into your test and use the console to debug and write your test. Additionally, `save_screenshot('filename.png')` will help you see what is going on.
+- If you are relying on code in a repo, ensure that the code is in the `deployed-to-production` branch. If not, see main README for guidance on running the tests against a different branch.
+
 [flaky tests]: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 [docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
 [retry-helpers]: ./spec/support/retry_helpers.rb
