@@ -1,4 +1,4 @@
-feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flakey: true do
+feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flaky: true do
   include WhitehallHelpers
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }
@@ -43,7 +43,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     reload_url_until_match(publication_finder, :has_text?, title, reload_seconds: 120)
     visit(publication_finder)
 
-    # This test is pretty flakey, with the 'page.find' below often
+    # This test is pretty flaky, with the 'page.find' below often
     # failing.  I don't really understand why, but reloading the page
     # makes it work much more reliably..
     visit(publication_finder)
