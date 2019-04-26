@@ -50,8 +50,8 @@ setup_dependencies:
 
 setup_apps:
 	bundle exec rake docker:wait_for_publishing_api
-	$(MAKE) contacts_admin_seed
 	$(MAKE) publish_routes
+	$(MAKE) contacts_admin_seed
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
 	bundle exec rake docker:wait_for_apps
