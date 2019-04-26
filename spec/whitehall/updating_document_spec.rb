@@ -1,4 +1,4 @@
-feature "Creating a new edition of a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flakey: true do
+feature "Creating a new edition of a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flaky: true do
   include WhitehallHelpers
 
   let(:title) { "Updating Whitehall Before #{SecureRandom.uuid}" }
