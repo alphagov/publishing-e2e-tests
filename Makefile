@@ -15,7 +15,7 @@ ifndef JENKINS_URL
 endif
 
 ifndef TEST_ARGS
-  TEST_ARGS = spec -o '--tag ~flaky --tag ~new'
+  TEST_ARGS = spec -o '--tag ~flaky --tag ~flakey --tag ~new'
 endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
@@ -175,40 +175,40 @@ test:
 	$(TEST_CMD)
 
 test-specialist-publisher:
-	$(TEST_CMD) -o '--tag specialist_publisher --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag specialist_publisher --tag ~flaky --tag ~flakey --tag ~new'
 
 test-travel-advice-publisher:
-	$(TEST_CMD) -o '--tag travel_advice_publisher --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag travel_advice_publisher --tag ~flaky --tag ~flakey --tag ~new'
 
 test-collections-publisher:
-	$(TEST_CMD) -o '--tag collections_publisher --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag collections_publisher --tag ~flaky --tag ~flakey --tag ~new'
 
 test-publisher:
-	$(TEST_CMD) -o '--tag publisher --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag publisher --tag ~flaky --tag ~flakey --tag ~new'
 
 test-manuals-publisher:
-	$(TEST_CMD) -o '--tag manuals_publisher --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag manuals_publisher --tag ~flaky --tag ~flakey --tag ~new'
 
 test-collections:
-	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~flakey --tag ~new'
 
 test-finder-frontend:
-	$(TEST_CMD) -o '--tag finder_frontend --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag finder_frontend --tag ~flaky --tag ~flakey --tag ~new'
 
 test-frontend:
-	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~flakey --tag ~new'
 
 test-government-frontend:
-	$(TEST_CMD) -o '--tag government_frontend --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag government_frontend --tag ~flaky --tag ~flakey --tag ~new'
 
 test-content-tagger:
-	$(TEST_CMD) -o '--tag content_tagger --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag content_tagger --tag ~flaky --tag ~flakey --tag ~new'
 
 test-contacts-admin:
-	$(TEST_CMD) -o '--tag contacts_admin --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag contacts_admin --tag ~flaky --tag ~flakey --tag ~new'
 
 test-whitehall:
-	$(TEST_CMD) -o '--tag whitehall --tag ~flaky --tag ~new'
+	$(TEST_CMD) -o '--tag whitehall --tag ~flaky --tag ~flakey --tag ~new'
 
 stop: kill
 

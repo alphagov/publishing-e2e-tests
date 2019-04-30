@@ -1,4 +1,4 @@
-feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true, flaky: true do
+feature "Publishing a document with Whitehall", whitehall: true, government_frontend: true, finder_frontend: true do
   include WhitehallHelpers
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }
@@ -7,7 +7,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     given_i_have_a_draft_document
     when_i_publish_it
     then_i_can_view_it_on_gov_uk
-    and_it_is_displayed_on_the_publication_finder
+    and_it_is_displayed_on_the_consultations_finder
   end
 
   def signin_to_signon
@@ -38,15 +38,15 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
     expect(page).to have_content("Test taxon")
   end
 
-  def and_it_is_displayed_on_the_publication_finder
-    publication_finder = find('a', text: "Publications", match: :first)[:href]
-    reload_url_until_match(publication_finder, :has_text?, title, reload_seconds: 120)
-    visit(publication_finder)
+  def and_it_is_displayed_on_the_consultations_finder
+    consultations_finder = find('a', text: "Policy papers and consultations", match: :first)[:href]
+    reload_url_until_match(consultations_finder, :has_text?, title, reload_seconds: 120)
+    visit(consultations_finder)
 
     # This test is pretty flaky, with the 'page.find' below often
     # failing.  I don't really understand why, but reloading the page
     # makes it work much more reliably..
-    visit(publication_finder)
+    visit(consultations_finder)
 
     expect_rendering_application("finder-frontend")
     # Session#find waits until an element is visible

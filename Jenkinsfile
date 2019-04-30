@@ -230,9 +230,9 @@ def startDockerApps() {
 }
 
 def runFlakyNewTests(params, testStatus) {
-  echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag new'`"
+  echo "Running flaky/new tests that aren't in main build with `make test TEST_ARGS='--tag flaky --tag flakey --tag new'`"
   try {
-    sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag new'\"")
+    sh("make test TEST_PROCESSES=${params.TEST_PROCESSES} TEST_ARGS=\"spec -o '--tag flaky --tag flakey --tag new'\"")
   } catch(err) {
     testStatus.flakyNewFailed = true
   }
