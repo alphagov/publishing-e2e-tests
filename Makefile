@@ -74,16 +74,16 @@ asset_manager_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps asset-manager bundle exec rake db:purge
 
 publishing_api_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake db:reset
 
 travel_advice_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps travel-advice-publisher bundle exec rake db:seed
 
 whitehall_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps whitehall-admin bundle exec rake db:create db:purge db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps whitehall-admin bundle exec rake db:reset
 
 content_tagger_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-tagger bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-tagger bundle exec rake db:reset
 
 manuals_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps manuals-publisher bundle exec rake db:seed
@@ -92,16 +92,16 @@ specialist_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps specialist-publisher env RUN_SEEDS_IN_PRODUCTION=true bundle exec rake db:seed
 
 publisher_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publisher bundle exec rake db:reset
 
 collections_publisher_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps collections-publisher bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps collections-publisher bundle exec rake db:reset
 
 rummager_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager env SEARCH_INDEX=all bundle exec rake search:create_all_indices
 
 email_alert_api_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:setup
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:reset
 
 wait_for_whitehall_admin:
 	bundle exec rake docker:wait_for_whitehall_admin
