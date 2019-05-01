@@ -116,15 +116,6 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
-chromedriver_from_path = File.which("chromedriver")
-
-if chromedriver_from_path
-  # Use the installed chromedriver, rather than chromedriver-helper
-  Selenium::WebDriver::Chrome.driver_path = chromedriver_from_path
-else
-  require "chromedriver-helper"
-end
-
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     acceptInsecureCerts: true,
