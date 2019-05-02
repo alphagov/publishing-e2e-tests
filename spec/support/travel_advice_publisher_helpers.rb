@@ -33,6 +33,7 @@ module TravelAdvicePublisherHelpers
     fill_in("Search title", with: options[:search_title]) if options[:search_title]
     fill_in("Summary", with: options[:summary])
     options[:parts].each do |part|
+      execute_script("window.scrollBy(0, 10000)") # make sure the button isn't obscured by the overlay footer navbar
       click_button("Add new part")
       within("#parts > :last-child") do
         fill_in("Title", with: part[:title])
