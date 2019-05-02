@@ -98,7 +98,7 @@ collections_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps collections-publisher bundle exec rake db:setup
 
 rummager_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager env RUMMAGER_INDEX=all bundle exec rake rummager:create_all_indices
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager env SEARCH_INDEX=all bundle exec rake search:create_all_indices
 
 email_alert_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:setup

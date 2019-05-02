@@ -62,6 +62,16 @@ module PublisherHelpers
     end
   end
 
+  def scroll_to_bottom
+    # this app has an overlay popup which sometimes obscures buttons
+    # by calling this method, it should means the buttons are no longer obscured
+    execute_script("window.scrollBy(0, 10000)")
+  end
+
+  def wait_for_workflow_message_to_hide
+    page.has_no_css?(".workflow-message", visible: true)
+  end
+
   def add_part_to_artefact(title:, body: sentence)
     # The parts collapse is animated, so disable this to avoid the
     # test not being able to find the parts
@@ -69,7 +79,7 @@ module PublisherHelpers
 
     wait_for_jquery_ready_event
 
-    execute_script("window.scrollBy(0, 10000)") # make sure the button isn't obscured by the overlay footer navbar
+    scroll_to_bottom
     click_link "Add new part"
 
     slug = within("div#untitled-part") do
@@ -78,7 +88,9 @@ module PublisherHelpers
       find_field("Slug").value
     end
 
+    wait_for_workflow_message_to_hide
     click_button "Save"
+
     slug
   end
 
