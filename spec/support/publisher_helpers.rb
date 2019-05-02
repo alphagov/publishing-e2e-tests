@@ -68,6 +68,8 @@ module PublisherHelpers
     disable_jquery_transitions
 
     wait_for_jquery_ready_event
+
+    execute_script("window.scrollBy(0, 10000)") # make sure the button isn't obscured by the overlay footer navbar
     click_link "Add new part"
 
     slug = within("div#untitled-part") do
@@ -75,6 +77,7 @@ module PublisherHelpers
       fill_in "Body", with: body
       find_field("Slug").value
     end
+
     click_button "Save"
     slug
   end
