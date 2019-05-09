@@ -2,8 +2,8 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher calendars \
-	manuals-publisher manuals-frontend whitehall content-tagger \
-	contacts-admin finder-frontend email-alert-api email-alert-service
+	manuals-publisher manuals-frontend whitehall content-tagger contacts-admin \
+	finder-frontend email-alert-api email-alert-frontend email-alert-service
 
 RUBY_VERSION = `cat .ruby-version`
 DOCKER_RUN = docker run --rm -v `pwd`:/app ruby:$(RUBY_VERSION)

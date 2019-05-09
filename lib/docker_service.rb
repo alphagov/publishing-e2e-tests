@@ -66,6 +66,8 @@ class DockerService
   def self.container_is_healthy(container)
     container_state = Docker::Container.get(container.id).json["State"]
     health = container_state["Health"]
-    container_state["Status"] == "running" && (health.nil? || health["Status"] == "healthy")
+    healthy = container_state["Status"] == "running" && (health.nil? || health["Status"] == "healthy")
+    puts "healthy? #{healthy} (container_state: #{container_state['Status']} health_status: #{health.nil? ? 'nil' : health['Status']} container_id: #{container.id})"
+    healthy
   end
 end
