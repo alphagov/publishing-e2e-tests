@@ -38,7 +38,7 @@ GEM
     faker (1.9.3)
       i18n (>= 0.7)
     ffi (1.10.0)
-    govuk-lint (3.11.1)
+    govuk-lint (3.11.2)
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
@@ -137,7 +137,7 @@ DEPENDENCIES
   docker-api (~> 1.34)
   docker-compose (~> 1.1)
   faker (~> 1.9)
-  govuk-lint (~> 3.11.1)
+  govuk-lint (~> 3.11.2)
   govuk_test (~> 0.4.2)
   httparty
   parallel_tests
