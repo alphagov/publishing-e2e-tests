@@ -81,7 +81,7 @@ services:
       << : *default-healthcheck
       test: "curl --silent --fail localhost:9200/_cluster/health || exit 1"
     volumes:
-      - ./docker/elasticsearch5.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./docker/elasticsearch5.yml:/usr/share/elasticsearch/config/elasticsearch5.yml
 
   rummager: &rummager
     image: govuk/search-api:${RUMMAGER_COMMITISH:-deployed-to-production}
