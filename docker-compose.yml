@@ -74,6 +74,7 @@ services:
   elasticsearch5:
     image: elasticsearch:5.6.14
     environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
       - xpack.security.enabled=false
