@@ -72,7 +72,7 @@ content_store_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps draft-content-store bundle exec rake db:reset
 
 asset_manager_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps asset-manager bundle exec rake db:purge
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps asset-manager bundle exec rake db:reset
 
 publishing_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake db:reset
