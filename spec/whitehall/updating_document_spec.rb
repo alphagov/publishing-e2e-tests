@@ -9,7 +9,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     given_i_have_a_published_document
     when_i_publish_a_new_edition_of_the_document
     then_i_can_view_the_updated_content_on_gov_uk
-    and_it_is_updated_on_the_consultations_finder
+    and_it_is_updated_on_the_all_content_finder
   end
 
   def signin_to_signon
@@ -46,10 +46,10 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     expect(page).to have_content(change_note)
   end
 
-  def and_it_is_updated_on_the_consultations_finder
-    consultations_finder = find('a', text: "Policy papers and consultations", match: :first)[:href]
-    reload_url_until_match(consultations_finder, :has_text?, updated_title, reload_seconds: 120)
-    visit(consultations_finder)
+  def and_it_is_updated_on_the_all_content_finder
+    finder_url = "#{Plek.new.website_root}/search/all?keywords=#{CGI.escape(updated_title)}"
+    reload_url_until_match(finder_url, :has_text?, updated_title, reload_seconds: 120)
+    visit finder_url
 
     expect_rendering_application("finder-frontend")
     # Session#find waits until an element appears
