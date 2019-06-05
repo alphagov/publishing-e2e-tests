@@ -15,6 +15,10 @@ ifndef JENKINS_URL
 endif
 
 ifndef TEST_ARGS
+	ifdef FLAKY_ONLY
+		FLAKEY_ONLY = true
+	endif
+
 	ifdef FLAKEY_ONLY
 		TAGS = --tag flaky --tag flakey
 	else
