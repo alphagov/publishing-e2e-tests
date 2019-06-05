@@ -15,7 +15,8 @@ ifndef JENKINS_URL
 endif
 
 ifndef TEST_ARGS
-  TEST_ARGS = spec -o '--tag ~flaky --tag ~flakey --tag ~new'
+		TAGS = --tag ~flaky --tag ~flakey --tag ~new
+  TEST_ARGS = spec -o '$(TAGS) $(EXTRA_TAGS)'
 endif
 
 TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
@@ -182,40 +183,40 @@ test:
 	$(TEST_CMD)
 
 test-specialist-publisher:
-	$(TEST_CMD) -o '--tag specialist_publisher --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag specialist_publisher' $(MAKE) test
 
 test-travel-advice-publisher:
-	$(TEST_CMD) -o '--tag travel_advice_publisher --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag travel_advice_publisher' $(MAKE) test
 
 test-collections-publisher:
-	$(TEST_CMD) -o '--tag collections_publisher --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag collections_publisher' $(MAKE) test
 
 test-publisher:
-	$(TEST_CMD) -o '--tag publisher --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag publisher' $(MAKE) test
 
 test-manuals-publisher:
-	$(TEST_CMD) -o '--tag manuals_publisher --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag manuals_publisher' $(MAKE) test
 
 test-collections:
-	$(TEST_CMD) -o '--tag collections --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag collections' $(MAKE) test
 
 test-finder-frontend:
-	$(TEST_CMD) -o '--tag finder_frontend --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag finder_frontend' $(MAKE) test
 
 test-frontend:
-	$(TEST_CMD) -o '--tag frontend --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag frontend' $(MAKE) test
 
 test-government-frontend:
-	$(TEST_CMD) -o '--tag government_frontend --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag government_frontend' $(MAKE) test
 
 test-content-tagger:
-	$(TEST_CMD) -o '--tag content_tagger --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag content_tagger' $(MAKE) test
 
 test-contacts-admin:
-	$(TEST_CMD) -o '--tag contacts_admin --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag contacts_admin' $(MAKE) test
 
 test-whitehall:
-	$(TEST_CMD) -o '--tag whitehall --tag ~flaky --tag ~flakey --tag ~new'
+	EXTRA_TAGS='--tag whitehall' $(MAKE) test
 
 stop: kill
 
