@@ -15,7 +15,12 @@ ifndef JENKINS_URL
 endif
 
 ifndef TEST_ARGS
+	ifdef FLAKEY_ONLY
+		TAGS = --tag flaky --tag flakey
+	else
 		TAGS = --tag ~flaky --tag ~flakey --tag ~new
+	endif
+
   TEST_ARGS = spec -o '$(TAGS) $(EXTRA_TAGS)'
 endif
 
