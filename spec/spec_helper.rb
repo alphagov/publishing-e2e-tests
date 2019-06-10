@@ -117,7 +117,7 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
-chrome_options = %w(disable-web-security disable-infobars disable-notifications no-sandbox)
+chrome_options = { args: %w(headless disable-gpu disable-web-security disable-infobars disable-notifications no-sandbox) }
 
 GovukTest.configure(chrome_options: chrome_options, window_size: "1400,1400")
 
