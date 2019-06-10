@@ -22,6 +22,7 @@ require "capybara-screenshot/rspec"
 # require "capybara/webkit"
 require "capybara-select2"
 require "faker"
+require "govuk_test"
 require "plek"
 require "ptools"
 require "selenium-webdriver"
@@ -116,30 +117,9 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    acceptInsecureCerts: true,
-    chromeOptions: {
-      args: %w(
-        --disable-gpu
-        --disable-web-security
-        --disable-infobars
-        --disable-notifications
-        --headless
-        --no-sandbox
-        --window-size=1400,1400
-      )
-    }
-  )
+chrome_options = %w(disable-web-security disable-infobars disable-notifications no-sandbox)
 
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-  )
-end
-
-Capybara.javascript_driver = :headless_chrome
+GovukTest.configure(chrome_options: chrome_options, window_size: "1400,1400")
 
 # Add support for Headless Chrome screenshots.
 Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
