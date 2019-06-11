@@ -208,7 +208,7 @@ def buildDockerEnvironmnet(params) {
   stage("Build docker environment") {
     try {
       sh("make pull")
-      sh("make build --no-cache")
+      sh("make build")
     } catch(e) {
       failBuild(params)
       throw e
