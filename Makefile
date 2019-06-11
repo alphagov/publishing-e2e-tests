@@ -49,7 +49,7 @@ kill:
 	$(DOCKER_COMPOSE_CMD) rm -f
 
 build: kill
-	$(DOCKER_COMPOSE_CMD) build --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
+	$(DOCKER_COMPOSE_CMD) build --no-cache --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
 setup_dependencies:
 	$(DOCKER_COMPOSE_CMD) up -d elasticsearch5 mongo mysql postgres rabbitmq redis
