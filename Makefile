@@ -8,7 +8,6 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 RUBY_VERSION = `cat .ruby-version`
 DOCKER_RUN = docker run --rm -v `pwd`:/app ruby:$(RUBY_VERSION)
 DOCKER_COMPOSE_CMD = docker-compose -f docker-compose.yml
-TEST_PROCESSES := 1
 
 ifndef JENKINS_URL
   DOCKER_COMPOSE_CMD += -f docker-compose.development.yml
@@ -28,7 +27,7 @@ ifndef TEST_ARGS
   TEST_ARGS = spec -o '$(TAGS) $(EXTRA_TAGS)'
 endif
 
-TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec parallel_rspec -n $(TEST_PROCESSES) $(TEST_ARGS)
+TEST_CMD = $(DOCKER_COMPOSE_CMD) run publishing-e2e-tests bundle exec rspec $(TEST_ARGS)
 
 all:
 	$(MAKE) clone
