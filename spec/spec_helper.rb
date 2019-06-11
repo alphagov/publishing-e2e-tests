@@ -126,6 +126,7 @@ GovukTest.configure(chrome_options: {
     --headless
     --no-sandbox
     --window-size=1400,1400
+    --disable-features=NetworkService
   )
 })
 
