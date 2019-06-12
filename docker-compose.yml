@@ -115,6 +115,7 @@ services:
       - rabbitmq
       - publishing-api
       - diet-error-handler
+      - redis
     command: foreman run worker
     environment:
       << : *govuk-app
@@ -437,6 +438,7 @@ services:
     depends_on:
       - publishing-api
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: collections-publisher-worker
@@ -806,6 +808,7 @@ services:
     command: foreman run worker
     depends_on:
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       REDIS_URL: redis://redis/1
@@ -885,6 +888,7 @@ services:
     command: foreman run worker
     depends_on:
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
@@ -924,6 +928,7 @@ services:
     command: foreman run worker
     depends_on:
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
