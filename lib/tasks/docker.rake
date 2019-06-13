@@ -2,7 +2,7 @@ require_relative "../docker_service"
 
 namespace :docker do
   task :wait_for_dbs do
-    DockerService.wait_for_healthy_services(services: %w(elasticsearch5 mongo mysql postgres redis))
+    DockerService.wait_for_healthy_services(services: %w(elasticsearch5 elasticsearch6 mongo mysql postgres redis))
   end
 
   task :wait_for_rabbitmq do

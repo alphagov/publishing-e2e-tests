@@ -83,12 +83,25 @@ services:
     volumes:
       - ./docker/elasticsearch5.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
+  elasticsearch6:
+    image: elasticsearch:6.7.0
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - xpack.security.enabled=false
+    healthcheck:
+      << : *default-healthcheck
+      test: "curl --silent --fail localhost:9200/_cluster/health || exit 1"
+    volumes:
+      - ./docker/elasticsearch6.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
   rummager: &rummager
     image: govuk/search-api:${RUMMAGER_COMMITISH:-deployed-to-production}
     build: apps/rummager
     depends_on:
       - redis
       - elasticsearch5
+      - elasticsearch6
       - publishing-api
       - rummager-worker
       - rummager-listener-publishing-queue
@@ -112,6 +125,7 @@ services:
     << : *rummager
     depends_on:
       - elasticsearch5
+      - elasticsearch6
       - rabbitmq
       - publishing-api
       - diet-error-handler
