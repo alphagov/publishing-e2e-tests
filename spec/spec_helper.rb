@@ -130,6 +130,7 @@ Capybara.register_driver :headless_chrome do |app|
     acceptInsecureCerts: true,
     chromeOptions: {
       args: %w(
+        --disable-dev-shm-usage
         --disable-gpu
         --disable-web-security
         --disable-infobars
