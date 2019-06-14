@@ -18,15 +18,24 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "capybara/rspec"
-require "capybara-screenshot/rspec"
 # require "capybara/webkit"
 require "capybara-select2"
 require "faker"
 require "plek"
 require "ptools"
 require "selenium-webdriver"
+require "govuk_test"
+
+GovukTest.configure
 
 Dir["./spec/support/*.rb"].each { |f| require f }
+
+Capybara.configure do |config|
+  config.run_server = false
+  config.default_driver = :headless_chrome
+  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
+  config.default_max_wait_time = 4
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -115,59 +124,3 @@ RSpec.configure do |config|
 
   config.add_setting :reload_page_wait_time, default: 60
 end
-
-chromedriver_from_path = File.which("chromedriver")
-
-if chromedriver_from_path
-  # Use the installed chromedriver, rather than chromedriver-helper
-  Selenium::WebDriver::Chrome.driver_path = chromedriver_from_path
-else
-  require "chromedriver-helper"
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    acceptInsecureCerts: true,
-    chromeOptions: {
-      args: %w(
-        --disable-gpu
-        --disable-web-security
-        --disable-infobars
-        --disable-notifications
-        --headless
-        --no-sandbox
-        --window-size=1400,1400
-      )
-    }
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-  )
-end
-
-Capybara.javascript_driver = :headless_chrome
-
-# Add support for Headless Chrome screenshots.
-Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
-  driver.browser.save_screenshot(path)
-end
-
-Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
-  "screenshot-#{example.description.downcase.gsub(/\W/, '-').gsub(/^.*\/spec\//, '')}"
-end
-
-Capybara.configure do |config|
-  config.run_server = false
-  config.default_driver = :headless_chrome
-  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
-  config.default_max_wait_time = 4
-end
-
-# Capybara::Webkit.configure do |config|
-#   config.allow_url("*.dev.gov.uk")
-#   config.block_unknown_urls
-#   config.skip_image_loading
-# end
