@@ -3,8 +3,6 @@ GEM
   specs:
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    archive-zip (0.12.0)
-      io-like (~> 0.3.0)
     ast (2.4.0)
     backticks (1.0.2)
     byebug (11.0.1)
@@ -22,11 +20,6 @@ GEM
     capybara-select2 (1.0.1)
       capybara
       rspec
-    childprocess (0.9.0)
-      ffi (~> 1.0, >= 1.0.11)
-    chromedriver-helper (2.1.1)
-      archive-zip (~> 0.10)
-      nokogiri (~> 1.8)
     concurrent-ruby (1.1.5)
     diff-lcs (1.3)
     docker-api (1.34.2)
@@ -42,18 +35,11 @@ GEM
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
-    govuk_test (0.4.2)
-      capybara
-      chromedriver-helper
-      ptools
-      puma
-      selenium-webdriver
     httparty (0.17.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
-    io-like (0.3.0)
     jaro_winkler (1.5.2)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -74,7 +60,6 @@ GEM
     plek (2.1.1)
     ptools (1.3.5)
     public_suffix (3.1.0)
-    puma (3.12.1)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -111,7 +96,6 @@ GEM
     rubocop-rspec (1.32.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.0)
-    rubyzip (1.2.2)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -120,9 +104,6 @@ GEM
     scss_lint (0.58.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5, >= 3.5.5)
-    selenium-webdriver (3.141.0)
-      childprocess (~> 0.5)
-      rubyzip (~> 1.2, >= 1.2.2)
     unicode-display_width (1.5.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -138,7 +119,6 @@ DEPENDENCIES
   docker-compose (~> 1.1)
   faker (~> 1.9)
   govuk-lint (~> 3.11.2)
-  govuk_test (~> 0.4.2)
   httparty
   parallel_tests
   plek (~> 2.0)
