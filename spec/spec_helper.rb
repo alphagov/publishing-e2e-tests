@@ -117,29 +117,19 @@ RSpec.configure do |config|
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    acceptInsecureCerts: true,
-    chromeOptions: {
-      args: %w(
-        --disable-gpu
-        --disable-web-security
-        --disable-infobars
-        --disable-notifications
-        --headless
-        --no-sandbox
-        --window-size=1400,1400
-      )
-    }
-  )
+  chrome_options = Selenium::WebDriver::Chrome::Options.new
+  chrome_options.headless!
+  chrome_options.add_argument("--disable-web-security")
+  chrome_options.add_argument("--no-sandbox")
+  chrome_options.add_argument("--window-size=1400,1400")
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    desired_capabilities: { acceptInsecureCerts: true },
+    options: chrome_options
   )
 end
-
-Capybara.javascript_driver = :headless_chrome
 
 # Add support for Headless Chrome screenshots.
 Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
