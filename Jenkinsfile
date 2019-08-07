@@ -197,7 +197,9 @@ def abortBuild(reason, params) {
 def cloneApplications(params) {
   stage("Clone applications") {
     try {
-      sh("make clone -j4")
+      sshagent(['govuk-ci-ssh-key']) {
+        sh("make clone -j4")
+      }
     } catch(e) {
       abortBuild("Publishing end-to-end tests could not clone all repositories", params)
     }
