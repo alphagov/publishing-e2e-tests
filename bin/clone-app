@@ -62,7 +62,7 @@ private
   end
 
   def git_url
-    "https://github.com/alphagov/#{name}.git"
+    "git@github.com:alphagov/#{name}.git"
   end
 
   def upper_name
