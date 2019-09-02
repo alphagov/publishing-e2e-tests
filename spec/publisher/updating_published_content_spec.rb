@@ -39,7 +39,7 @@ private
 
     click_button "Schedule downtime message"
 
-    expect(page).to have_text(title + " downtime message scheduled")
+    expect(page).to have_text("downtime message scheduled")
   end
 
   def and_i_visit_the_transaction_on_gov_uk
