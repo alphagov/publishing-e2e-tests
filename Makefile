@@ -123,6 +123,12 @@ contacts_admin_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:schema:load_if_ruby db:structure:load_if_sql
 
 contacts_admin_seed: wait_for_whitehall_admin
+	# Contacts Admin seeds from the organisations API, which is rendered by
+	# Collections, which gets its data from Search API, which gets indexed by
+	# Whitehall.
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake search:index:organisations
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
+
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
 
 setup_queues:
