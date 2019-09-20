@@ -63,14 +63,14 @@ timestamps {
         throw e
       }
 
-      cloneApplications(params)
-      buildDockerEnvironmnet(params)
-
       // a map to store whether tests are failed despite exception flows
-      def testStatus = [flakyNewFailed: false, mainFailed: false]
+      def testStatus = [flakyNewFailed: false, mainFailed: false, startUpFailed: false]
+
+      cloneApplications(params)
+      buildDockerEnvironmnet(params, testStatus)
 
       try {
-        startDockerApps()
+        startDockerApps(testStatus)
         runFlakyNewTests(params, testStatus)
         runTests(params, testStatus)
         pushTestAgainstBranch()
@@ -206,19 +206,20 @@ def cloneApplications(params) {
   }
 }
 
-def buildDockerEnvironmnet(params) {
+def buildDockerEnvironmnet(params, testStatus) {
   stage("Build docker environment") {
     try {
       sh("make pull")
       sh("make build")
     } catch(e) {
       failBuild(params)
+      testStatus.startUpFailed = true
       throw e
     }
   }
 }
 
-def startDockerApps() {
+def startDockerApps(testStatus) {
   stage("Start docker apps") {
     try {
       sh("make setup_dependencies -j12")
@@ -226,6 +227,7 @@ def startDockerApps() {
       sh("make setup_apps -j12")
     } catch(e) {
       echo("We weren't able to setup for tests, this probably means there is a bigger problem. Test aborting")
+      testStatus.startUpFailed = true
       throw e
     }
   }
@@ -299,8 +301,11 @@ def stopDocker() {
 def alertTestOutcome(params, testStatus) {
   def channel = "#govuk-e2e-tests"
   // post to slack just when it's an important branch
-  if (env.BRANCH_NAME == "master" && testStatus.mainFailed) {
+  if (env.BRANCH_NAME == "master" && (testStatus.mainFailed || testStatus.startUpFailed)) {
     def message = "Publishing end-to-end tests <${BUILD_URL}|failed> for master branch, changes not pushed to test-against"
+    slackSend(color: "#d40100", channel: channel, message: message)
+  } else if (env.BRANCH_NAME == "test-against" && testStatus.startUpFailed) {
+    def message = "Publishing end-to-end tests start up <${BUILD_URL}|failed> for $NODE_NAME"
     slackSend(color: "#d40100", channel: channel, message: message)
   } else if (env.BRANCH_NAME == "test-against" && testStatus.mainFailed) {
     def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
