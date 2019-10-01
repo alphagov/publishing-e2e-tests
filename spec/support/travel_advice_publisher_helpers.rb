@@ -50,7 +50,7 @@ module TravelAdvicePublisherHelpers
       summary: Faker::Lorem.paragraph,
       parts: [
         { title: part_title, body: Faker::Lorem.sentence },
-      ]
+      ],
     }.merge(options)
 
     options[:parts] = options[:parts].map do |item|
