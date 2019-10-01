@@ -21,12 +21,12 @@ feature "Removing content from Content Tagger", collections: true, content_tagge
     signin_to_signon if use_signon?
 
     @redirection_destination_url = create_and_publish_taxon(
-      base_path: redirection_destination_base_path, title: redirection_destination_title
+      base_path: redirection_destination_base_path, title: redirection_destination_title,
     )
     reload_url_until_status_code(@redirection_destination_url, 200)
 
     @redirected_taxon_url = create_and_publish_taxon(
-      base_path: removed_base_path, title: "Removed taxon " + SecureRandom.uuid
+      base_path: removed_base_path, title: "Removed taxon " + SecureRandom.uuid,
     )
     reload_url_until_status_code(@redirected_taxon_url, 200)
   end

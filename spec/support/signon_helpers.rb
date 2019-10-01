@@ -107,14 +107,14 @@ module SignonHelpers
 
       fill_in(
         'Code from your phone',
-        with: user.two_step_verification_code
+        with: user.two_step_verification_code,
       )
 
       click_button('submit_code')
     elsif current_path == '/users/two_step_verification/session/new'
       fill_in(
         'Your verification code',
-        with: user.two_step_verification_code
+        with: user.two_step_verification_code,
       )
 
       click_button('Sign in')

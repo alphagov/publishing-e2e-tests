@@ -24,7 +24,7 @@ module RetryHelpers
 
     code = HTTParty.head(
       url,
-      headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) }
+      headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) },
     ).code
     unless status_codes.include?(code)
       raise "#{url} returned a status code of #{code}"
@@ -69,7 +69,7 @@ module RetryHelpers
       code = HTTParty.head(
         url,
         follow_redirects: false,
-        headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) }
+        headers: { "Cookie" => retry_helpers_cookies_string(URI(url).host) },
       ).code
 
       unless (keep_retrying_while + status_codes).include?(code)
