@@ -49,7 +49,7 @@ module TravelAdvicePublisherHelpers
       change_description: Faker::Lorem.sentence,
       summary: Faker::Lorem.paragraph,
       parts: [
-        { title: part_title, body: Faker::Lorem.sentence }
+        { title: part_title, body: Faker::Lorem.sentence },
       ]
     }.merge(options)
 
