@@ -42,7 +42,7 @@ feature "Adding a facet tag to a finder content", search_api: true, finder_front
     reload_url_until_match(finder_url, :has_text?, guide_title)
     visit(finder_url)
     expect_rendering_application("finder-frontend")
-    within('.filtered-results__group') do
+    within(".filtered-results__group") do
       expect(page).to have_content(guide_title)
     end
   end

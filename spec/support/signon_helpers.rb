@@ -1,7 +1,7 @@
 # coding: utf-8
 
-require 'rotp'
-require_relative 'javascript_helpers'
+require "rotp"
+require_relative "javascript_helpers"
 
 module SignonHelpers
   include JavascriptHelpers
@@ -32,7 +32,7 @@ module SignonHelpers
     end
 
     def two_step_verification_secret=(secret)
-      File.open(two_step_verification_secret_file_name, 'w') do |f|
+      File.open(two_step_verification_secret_file_name, "w") do |f|
         f.puts secret
       end
     end
@@ -53,7 +53,7 @@ module SignonHelpers
     end
 
     def self.available_user_count
-      count = ENV['SIGNON_USER_COUNT']
+      count = ENV["SIGNON_USER_COUNT"]
       count.nil? ? nil : count.to_i
     end
 
@@ -76,51 +76,51 @@ module SignonHelpers
   end
 
   def signin_with_user(user)
-    visit_signon('/users/sign_in') unless
+    visit_signon("/users/sign_in") unless
       has_current_path?("#{signon_url}/users/signin")
 
     # If some user is already signed in
-    if current_path == '/'
+    if current_path == "/"
       # TODO: Checking if the right user is already signed in at this
       # point would be ideal, but for now, sign out, so that we can
       # sign in.
-      first(:link, 'Sign out').click
+      first(:link, "Sign out").click
     end
 
-    fill_in('Email', with: user.email)
-    fill_in('Password', with: user.passphrase)
-    click_button('Sign in')
+    fill_in("Email", with: user.email)
+    fill_in("Password", with: user.passphrase)
+    click_button("Sign in")
 
-    if current_path == '/users/two_step_verification/prompt'
-      click_link('Start set up')
+    if current_path == "/users/two_step_verification/prompt"
+      click_link("Start set up")
 
       # Disable transitions, as this makes the following steps fail
       # often
       disable_jquery_transitions
-      click_link('Next')
+      click_link("Next")
 
-      paragraph = find('p', text: 'Enter the code manually:')
+      paragraph = find("p", text: "Enter the code manually:")
 
-      user.two_step_verification_secret = paragraph.text.split(' ').last
+      user.two_step_verification_secret = paragraph.text.split(" ").last
 
-      click_link('Next')
+      click_link("Next")
 
       fill_in(
-        'Code from your phone',
+        "Code from your phone",
         with: user.two_step_verification_code,
       )
 
-      click_button('submit_code')
-    elsif current_path == '/users/two_step_verification/session/new'
+      click_button("submit_code")
+    elsif current_path == "/users/two_step_verification/session/new"
       fill_in(
-        'Your verification code',
+        "Your verification code",
         with: user.two_step_verification_code,
       )
 
-      click_button('Sign in')
+      click_button("Sign in")
     end
 
-    if current_path == '/'
+    if current_path == "/"
       return true
     else
       raise "Couldn't sign in to Signon, current path is #{current_path}"
@@ -128,22 +128,22 @@ module SignonHelpers
   end
 
   def set_user_permissions(email, app_permissions)
-    visit_signon('/users')
-    fill_in('Name or email', with: email)
-    click_button('Search')
+    visit_signon("/users")
+    fill_in("Name or email", with: email)
+    click_button("Search")
 
-    within('td', text: email) do
-      find('a').click
+    within("td", text: email) do
+      find("a").click
     end
 
-    within_table('editable-permissions') do
+    within_table("editable-permissions") do
       app_permissions.each do |app, permissions|
         within(:xpath, "//tr[td//text()[normalize-space(.) ='#{app}']]") do
           find("input[type='checkbox']").set(!permissions.nil?)
 
-          options = all('option', visible: :all)
+          options = all("option", visible: :all)
 
-          if permissions.include? 'signin'
+          if permissions.include? "signin"
             raise "The 'signin' permission is implicit, so it doesn't need to be included"
           end
 
@@ -157,7 +157,7 @@ module SignonHelpers
 
           within(".chosen-container") do
             # Remove all existing permissions
-            all('.search-choice-close').each(&:click)
+            all(".search-choice-close").each(&:click)
 
             # Select the desired permissions
             permissions.each do |permission|
@@ -169,7 +169,7 @@ module SignonHelpers
       end
     end
 
-    click_button('Update User')
+    click_button("Update User")
   end
 
   def signin_with_next_user(app_permissions = {})
@@ -179,12 +179,12 @@ module SignonHelpers
     user
   end
 
-  def visit_signon(path = '/')
+  def visit_signon(path = "/")
     visit(signon_url + path)
   end
 
   def signon_url
-    @signon_url ||= Plek.find('signon')
+    @signon_url ||= Plek.find("signon")
   end
 
   def self.included(base)

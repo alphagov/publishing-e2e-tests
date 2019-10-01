@@ -10,6 +10,6 @@ module JavascriptHelpers
   end
 
   def disable_jquery_transitions
-    execute_script('$.support.transition = false')
+    execute_script("$.support.transition = false")
   end
 end

@@ -1,5 +1,5 @@
-require 'docker'
-require 'docker/compose'
+require "docker"
+require "docker/compose"
 
 class DockerService
   def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 60, interval_seconds: 10)
