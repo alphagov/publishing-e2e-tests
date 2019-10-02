@@ -127,7 +127,7 @@ Capybara.register_driver :headless_chrome do |app|
     app,
     browser: :chrome,
     desired_capabilities: { acceptInsecureCerts: true },
-    options: chrome_options
+    options: chrome_options,
   )
 end
 

@@ -1,4 +1,4 @@
-require_relative 'javascript_helpers'
+require_relative "javascript_helpers"
 
 module PublisherHelpers
   include JavascriptHelpers

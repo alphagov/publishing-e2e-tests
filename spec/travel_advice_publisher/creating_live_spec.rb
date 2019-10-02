@@ -27,7 +27,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
       summary: summary,
       parts: [
         { title: part_title, body: part_body },
-      ]
+      ],
     )
 
     click_button("Save & Publish")
