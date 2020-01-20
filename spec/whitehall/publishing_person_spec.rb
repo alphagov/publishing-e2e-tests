@@ -26,7 +26,7 @@ feature "Publishing a person on Whitehall", whitehall: true do
     reload_url_until_status_code(url, 200)
 
     click_link "View on website"
-    expect_rendering_application("whitehall")
+    expect_rendering_application("collections")
     expect_url_matches_live_gov_uk
     expect(page).to have_content(forename)
   end
