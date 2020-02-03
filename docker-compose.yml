@@ -527,7 +527,7 @@ services:
       - static
       - rummager
       - diet-error-handler
-      - whitehall-admin
+      - whitehall-frontend
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: finder-frontend
@@ -539,7 +539,7 @@ services:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
-      - nginx-proxy:whitehall-admin.dev.gov.uk
+      - nginx-proxy:whitehall-frontend.dev.gov.uk
     ports:
       - "3062"
     volumes:
