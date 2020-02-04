@@ -35,11 +35,11 @@ def apps = [
 timestamps {
   node("publishing-e2e-tests") {
     initializeParameters(govuk, apps)
+    
+    originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
 
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {
-        originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
-
         stage("Clean workspace") {
           checkout(scm)
           sh("make -j clean_tmp clean_apps")
