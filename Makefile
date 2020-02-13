@@ -169,7 +169,6 @@ populate_end_to_end_test_data_from_whitehall:
 publish_facets:
 	$(DOCKER_COMPOSE_CMD) exec -T content-tagger bundle exec rake facets:import_facet_group[lib/data/find-eu-exit-guidance-business.yml]
 	$(DOCKER_COMPOSE_CMD) exec -T content-tagger bundle exec rake facets:publish_facet_group[lib/data/find-eu-exit-guidance-business.yml]
-	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_eu_exit_business_finder
 
 clean_apps:
 	$(DOCKER_RUN) bash -c 'rm -rf /app/apps/*'
