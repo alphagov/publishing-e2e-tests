@@ -67,7 +67,7 @@ timestamps {
       def testStatus = [flakyNewFailed: false, mainFailed: false, startUpFailed: false]
 
       cloneApplications(params)
-      buildDockerEnvironmnet(params, testStatus)
+      buildDockerEnvironment(params, testStatus)
 
       try {
         startDockerApps(testStatus)
@@ -206,7 +206,7 @@ def cloneApplications(params) {
   }
 }
 
-def buildDockerEnvironmnet(params, testStatus) {
+def buildDockerEnvironment(params, testStatus) {
   stage("Build docker environment") {
     try {
       sh("make pull")
