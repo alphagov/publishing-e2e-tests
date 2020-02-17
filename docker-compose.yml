@@ -38,6 +38,8 @@ services:
 
   postgres:
     image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       << : *default-healthcheck
       test: "psql --username 'postgres' -c 'SELECT 1'"
@@ -304,6 +306,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
@@ -328,6 +331,7 @@ services:
       - rabbitmq
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api-worker
     healthcheck:
@@ -825,6 +829,7 @@ services:
       - content-store
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/content-tagger
       SENTRY_CURRENT_ENV: content-tagger
       VIRTUAL_HOST: content-tagger.dev.gov.uk
     healthcheck:
@@ -845,6 +850,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/content-tagger
       SENTRY_CURRENT_ENV: content-tagger-worker
     healthcheck:
       disable: true
@@ -906,6 +912,7 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/email-alert-api
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: email-alert-api
@@ -925,6 +932,7 @@ services:
       - redis
     environment:
       << : *govuk-app
+      DATABASE_URL: postgresql://postgres:postgres@postgres/email-alert-api
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
       REDIS_HOST: redis
       SENTRY_CURRENT_ENV: email-alert-api-worker
