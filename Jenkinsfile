@@ -67,6 +67,7 @@ timestamps {
       def testStatus = [flakyNewFailed: false, mainFailed: false, startUpFailed: false]
 
       cloneApplications(params)
+      resetDockerEnvironment()
       buildDockerEnvironment(params, testStatus)
 
       try {
@@ -135,6 +136,11 @@ def initializeParameters(govuk, appsCollection) {
         defaultValue: "6",
         description: "Set number of processes for parallel testing",
         name: "TEST_PROCESSES"
+      ),
+      booleanParam(
+        defaultValue: false,
+        description: "Whether to remove existing Docker containers",
+        name: "RESET_DOCKER_ENV"
       )
     ] + appParams)
   ])
@@ -215,6 +221,20 @@ def buildDockerEnvironment(params, testStatus) {
       failBuild(params)
       testStatus.startUpFailed = true
       throw e
+    }
+  }
+}
+
+def resetDockerEnvironment() {
+  stage("Resetting Docker environment") {
+    if (params.RESET_DOCKER_ENV) {
+      try {
+        sh("docker rm \$(docker ps -a -q)")
+      } catch (e) {
+        echo("We weren't able to reset the Docker environment. Test aborting")
+        testStatus.startUpFailed = true
+        throw e
+      }
     }
   }
 }
