@@ -121,7 +121,7 @@ module SignonHelpers
     end
 
     if current_path == "/"
-      return true
+      true
     else
       raise "Couldn't sign in to Signon, current path is #{current_path}"
     end
