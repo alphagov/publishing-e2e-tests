@@ -38,7 +38,9 @@ timestamps {
 
     originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
 
-    currentBuild.displayName = "#$BUILD_NUMBER - $ORIGIN_REPO"
+    if (params.ORIGIN_REPO) {
+      currentBuild.displayName = "#$BUILD_NUMBER - $ORIGIN_REPO"
+    }
 
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {
