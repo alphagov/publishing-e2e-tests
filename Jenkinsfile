@@ -35,8 +35,10 @@ def apps = [
 timestamps {
   node("publishing-e2e-tests") {
     initializeParameters(govuk, apps)
-    
+
     originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
+
+    currentBuild.displayName = "#$BUILD_NUMBER - $ORIGIN_REPO"
 
     lock("publishing-e2e-tests-$NODE_NAME") {
       try {
