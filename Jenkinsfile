@@ -59,7 +59,7 @@ timestamps {
         }
 
         stage("Ruby Lint") {
-          govuk.lintRuby("spec lib Gemfile")
+          govuk.lintRuby()
         }
 
       } catch(e) {
