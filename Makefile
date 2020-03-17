@@ -46,7 +46,7 @@ clone: $(APPS)
 
 kill:
 	$(DOCKER_COMPOSE_CMD) kill
-	$(DOCKER_COMPOSE_CMD) rm -f
+	$(DOCKER_COMPOSE_CMD) rm -s -f
 
 build: kill
 	$(DOCKER_COMPOSE_CMD) build --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
