@@ -38,8 +38,11 @@ private
   end
 
   def and_i_can_view_it_on_finder
-    visit "#{Plek.new.website_root}/search/all?keywords=#{CGI.escape(title)}"
+    search_results = "#{Plek.new.website_root}/search/all?keywords=#{CGI.escape(title)}"
 
+    reload_url_until_match(search_results, :has_text?, title)
+
+    visit "#{Plek.new.website_root}/search/all?keywords=#{CGI.escape(title)}"
     expect_rendering_application("finder-frontend")
     expect(page).to have_content(title)
   end
