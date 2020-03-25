@@ -29,7 +29,7 @@ module TravelAdvicePublisherHelpers
   def fill_in_advice_form(options)
     options = populate_form_defaults(options)
 
-    fill_in("Change description", with: options[:change_description])
+    fill_in("Public change note", with: options[:change_description])
     fill_in("Search title", with: options[:search_title]) if options[:search_title]
     fill_in("Summary", with: options[:summary])
     options[:parts].each do |part|
