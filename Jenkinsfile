@@ -271,10 +271,10 @@ def makeLogsAvailable() {
   stage("Output Error log") {
     errors = sh(script: "test -s tmp/errors.log", returnStatus: true)
     if (errors == 0) {
-      echo("The following errors were logged with sentry/errbit:")
+      echo("The following errors were logged with Sentry")
       sh("cat tmp/errors.log")
     } else {
-      echo("No errors were sent to sentry/errbit")
+      echo("No errors were sent to Sentry")
     }
   }
 
