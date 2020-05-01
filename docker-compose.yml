@@ -186,7 +186,6 @@ services:
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
-      - nginx-proxy:calendars.dev.gov.uk
       - nginx-proxy:manuals-frontend.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
       - nginx-proxy:finder-frontend.dev.gov.uk
@@ -559,7 +558,6 @@ services:
       - publishing-api
       - publisher-worker
       - diet-error-handler
-      - calendars
       - redis
       - mongo
       - router
@@ -577,7 +575,6 @@ services:
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
-      - nginx-proxy:calendars.dev.gov.uk
       - nginx-proxy:www.dev.gov.uk
     ports:
       - "3000"
@@ -721,29 +718,6 @@ services:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
       - "3172"
-
-  calendars: &calendars
-    image: govuk/calendars:${CALENDARS_COMMITISH:-deployed-to-production}
-    build:
-      context: apps/calendars
-    depends_on:
-      - content-store
-      - static
-      - publishing-api
-      - diet-error-handler
-    environment:
-      << : *govuk-app
-      SENTRY_CURRENT_ENV: calendars
-      VIRTUAL_HOST: calendars.dev.gov.uk
-    links:
-      - nginx-proxy:static.dev.gov.uk
-      - nginx-proxy:content-store.dev.gov.uk
-      - nginx-proxy:publishing-api.dev.gov.uk
-      - nginx-proxy:error-handler.dev.gov.uk
-    ports:
-      - "3011"
-    volumes:
-      - ./apps/calendars/log:/app/log
 
   whitehall-admin: &whitehall
     image: govuk/whitehall:${WHITEHALL_COMMITISH:-deployed-to-production}
