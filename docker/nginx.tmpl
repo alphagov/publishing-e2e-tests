@@ -274,13 +274,6 @@ server {
   {{ $upstream_name := sha1 $host }}
   {{ $proto := or (first (groupByKeys $containers "Env.VIRTUAL_PROTO")) "http" }}
 
-  {{ if eq $host "calendars.dev.gov.uk" }}
-  location /calendars/ {
-    proxy_set_header Host calendars.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
   {{ if eq $host "collections.dev.gov.uk" }}
   location /collections/ {
     proxy_set_header Host collections.dev.gov.uk;

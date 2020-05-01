@@ -1,7 +1,7 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api rummager \
 	specialist-publisher static travel-advice-publisher collections-publisher \
-	collections frontend publisher calendars \
+	collections frontend publisher  \
 	manuals-publisher manuals-frontend whitehall content-tagger \
 	contacts-admin finder-frontend email-alert-api email-alert-service
 
@@ -136,7 +136,7 @@ setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager-worker bundle exec rake message_queue:create_queues
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-service bundle exec rake message_queues:create_queues
 
-publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher publish_calendars
+publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
 
 publish_rummager:
 	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
@@ -147,6 +147,7 @@ publish_specialist:
 
 publish_frontend:
 	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_calendars
 
 publish_collections_publisher:
 	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
@@ -158,9 +159,6 @@ publish_contacts_admin:
 
 publish_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
-
-publish_calendars:
-	$(DOCKER_COMPOSE_CMD) exec -T calendars bundle exec rake publishing_api:publish
 
 populate_end_to_end_test_data_from_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake taxonomy:populate_end_to_end_test_data

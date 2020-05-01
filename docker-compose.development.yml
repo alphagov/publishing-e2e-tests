@@ -100,10 +100,6 @@ services:
     ports:
       - "33172:3172"
 
-  calendars:
-    ports:
-      - "33011:3011"
-
   whitehall-admin:
     ports:
       - "33020:3020"
