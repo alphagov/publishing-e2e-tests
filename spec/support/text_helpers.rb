@@ -16,7 +16,7 @@ module TextHelpers
   end
 
   def ignore_quotes_regex(text)
-    escaped = Regexp.escape(text).gsub(/["']/, %{["“”'‘’]})
+    escaped = Regexp.escape(text).gsub(/["']/, %(["“”'‘’]))
     /#{escaped}/
   end
 

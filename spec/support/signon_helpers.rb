@@ -72,7 +72,7 @@ module SignonHelpers
   end
 
   def use_signon?
-    !User::available_user_count.nil?
+    !User.available_user_count.nil?
   end
 
   def signin_with_user(user)
@@ -189,7 +189,7 @@ module SignonHelpers
 
   def self.included(base)
     base.after(:each) do
-      User::reset_next_user_number
+      User.reset_next_user_number
     end
   end
 

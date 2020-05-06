@@ -163,7 +163,7 @@ module SpecialistPublisherHelpers
     select2_container = first("#s2id_#{scope}.select2-container")
     select2_container.click
 
-    page.execute_script("$('##{scope}').value = '#{value}'");
+    page.execute_script("$('##{scope}').value = '#{value}'")
     find(:xpath, "//body").first(".select2-results li", text: value).click
   end
 end
