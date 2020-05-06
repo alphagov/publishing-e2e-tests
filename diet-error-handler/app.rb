@@ -25,7 +25,7 @@ post "/api/:project_id/store/" do
   handle_notice(notice)
 
   status 201
-  json Hash.new
+  json({})
 end
 
 # Airbrake/Errbit v3 endpoint - DEPRECATED
@@ -42,15 +42,13 @@ end
 # Airbrake/Errbit v2 endpoint - DEPRECATED
 # @TODO remove this and associated code when no apps use errbit
 post "/notifier_api/v2/notices" do
-  begin
-    notice = Notice.from_v2(request.body.read.to_s)
-    handle_notice(notice)
-    status 200
-    body "Success"
-  rescue Nokogiri::XML::SyntaxError
-    status 422
-    body "The provided XML was not well formed"
-  end
+  notice = Notice.from_v2(request.body.read.to_s)
+  handle_notice(notice)
+  status 200
+  body "Success"
+rescue Nokogiri::XML::SyntaxError
+  status 422
+  body "The provided XML was not well formed"
 end
 
 def decompress_body(body)
@@ -79,7 +77,7 @@ def write_to_log(notice)
     timestamp: notice.timestamp,
     errors: notice.errors.map { |e| e.merge(message: abridged_message(e[:message])) },
     context: notice.context,
-    }
+  }
   File.open(ERROR_LOG, "a") { |f| f << abridged_notice.to_yaml }
 end
 

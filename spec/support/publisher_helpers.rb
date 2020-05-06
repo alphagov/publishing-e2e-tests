@@ -54,12 +54,10 @@ module PublisherHelpers
   end
 
   def is_button_visible?(button)
-    begin
-      find_button button
-      true
-    rescue Capybara::ElementNotFound
-      false
-    end
+    find_button button
+    true
+  rescue Capybara::ElementNotFound
+    false
   end
 
   def scroll_to_bottom

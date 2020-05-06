@@ -83,8 +83,8 @@ module RetryHelpers
   alias expect_status_code_eventually reload_url_until_status_code
 
   def retry_while_false(fail_reason: nil, reload_seconds: nil, interval_seconds: nil, &block)
-    reload_seconds = reload_seconds || RSpec.configuration.reload_page_wait_time
-    interval_seconds = interval_seconds || 0.5
+    reload_seconds ||= RSpec.configuration.reload_page_wait_time
+    interval_seconds ||= 0.5
     success = RetryWhileFalse.(reload_seconds: reload_seconds, interval_seconds: interval_seconds, &block)
     fail_reason ||= "the expectation was not met"
     raise TimeoutError, "After #{reload_seconds} seconds, #{fail_reason}" unless success
