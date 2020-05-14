@@ -64,7 +64,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     click_button "Create new edition to edit"
 
     fill_in "Title", with: updated_title
-    fill_in "Public change note", with: change_note
+    fill_in "Enter a public change note", with: change_note
     click_button("Save and continue")
     check "Test taxon"
     click_button("Save and review legacy tagging")
