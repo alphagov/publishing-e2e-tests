@@ -1023,43 +1023,43 @@ services:
     shm_size: 2G
     build: .
     depends_on:
-      - specialist-publisher
-      - government-frontend
-      - draft-government-frontend
-      - travel-advice-publisher
+      - draft-router
+      - draft-static
+      - router
+      - static
+      - collections-publisher
       - contacts-admin
       - content-tagger
-      - collections-publisher
-      - collections
-      - publisher
-      - finder-frontend
-      - frontend
-      - draft-frontend
       - manuals-publisher
-      - manuals-frontend
-      - draft-manuals-frontend
+      - publisher
+      - specialist-publisher
+      - travel-advice-publisher
+      - whitehall-admin
     links:
-      - nginx-proxy:www.dev.gov.uk
-      - nginx-proxy:assets-origin.dev.gov.uk
-      - nginx-proxy:static.dev.gov.uk
+      # Draft frontend
       - nginx-proxy:draft-origin.dev.gov.uk
+      - nginx-proxy:draft-frontend.dev.gov.uk
+      - nginx-proxy:draft-government-frontend.dev.gov.uk
+      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
+      - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
+      # Live frontend
+      - nginx-proxy:assets-origin.dev.gov.uk
       - nginx-proxy:finder-frontend.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
-      - nginx-proxy:draft-frontend.dev.gov.uk
       - nginx-proxy:government-frontend.dev.gov.uk
-      - nginx-proxy:draft-government-frontend.dev.gov.uk
       - nginx-proxy:manuals-frontend.dev.gov.uk
-      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
-      - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
+      - nginx-proxy:www.dev.gov.uk
+      # Publishing applications
+      - nginx-proxy:collections-publisher.dev.gov.uk
+      - nginx-proxy:contacts-admin.dev.gov.uk
+      - nginx-proxy:content-tagger.dev.gov.uk
+      - nginx-proxy:manuals-publisher.dev.gov.uk
+      - nginx-proxy:publisher.dev.gov.uk
       - nginx-proxy:specialist-publisher.dev.gov.uk
       - nginx-proxy:travel-advice-publisher.dev.gov.uk
-      - nginx-proxy:collections-publisher.dev.gov.uk
-      - nginx-proxy:publisher.dev.gov.uk
-      - nginx-proxy:manuals-publisher.dev.gov.uk
-      - nginx-proxy:content-tagger.dev.gov.uk
-      - nginx-proxy:contacts-admin.dev.gov.uk
       - nginx-proxy:whitehall-admin.dev.gov.uk
     volumes:
       - ./tmp:/app/tmp
