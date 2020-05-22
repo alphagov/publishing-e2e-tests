@@ -1044,6 +1044,15 @@ services:
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:draft-origin.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
+      - nginx-proxy:finder-frontend.dev.gov.uk
+      - nginx-proxy:frontend.dev.gov.uk
+      - nginx-proxy:draft-frontend.dev.gov.uk
+      - nginx-proxy:government-frontend.dev.gov.uk
+      - nginx-proxy:draft-government-frontend.dev.gov.uk
+      - nginx-proxy:manuals-frontend.dev.gov.uk
+      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
+      - nginx-proxy:whitehall-frontend.dev.gov.uk
+      - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
       - nginx-proxy:specialist-publisher.dev.gov.uk
       - nginx-proxy:travel-advice-publisher.dev.gov.uk
       - nginx-proxy:collections-publisher.dev.gov.uk
