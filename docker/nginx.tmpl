@@ -274,62 +274,6 @@ server {
   {{ $upstream_name := sha1 $host }}
   {{ $proto := or (first (groupByKeys $containers "Env.VIRTUAL_PROTO")) "http" }}
 
-  {{ if eq $host "collections.dev.gov.uk" }}
-  location /collections/ {
-    proxy_set_header Host collections.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "finder-frontend.dev.gov.uk" }}
-  location /finder-frontend/ {
-    proxy_set_header Host finder-frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "frontend.dev.gov.uk" }}
-  location /frontend/ {
-    proxy_set_header Host frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "government-frontend.dev.gov.uk" }}
-  location /government-frontend/ {
-    proxy_set_header Host government-frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "manuals-frontend.dev.gov.uk" }}
-  location /manuals-frontend/ {
-    proxy_set_header Host manuals-frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "specialist-frontend.dev.gov.uk" }}
-  location /specialist-frontend/ {
-    proxy_set_header Host specialist-frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "static.dev.gov.uk" }}
-  location / {
-    proxy_set_header Host static.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
-  {{ if eq $host "whitehall-frontend.dev.gov.uk" }}
-  location /government/assets/ {
-    proxy_set_header Host whitehall-frontend.dev.gov.uk;
-    proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
-  }
-  {{ end }}
-
   {{ if eq $host "asset-manager.dev.gov.uk" }}
   # Ref: https://github.com/alphagov/govuk-puppet/blob/3001e50c2c44c5456e316ae5bd0d241eade063b8/modules/govuk/templates/static_extra_nginx_config.conf.erb#L19-L37
   location ~ ^/media/ {
