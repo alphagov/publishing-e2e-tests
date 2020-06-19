@@ -744,7 +744,6 @@ services:
       VIRTUAL_HOST: whitehall-admin.dev.gov.uk
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: whitehall-admin
-      GOVUK_ASSET_ROOT: http://whitehall-admin.dev.gov.uk
       LOG_PATH: log/admin.log
       REDIS_URL: redis://redis/1
     healthcheck:
