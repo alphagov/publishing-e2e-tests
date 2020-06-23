@@ -7,7 +7,6 @@ x-govuk-app-env: &govuk-app
   GOVUK_APP_DOMAIN: dev.gov.uk
   GOVUK_APP_DOMAIN_EXTERNAL: dev.gov.uk
   GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
-  GOVUK_ASSET_HOST: http://assets-origin.dev.gov.uk
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
   JWT_AUTH_SECRET: fakejwtsecret
   LOG_PATH: log/live.log
