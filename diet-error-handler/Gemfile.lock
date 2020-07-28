@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (2.8.2)
-    json (2.1.0)
+    json (2.3.0)
     mini_portile2 (2.4.0)
     multi_json (1.13.1)
     mustermann (1.0.3)
