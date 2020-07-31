@@ -58,7 +58,7 @@ timestamps {
         }
 
         stage("Ruby Lint") {
-          govuk.lintRuby()
+          sh("bundle exec rubocop")
         }
 
       } catch(e) {
