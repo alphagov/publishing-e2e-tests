@@ -65,7 +65,6 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
     fill_in "Title", with: updated_title
     fill_in "Public change note", with: change_note
-    check "Applies to all UK nations"
     click_button("Save and continue")
     check "Test taxon"
     click_button("Save and review legacy tagging")
