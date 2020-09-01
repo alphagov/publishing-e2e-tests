@@ -3,8 +3,8 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true, go
 
   let(:title) { "Unpublishing Specialist Publisher #{SecureRandom.uuid}" }
 
-  scenario "Unpublishing a DFID research output" do
-    given_there_is_a_published_dfid_research_output
+  scenario "Unpublishing a Research For Development Output" do
+    given_there_is_a_published_research_for_development_output
     when_i_unpublish_it
     then_i_receive_a_410_on_gov_uk
   end
@@ -15,11 +15,11 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true, go
     )
   end
 
-  def given_there_is_a_published_dfid_research_output
+  def given_there_is_a_published_research_for_development_output
     signin_to_signon if use_signon?
-    visit_specialist_publisher("/dfid-research-outputs/new")
+    visit_specialist_publisher("/research-for-development-outputs/new")
 
-    fill_in_dfid_research_output_form(title: title)
+    fill_in_research_for_development_output_form(title: title)
     click_button("Save as draft")
     expect_created_alert(title)
     expect(page).to have_text(/Created #{Regexp.escape(title)}/), "Failed to create draft of #{title}"

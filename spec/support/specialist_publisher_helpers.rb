@@ -116,7 +116,7 @@ module SpecialistPublisherHelpers
     fill_in("Body", with: options[:body])
   end
 
-  def fill_in_dfid_research_output_form(options = {})
+  def fill_in_research_for_development_output_form(options = {})
     options = {
       title: unique_title,
       summary: Faker::Lorem.sentence,
@@ -127,11 +127,11 @@ module SpecialistPublisherHelpers
     fill_in("Title", with: options[:title])
     fill_in("Summary", with: options[:summary])
     fill_in("Body", with: options[:body])
-    select2("dfid_research_output_dfid_document_type", "Book")
-    select_all_select2("dfid_research_output_dfid_theme")
-    fill_in("dfid_research_output_first_published_at_year", with: options[:first_published_at].year)
-    fill_in("dfid_research_output_first_published_at_month", with: options[:first_published_at].month)
-    fill_in("dfid_research_output_first_published_at_day", with: options[:first_published_at].day)
+    select2("research_for_development_output_research_document_type", "Book")
+    select_all_select2("research_for_development_output_theme")
+    fill_in("research_for_development_output_first_published_at_year", with: options[:first_published_at].year)
+    fill_in("research_for_development_output_first_published_at_month", with: options[:first_published_at].month)
+    fill_in("research_for_development_output_first_published_at_day", with: options[:first_published_at].day)
   end
 
   def fill_in_eat_decision_form(options = {})
