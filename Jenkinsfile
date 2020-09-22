@@ -169,7 +169,7 @@ def initializeParameters(govuk, appsCollection) {
 }
 
 def originBuildStatus(message, status, params) {
-  print "DEBUG: parameter repo = ${param.ORIGIN_REPO}"
+  print "DEBUG: parameter repo = ${params.ORIGIN_REPO}"
   if (params.ORIGIN_REPO && params.ORIGIN_COMMIT) {
     step([
         $class: "GitHubCommitStatusSetter",
