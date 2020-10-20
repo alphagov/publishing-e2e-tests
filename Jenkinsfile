@@ -13,7 +13,6 @@ def apps = [
   [constantPrefix: "CONTENT_STORE", app: "content-store", name: "Content Store"],
   [constantPrefix: "CONTENT_TAGGER", app: "content-tagger", name: "Content Tagger"],
   [constantPrefix: "EMAIL_ALERT_API", app: "email-alert-api", name: "Email Alert API"],
-  [constantPrefix: "EMAIL_ALERT_SERVICE", app: "email-alert-service", name: "Email Alert Service"],
   [constantPrefix: "FINDER_FRONTEND", app: "finder-frontend", name: "Finder Frontend"],
   [constantPrefix: "FRONTEND", app: "frontend", name: "Frontend"],
   [constantPrefix: "GOVUK_CONTENT_SCHEMAS", app: "govuk-content-schemas", name: "GOV.UK Content Schemas"],

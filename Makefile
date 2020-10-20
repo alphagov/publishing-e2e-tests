@@ -3,7 +3,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher  \
 	manuals-publisher manuals-frontend whitehall content-tagger \
-	contacts-admin finder-frontend email-alert-api email-alert-service
+	contacts-admin finder-frontend email-alert-api
 
 RUBY_VERSION = `cat .ruby-version`
 DOCKER_RUN = docker run --rm -v `pwd`:/app ruby:$(RUBY_VERSION)
@@ -134,7 +134,6 @@ setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake setup_exchange
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager-worker bundle exec rake message_queue:create_queues
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-service bundle exec rake message_queues:create_queues
 
 publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
 
