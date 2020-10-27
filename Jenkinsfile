@@ -211,6 +211,14 @@ def cloneApplications(params) {
 def buildDockerEnvironment(params, testStatus) {
   stage("Build docker environment") {
     try {
+      withCredentials([usernamePassword(credentialsId: 'govukci-docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        // --password-stdin doesn't actually improve security here but it does
+        // suppress an inapplicable warning message.
+        sh([
+          script: 'echo $DOCKER_PASSWORD | docker login --username "$DOCKER_USERNAME" --password-stdin',
+          label: 'Log into DockerHub'
+        ])
+      }
       sh("make pull")
       sh("make build")
     } catch(e) {
