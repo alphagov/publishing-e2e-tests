@@ -150,7 +150,6 @@ publish_frontend:
 
 publish_collections_publisher:
 	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
-	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_finders
 	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_special_routes
 
 publish_contacts_admin:
