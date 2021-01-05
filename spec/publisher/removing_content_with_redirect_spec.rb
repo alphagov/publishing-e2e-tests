@@ -9,7 +9,7 @@ feature "Removing content by redirecting it from Publisher", publisher: true do
     given_there_is_a_published_artefact_with_subpages
     when_i_remove_the_published_artefact_with_a_redirect_to_help
     then_visiting_the_artefact_redirects_to_help
-    and_visiting_a_subpage_redirects_to_help_with_slug
+    and_visiting_a_subpage_redirects_to_help
   end
 
 private
@@ -53,11 +53,11 @@ private
     expect(current_url).to end_with("gov.uk/help")
   end
 
-  def and_visiting_a_subpage_redirects_to_help_with_slug
+  def and_visiting_a_subpage_redirects_to_help
     reload_url_until_status_code(subpage_url, 301, keep_retrying_while: [200])
 
     visit(subpage_url)
-    expect(current_url).to end_with("gov.uk/help/#{@subpart_slug}")
+    expect(current_url).to end_with("gov.uk/help")
   end
 
   def subpage_url
