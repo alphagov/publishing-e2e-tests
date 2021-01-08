@@ -851,6 +851,7 @@ services:
       << : *govuk-app
       ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: asset-manager
       VIRTUAL_HOST: asset-manager.dev.gov.uk
       FAKE_S3_HOST: http://127.0.0.1
@@ -874,6 +875,7 @@ services:
       << : *govuk-app
       ASSET_MANAGER_CLAMSCAN_PATH: /bin/true
       REDIS_HOST: redis
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
@@ -896,6 +898,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres/email-alert-api
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
       REDIS_HOST: redis
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: email-alert-api
       VIRTUAL_HOST: email-alert-api.dev.gov.uk
     healthcheck:
@@ -916,6 +919,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres/email-alert-api
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
       REDIS_HOST: redis
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: email-alert-api-worker
     healthcheck:
       disable: true
