@@ -99,6 +99,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager
+      RACK_ENV: production
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager
       VIRTUAL_HOST: rummager.dev.gov.uk
@@ -122,6 +123,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
+      RACK_ENV: production
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-worker
     links:
@@ -139,6 +141,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-publishing-queue
+      RACK_ENV: production
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-publishing-queue
     ports: []
@@ -153,6 +156,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-insert-data
+      RACK_ENV: production
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-insert-data
     ports: []
@@ -167,6 +171,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-bulk-insert-data
+      RACK_ENV: production
       REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-bulk-insert-data
     ports: []
