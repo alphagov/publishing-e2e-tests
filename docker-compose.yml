@@ -99,6 +99,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager
       VIRTUAL_HOST: rummager.dev.gov.uk
     links:
@@ -121,6 +122,7 @@ services:
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-worker
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-worker
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -133,9 +135,11 @@ services:
     depends_on:
       - diet-error-handler
       - rabbitmq
+      - redis
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-publishing-queue
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-publishing-queue
     ports: []
 
@@ -145,9 +149,11 @@ services:
     depends_on:
       - diet-error-handler
       - rabbitmq
+      - redis
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-insert-data
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-insert-data
     ports: []
 
@@ -157,9 +163,11 @@ services:
     depends_on:
       - diet-error-handler
       - rabbitmq
+      - redis
     environment:
       << : *govuk-app
       GOVUK_APP_NAME: rummager-listener-bulk-insert-data
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: rummager-listener-bulk-insert-data
     ports: []
 
@@ -306,6 +314,7 @@ services:
       << : *govuk-app
       DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
       MEMCACHE_SERVERS: memcached
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
     links:
@@ -330,6 +339,7 @@ services:
     environment:
       << : *govuk-app
       DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
+      REDIS_URL: redis://redis/1
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api-worker
     healthcheck:
@@ -353,6 +363,7 @@ services:
     environment:
       << : *govuk-app
       MONGO_WRITE_CONCERN: 1
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
     healthcheck:
@@ -382,6 +393,7 @@ services:
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: travel-advice-publisher
+      REDIS_URL: redis://redis/1
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
     healthcheck:
       << : *default-healthcheck
@@ -401,11 +413,13 @@ services:
     command: foreman run worker
     depends_on:
       - publishing-api
+      - redis
       - diet-error-handler
     healthcheck:
       disable: true
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
     ports: []
 
@@ -416,11 +430,13 @@ services:
     depends_on:
       - publishing-api
       - mysql
+      - redis
       - rummager
       - collections-publisher-worker
       - diet-error-handler
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: collections-publisher
       VIRTUAL_HOST: collections-publisher.dev.gov.uk
     healthcheck:
@@ -443,6 +459,7 @@ services:
       - redis
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: collections-publisher-worker
     healthcheck:
       disable: true
@@ -565,6 +582,7 @@ services:
       << : *govuk-app
       DISABLE_SECURE_COOKIES: "true"
       DISABLE_EMAIL: "true"
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
@@ -585,10 +603,12 @@ services:
     << : *publisher
     command: foreman run worker
     depends_on:
+      - redis
       - publishing-api
       - diet-error-handler
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: publisher-worker
     healthcheck:
       disable: true
@@ -650,6 +670,7 @@ services:
       - manuals-publisher-worker
       - mongo
       - publishing-api
+      - redis
       - router
       - rummager
       - whitehall-admin
@@ -674,6 +695,7 @@ services:
     command: foreman run worker
     depends_on:
       - publishing-api
+      - redis
       - diet-error-handler
     environment:
       << : *govuk-app
@@ -811,6 +833,7 @@ services:
     environment:
       << : *govuk-app
       DATABASE_URL: postgresql://postgres:postgres@postgres/content-tagger
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: content-tagger
       VIRTUAL_HOST: content-tagger.dev.gov.uk
     healthcheck:
@@ -829,9 +852,11 @@ services:
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       DATABASE_URL: postgresql://postgres:postgres@postgres/content-tagger
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: content-tagger-worker
     healthcheck:
       disable: true
@@ -930,9 +955,11 @@ services:
     build: apps/static
     depends_on:
       - diet-error-handler
+      - redis
     environment:
       << : *govuk-app
       ASSET_HOST: static.dev.gov.uk
+      REDIS_URL: redis://redis/1
       SENTRY_CURRENT_ENV: static
       VIRTUAL_HOST: static.dev.gov.uk
     links:
