@@ -98,7 +98,6 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
-      GOVUK_APP_NAME: rummager
       RACK_ENV: production
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: rummager
@@ -122,7 +121,6 @@ services:
     command: foreman run worker
     environment:
       << : *govuk-app
-      GOVUK_APP_NAME: rummager-worker
       RACK_ENV: production
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: rummager-worker
@@ -140,7 +138,6 @@ services:
       - redis
     environment:
       << : *govuk-app
-      GOVUK_APP_NAME: rummager-listener-publishing-queue
       RACK_ENV: production
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: rummager-listener-publishing-queue
@@ -155,7 +152,6 @@ services:
       - redis
     environment:
       << : *govuk-app
-      GOVUK_APP_NAME: rummager-listener-insert-data
       RACK_ENV: production
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: rummager-listener-insert-data
@@ -170,7 +166,6 @@ services:
       - redis
     environment:
       << : *govuk-app
-      GOVUK_APP_NAME: rummager-listener-bulk-insert-data
       RACK_ENV: production
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: rummager-listener-bulk-insert-data
