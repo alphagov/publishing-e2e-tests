@@ -132,7 +132,7 @@ contacts_admin_seed: wait_for_whitehall_admin
 
 setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake setup_exchange
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker bundle exec rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps search-api-worker bundle exec rake message_queue:create_queues
 
 publish_routes: publish_search_api publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
