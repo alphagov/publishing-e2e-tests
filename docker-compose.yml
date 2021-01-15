@@ -10,7 +10,7 @@ x-govuk-app-env: &govuk-app
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
   JWT_AUTH_SECRET: fakejwtsecret
   LOG_PATH: log/live.log
-  PLEK_SERVICE_SEARCH_URI: http://rummager.dev.gov.uk
+  PLEK_SERVICE_SEARCH_URI: http://search-api.dev.gov.uk
   RAILS_ENV: production
   RAILS_SERVE_STATIC_FILES: "true"
   SECRET_KEY_BASE: 875c6bf4c48da9bb41f4cfd25d09bf5e2a62d88b39efc4bd9c498e6c8f61e4df740af87386f97269525e01b5f74402512eb6a4723882579f10aa95f6e2971fc2
@@ -84,34 +84,34 @@ services:
     volumes:
       - ./docker/elasticsearch6.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
-  rummager: &rummager
-    image: govuk/search-api:${RUMMAGER_COMMITISH:-deployed-to-production}
-    build: apps/rummager
+  search-api: &search-api
+    image: govuk/search-api:${SEARCH_API_COMMITISH:-deployed-to-production}
+    build: apps/search-api
     depends_on:
       - redis
       - elasticsearch6
       - publishing-api
-      - rummager-worker
-      - rummager-listener-publishing-queue
-      - rummager-listener-insert-data
-      - rummager-listener-bulk-insert-data
+      - search-api-worker
+      - search-api-listener-publishing-queue
+      - search-api-listener-insert-data
+      - search-api-listener-bulk-insert-data
       - diet-error-handler
     environment:
       << : *govuk-app
       RACK_ENV: production
       REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: rummager
-      VIRTUAL_HOST: rummager.dev.gov.uk
+      SENTRY_CURRENT_ENV: search-api
+      VIRTUAL_HOST: search-api.dev.gov.uk
     links:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
     ports:
       - "3233"
     volumes:
-      - ./apps/rummager/log:/app/log
+      - ./apps/search-api/log:/app/log
 
-  rummager-worker:
-    << : *rummager
+  search-api-worker:
+    << : *search-api
     depends_on:
       - elasticsearch6
       - rabbitmq
@@ -123,14 +123,14 @@ services:
       << : *govuk-app
       RACK_ENV: production
       REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: rummager-worker
+      SENTRY_CURRENT_ENV: search-api-worker
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
     ports: []
 
-  rummager-listener-publishing-queue:
-    << : *rummager
+  search-api-listener-publishing-queue:
+    << : *search-api
     command: foreman run publishing-queue-listener
     depends_on:
       - diet-error-handler
@@ -140,11 +140,11 @@ services:
       << : *govuk-app
       RACK_ENV: production
       REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: rummager-listener-publishing-queue
+      SENTRY_CURRENT_ENV: search-api-listener-publishing-queue
     ports: []
 
-  rummager-listener-insert-data:
-    << : *rummager
+  search-api-listener-insert-data:
+    << : *search-api
     command: foreman run govuk-index-queue-listener
     depends_on:
       - diet-error-handler
@@ -154,11 +154,11 @@ services:
       << : *govuk-app
       RACK_ENV: production
       REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: rummager-listener-insert-data
+      SENTRY_CURRENT_ENV: search-api-listener-insert-data
     ports: []
 
-  rummager-listener-bulk-insert-data:
-    << : *rummager
+  search-api-listener-bulk-insert-data:
+    << : *search-api
     command: foreman run bulk-reindex-queue-listener
     depends_on:
       - diet-error-handler
@@ -168,7 +168,7 @@ services:
       << : *govuk-app
       RACK_ENV: production
       REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: rummager-listener-bulk-insert-data
+      SENTRY_CURRENT_ENV: search-api-listener-bulk-insert-data
     ports: []
 
   diet-error-handler:
@@ -387,7 +387,7 @@ services:
       - publishing-api
       - asset-manager
       - static
-      - rummager
+      - search-api
       - travel-advice-publisher-worker
       - diet-error-handler
     environment:
@@ -398,7 +398,7 @@ services:
     healthcheck:
       << : *default-healthcheck
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
@@ -431,7 +431,7 @@ services:
       - publishing-api
       - mysql
       - redis
-      - rummager
+      - search-api
       - collections-publisher-worker
       - diet-error-handler
     environment:
@@ -442,7 +442,7 @@ services:
     healthcheck:
       << : *default-healthcheck
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -472,14 +472,14 @@ services:
     depends_on:
       - content-store
       - static
-      - rummager
+      - search-api
       - diet-error-handler
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: collections
       VIRTUAL_HOST: collections.dev.gov.uk
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -493,7 +493,7 @@ services:
     depends_on:
       - draft-content-store
       - draft-static
-      - rummager
+      - search-api
       - diet-error-handler
     environment:
       << : *draft-govuk-app
@@ -501,7 +501,7 @@ services:
       VIRTUAL_HOST: draft-collections.dev.gov.uk
       PORT: 3170
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:draft-content-store.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -518,7 +518,7 @@ services:
       - mysql
       - publishing-api
       - router
-      - rummager
+      - search-api
       - whitehall-admin
     environment:
       << : *govuk-app
@@ -527,7 +527,7 @@ services:
     healthcheck:
       << : *default-healthcheck
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:whitehall-admin.dev.gov.uk
@@ -544,7 +544,7 @@ services:
     depends_on:
       - content-store
       - static
-      - rummager
+      - search-api
       - diet-error-handler
       - whitehall-frontend
       - router
@@ -556,7 +556,7 @@ services:
     healthcheck:
       << : *default-healthcheck
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
@@ -672,14 +672,14 @@ services:
       - publishing-api
       - redis
       - router
-      - rummager
+      - search-api
       - whitehall-admin
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
     links:
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
@@ -756,7 +756,7 @@ services:
       - mysql
       - publishing-api
       - redis
-      - rummager
+      - search-api
       - static
       - whitehall-worker
     environment:
@@ -774,7 +774,7 @@ services:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
-      - nginx-proxy:rummager.dev.gov.uk
+      - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
     ports:
       - "3020"
@@ -828,7 +828,7 @@ services:
       - publishing-api
       - postgres
       - redis
-      - rummager
+      - search-api
       - content-store
     environment:
       << : *govuk-app

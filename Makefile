@@ -1,5 +1,5 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
-	publishing-api router router-api rummager \
+	publishing-api router router-api search-api \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher  \
 	manuals-publisher manuals-frontend whitehall content-tagger \
@@ -69,7 +69,7 @@ setup_apps:
 setup_dbs: router_setup content_store_setup asset_manager_setup \
 	publishing_api_setup travel_advice_setup whitehall_setup \
 	content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
-	publisher_setup collections_publisher_setup rummager_setup \
+	publisher_setup collections_publisher_setup search_api_setup \
 	contacts_admin_setup email_alert_api_setup
 
 router_setup:
@@ -107,8 +107,8 @@ publisher_setup:
 collections_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps collections-publisher bundle exec rake db:reset
 
-rummager_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager env SEARCH_INDEX=all bundle exec rake search:create_all_indices
+search_api_setup:
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps search-api env SEARCH_INDEX=all bundle exec rake search:create_all_indices
 
 email_alert_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:reset
@@ -133,13 +133,13 @@ contacts_admin_seed: wait_for_whitehall_admin
 setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake setup_exchange
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker rails runner 'Sidekiq::Queue.new.clear'
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps rummager-worker bundle exec rake message_queue:create_queues
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps search-api-worker bundle exec rake message_queue:create_queues
 
-publish_routes: publish_rummager publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
+publish_routes: publish_search_api publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
 
-publish_rummager:
-	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_special_routes
-	$(DOCKER_COMPOSE_CMD) exec -T rummager bundle exec rake publishing_api:publish_supergroup_finders
+publish_search_api:
+	$(DOCKER_COMPOSE_CMD) exec -T search-api bundle exec rake publishing_api:publish_special_routes
+	$(DOCKER_COMPOSE_CMD) exec -T search-api bundle exec rake publishing_api:publish_supergroup_finders
 
 publish_specialist:
 	$(DOCKER_COMPOSE_CMD) exec -T specialist-publisher bundle exec rake publishing_api:publish_finders
@@ -233,7 +233,7 @@ stop: kill
 	publishing_api_setup travel_advice_setup whitehall_setup \
 	content_tagger_setup manuals_publisher_setup \
 	specialist_publisher_setup publisher_setup collections_publisher_setup \
-	rummager_setup publish_rummager publish_specialist publish_frontend \
+	search_api_setup publish_search_api publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
 	wait_for_whitehall_admin contacts_admin_setup contact_admin_seed pull \
 	clean_apps clean_docker clean_tmp clean setup_apps setup_dependencies

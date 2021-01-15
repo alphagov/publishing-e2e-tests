@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
 
-  rummager:
+  search-api:
     ports:
       - "33233:3233"
 

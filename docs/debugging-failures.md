@@ -47,7 +47,7 @@ through the output until you see the distinctive Ruby symbolized output.
 13:48:18 - :type: GovukIndex::InvalidFormatError
 13:48:18   :message: GovukIndex::InvalidFormatError
 13:48:18 :context:
-13:48:18   :environment: rummager-worker
+13:48:18   :environment: search-api-worker
 13:48:18   :hostname:
 13:48:18   :url:
 13:48:18 ---
