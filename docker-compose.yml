@@ -676,6 +676,7 @@ services:
       - whitehall-admin
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
     links:
@@ -699,6 +700,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher-worker
     healthcheck:
       disable: true
