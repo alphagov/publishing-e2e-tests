@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "byebug"
 gem "capybara-screenshot"
-gem "capybara-select2"
+gem "capybara-select-2"
 gem "docker-api", "~> 1.34"
 gem "docker-compose", "~> 1.1"
 gem "faker", "~> 1.9"

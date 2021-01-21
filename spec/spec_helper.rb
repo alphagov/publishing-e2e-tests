@@ -19,7 +19,7 @@
 
 require "capybara/rspec"
 require "capybara-screenshot/rspec"
-require "capybara-select2"
+require "capybara-select-2"
 require "faker"
 require "plek"
 require "ptools"
