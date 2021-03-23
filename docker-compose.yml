@@ -60,6 +60,13 @@ services:
       << : *default-healthcheck
       test: "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"
 
+  mongo-2.6:
+    image: mongo:2.6
+    command: ["--replSet", "mongo-2.6-replica-set"]
+    healthcheck:
+      << : *default-healthcheck
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo localhost:27017/test --quiet) -eq 1
+
   redis:
     image: redis
     healthcheck:
@@ -184,11 +191,12 @@ services:
     image: govuk/router:${ROUTER_COMMITISH:-deployed-to-production}
     build: apps/router
     depends_on:
-      - mongo
+      - mongo-2.6
     environment:
       VIRTUAL_HOST: www.dev.gov.uk
       VIRTUAL_PORT: 3054
       ROUTER_BACKEND_HEADER_TIMEOUT: 60s
+      ROUTER_MONGO_URL: mongo-2.6
     links:
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
@@ -209,6 +217,7 @@ services:
       ROUTER_PUBADDR: ":3154"
       ROUTER_APIADDR: ":3155"
       ROUTER_MONGO_DB: draft-router
+      ROUTER_MONGO_URL: mongo-2.6
       VIRTUAL_HOST: draft-origin.dev.gov.uk
       VIRTUAL_PORT: 3154
     links:
@@ -225,13 +234,15 @@ services:
     image: govuk/router-api:${ROUTER_API_COMMITISH:-deployed-to-production}
     build: apps/router-api
     depends_on:
-      - mongo
+      - mongo-2.6
       - router
       - diet-error-handler
     environment:
       << : *govuk-app
       SENTRY_CURRENT_ENV: router-api
       VIRTUAL_HOST: router-api.dev.gov.uk
+      MONGODB_URI: mongodb://mongo-2.6/router
+      TEST_MONGODB_URI: mongodb://mongo-2.6/router-test
     links:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -242,17 +253,17 @@ services:
   draft-router-api:
     << : *router-api
     depends_on:
-      - mongo
+      - mongo-2.6
       - draft-router
       - diet-error-handler
     environment:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-router-api
-      MONGODB_URI: mongodb://mongo/draft-router
+      MONGODB_URI: mongodb://mongo-2.6/draft-router
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       SENTRY_CURRENT_ENV: draft-router-api
-      TEST_MONGODB_URI: mongodb://mongo/draft-router-test
+      TEST_MONGODB_URI: mongodb://mongo-2.6/draft-router-test
       VIRTUAL_HOST: draft-router-api.dev.gov.uk
     links:
       - nginx-proxy:error-handler.dev.gov.uk
