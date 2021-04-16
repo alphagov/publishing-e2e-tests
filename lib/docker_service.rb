@@ -1,17 +1,17 @@
 require "docker"
-require "docker/compose"
 
 class DockerService
   def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 60, interval_seconds: 10)
-    unhealthy_containers = get_services_containers(only: services, except: except)
+    container_ids = service_container_ids(only: services, except: except)
+    unhealthy_containers = []
 
     RetryWhileFalse.call(reload_seconds: reload_seconds, interval_seconds: interval_seconds) do
-      unhealthy_containers = unhealthy_containers.reject { |service_container| container_is_healthy(service_container) }
+      container_ids.reject! { |_, id| container_is_healthy?(id) }
+      unhealthy_containers = container_ids.keys
       unhealthy_containers.empty?
     end
 
-    unhealthy_container_names = unhealthy_containers.map(&:name)
-    raise "Container(s) #{unhealthy_container_names.join(',')} were unhealthy after 60 seconds" if unhealthy_containers.any?
+    raise "Container(s) #{unhealthy_containers.join(',')} were unhealthy after 60 seconds" if unhealthy_containers.any?
   end
 
   def self.remove_built_app_images
@@ -39,32 +39,26 @@ class DockerService
     end
   end
 
-  def self.get_services_containers(only:, except:)
-    containers = Docker::Compose.new.ps
+  def self.service_container_ids(only:, except:)
+    output = `docker-compose ps --services`
+    raise "Failed to check docker compose services" unless $CHILD_STATUS.success?
 
-    unless only.empty?
-      only_labels = docker_compose_labels(only)
-      containers = containers.find_all do |container|
-        (container.labels & only_labels).any?
-      end
+    service_names = output.split("\n")
+
+    unknown_services = (only + except) - service_names
+    raise "Unknown services: #{unknown_services.join(',')}" if unknown_services.any?
+
+    service_names.select! { |name| only.include?(name) } unless only.empty?
+    service_names.reject! { |name| except.include?(name) } unless except.empty?
+
+    service_names.each_with_object({}) do |name, memo|
+      memo[name] = `docker-compose ps -q #{name}`.chomp
+      raise "Failed to determine a container id for #{name}" unless $CHILD_STATUS.success?
     end
-
-    unless except.empty?
-      except_labels = docker_compose_labels(except)
-      containers = containers.find_all do |container|
-        (container.labels & except_labels).empty?
-      end
-    end
-
-    containers
   end
 
-  def self.docker_compose_labels(services)
-    services.map { |service| "com.docker.compose.service=#{service}" }
-  end
-
-  def self.container_is_healthy(container)
-    container_state = Docker::Container.get(container.id).json["State"]
+  def self.container_is_healthy?(container_id)
+    container_state = Docker::Container.get(container_id).json["State"]
     health = container_state["Health"]
     container_state["Status"] == "running" && (health.nil? || health["Status"] == "healthy")
   end
