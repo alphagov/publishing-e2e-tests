@@ -76,6 +76,6 @@ private
   def wait_for_the_child_to_redirect
     click_link(child_title)
     url = find_link(link)[:href]
-    reload_url_until_status_code(url, 301, keep_retrying_while: [200])
+    reload_url_until_status_code(url, 301, keep_retrying_while: [200, 404])
   end
 end
