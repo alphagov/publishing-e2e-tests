@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "rotp"
 require_relative "javascript_helpers"
 

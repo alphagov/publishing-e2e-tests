@@ -56,7 +56,7 @@ module SpecialistPublisherHelpers
       title: unique_title,
       summary: Faker::Lorem.sentence,
       body: Faker::Lorem.paragraph,
-      reference_number: Faker::Number.number(10),
+      reference_number: Faker::Number.number(digits: 10),
       decision_date: Faker::Date.backward,
     }.merge(options)
 
