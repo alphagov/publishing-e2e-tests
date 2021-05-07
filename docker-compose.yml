@@ -559,9 +559,11 @@ services:
       - diet-error-handler
       - whitehall-frontend
       - router
+      - memcached
     environment:
       << : *govuk-app
       ASSET_HOST: finder-frontend.dev.gov.uk
+      MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: finder-frontend
       VIRTUAL_HOST: finder-frontend.dev.gov.uk
     healthcheck:
