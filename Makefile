@@ -52,7 +52,7 @@ build: kill
 	$(DOCKER_COMPOSE_CMD) build --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
 
 setup_dependencies:
-	$(DOCKER_COMPOSE_CMD) up -d elasticsearch6 mongo mongo-2.6 mysql postgres rabbitmq redis
+	$(DOCKER_COMPOSE_CMD) up -d elasticsearch6 memcached mongo mongo-2.6 mysql postgres rabbitmq redis
 	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
 	bundle exec rake docker:wait_for_rabbitmq
@@ -64,6 +64,7 @@ setup_apps:
 	$(MAKE) publish_routes
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
+	$(MAKE) finder_frontend_seed
 	bundle exec rake docker:wait_for_apps
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
@@ -130,6 +131,9 @@ contacts_admin_seed: wait_for_whitehall_admin
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish_all_organisations
 
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
+
+finder_frontend_seed:
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps finder-frontend bundle exec rake registries:cache_warm
 
 setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake setup_exchange
@@ -237,4 +241,5 @@ stop: kill
 	search_api_setup publish_search_api publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
 	wait_for_whitehall_admin contacts_admin_setup contact_admin_seed pull \
-	clean_apps clean_docker clean_tmp clean setup_apps setup_dependencies
+	clean_apps clean_docker clean_tmp clean setup_apps setup_dependencies \
+	finder_frontend_seed
