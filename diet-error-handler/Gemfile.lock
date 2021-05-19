@@ -3,10 +3,10 @@ GEM
   specs:
     backports (2.8.2)
     json (2.3.0)
-    mini_portile2 (2.5.0)
+    mini_portile2 (2.5.1)
     multi_json (1.13.1)
     mustermann (1.0.3)
-    nokogiri (1.11.0)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     racc (1.5.2)
