@@ -128,7 +128,7 @@ contacts_admin_seed: wait_for_whitehall_admin
 	# Whitehall.
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake search:index:organisations
 	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish_all_organisations
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
 
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
 
