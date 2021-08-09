@@ -782,6 +782,7 @@ services:
       SENTRY_CURRENT_ENV: whitehall-admin
       LOG_PATH: log/admin.log
       REDIS_URL: redis://redis
+      SKIP_S3_HEALTHCHECK_FOR_PUBLISHING_E2E_TESTS: "true"
     healthcheck:
       << : *default-healthcheck
     links:
