@@ -40,7 +40,7 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
     wait_for_artefact_to_be_viewable(@published_guide_url)
     reload_url_until_status_code(@taxon_url, 200)
     visit_tag_external_content_page(slug: guide_slug)
-    select2(taxon_title, css: "#s2id_tagging_tagging_update_form_taxons")
+    select2(taxon_title, css: "[data-select2-id='1']")
     click_button "Update tagging"
   end
 
