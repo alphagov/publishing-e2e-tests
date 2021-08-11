@@ -782,7 +782,6 @@ services:
       SENTRY_CURRENT_ENV: whitehall-admin
       LOG_PATH: log/admin.log
       REDIS_URL: redis://redis
-      SKIP_S3_HEALTHCHECK_FOR_PUBLISHING_E2E_TESTS: "true"
     healthcheck:
       << : *default-healthcheck
     links:
@@ -808,7 +807,6 @@ services:
       SENTRY_CURRENT_ENV: whitehall-frontend
       LOG_PATH: log/frontend.log
       REDIS_URL: redis://redis
-      SKIP_S3_HEALTHCHECK_FOR_PUBLISHING_E2E_TESTS: "true"
 
   draft-whitehall-frontend:
     << : *whitehall
@@ -820,7 +818,6 @@ services:
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
       LOG_PATH: log/draft-frontend.log
       REDIS_URL: redis://redis
-      SKIP_S3_HEALTHCHECK_FOR_PUBLISHING_E2E_TESTS: "true"
 
   whitehall-worker:
     << : *whitehall
