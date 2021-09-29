@@ -114,6 +114,8 @@ RSpec.configure do |config|
   config.add_setting :reload_page_wait_time, default: 60
 end
 
+Webdrivers.install_dir = File.expand_path("~/.webdrivers/#{ENV['TEST_ENV_NUMBER']}")
+
 Capybara.register_driver :headless_chrome do |app|
   chrome_options = Selenium::WebDriver::Chrome::Options.new
   chrome_options.headless!
