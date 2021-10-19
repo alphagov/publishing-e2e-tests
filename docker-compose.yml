@@ -614,7 +614,7 @@ services:
 
   publisher-worker:
     << : *publisher
-    command: foreman run worker
+    command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
       - redis
       - publishing-api
