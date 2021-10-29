@@ -639,6 +639,7 @@ services:
     environment:
       << : *govuk-app
       ASSET_HOST: frontend.dev.gov.uk
+      PORT: 3005
       SENTRY_CURRENT_ENV: frontend
       VIRTUAL_HOST: frontend.dev.gov.uk
     healthcheck:
