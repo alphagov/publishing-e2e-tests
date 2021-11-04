@@ -599,6 +599,10 @@ services:
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
+      MONGODB_URI: mongodb://mongo/govuk_content_development
+      TEST_MONGODB_URI: mongodb://mongo/govuk_content_development-test
+      PORT: 3000
+      ASSETS_PREFIX: /assets/publisher
     healthcheck:
       << : *default-healthcheck
     volumes:
