@@ -279,7 +279,6 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
-      GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas
       MONGO_WRITE_CONCERN: 1
       MONGODB_URI: mongodb://mongo/content-store
       PORT: 3068
@@ -303,7 +302,6 @@ services:
     environment:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-content-store
-      GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas
       MONGO_WRITE_CONCERN: 1
       MONGODB_URI: mongodb://mongo/draft-content-store
       PORT: 3100
