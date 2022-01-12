@@ -789,6 +789,8 @@ services:
       SENTRY_CURRENT_ENV: whitehall-admin
       LOG_PATH: log/admin.log
       REDIS_URL: redis://redis
+      PORT: 3020
+      DATABASE_URL: mysql2://root:root@mysql/whitehall_development
     healthcheck:
       << : *default-healthcheck
     links:
@@ -814,6 +816,8 @@ services:
       SENTRY_CURRENT_ENV: whitehall-frontend
       LOG_PATH: log/frontend.log
       REDIS_URL: redis://redis
+      PORT: 3020
+      DATABASE_URL: mysql2://root:root@mysql/whitehall_development
 
   draft-whitehall-frontend:
     << : *whitehall
@@ -825,10 +829,12 @@ services:
       SENTRY_CURRENT_ENV: draft-whitehall-frontend
       LOG_PATH: log/draft-frontend.log
       REDIS_URL: redis://redis
+      PORT: 3020
+      DATABASE_URL: mysql2://root:root@mysql/whitehall_development
 
   whitehall-worker:
     << : *whitehall
-    command: foreman run worker
+    command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
       - diet-error-handler
       - redis
@@ -836,6 +842,8 @@ services:
       << : *govuk-app
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: whitehall-worker
+      PORT: 3020
+      DATABASE_URL: mysql2://root:root@mysql/whitehall_development
     healthcheck:
       disable: true
     ports: []
