@@ -36,7 +36,7 @@ services:
       - ./docker/nginx.tmpl:/app/nginx.tmpl
 
   postgres:
-    image: postgres:9.6
+    image: postgres:13
     environment:
       POSTGRES_PASSWORD: postgres
     healthcheck:
