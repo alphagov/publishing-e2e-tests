@@ -2,22 +2,17 @@
 
 This guide covers the basics for contributing to this project.
 
-- [Coding/commit style](#codingcommit-style)
+- [Coding style](#coding-style)
 - [Adding new tests](#adding-new-tests)
 - [Dealing with flaky tests](#dealing-with-flaky-tests)
 - [Testing new applications](#testing-new-applications)
 
-## Coding/commit style
-
-Code and commits should be written in styles conforming to the GDS
-[Ruby][ruby-styleguide] and [Git][git-styleguide] styleguides.
+## Coding style
 
 The feature tests are written in a style consistent with this article:
 [How we write readable feature tests with rspec][readable-feature-tests].
 
 [readable-feature-tests]: https://about.futurelearn.com/blog/how-we-write-readable-feature-tests-with-rspec
-[ruby-styleguide]: https://github.com/alphagov/styleguides/blob/master/ruby.md
-[git-styleguide]: https://github.com/alphagov/styleguides/blob/master/git.md
 
 ## Adding new tests
 
