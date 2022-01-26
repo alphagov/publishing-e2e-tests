@@ -37,8 +37,8 @@ against your change.
 4. Deploy your application change to production as you would normally,
    waiting for deployed-to-production to be updated.
 
-5. Merge your E2E tests change into master branch. This will trigger the
-   master build which also updates the test-against branch.  Once test-against
+5. Merge your E2E tests change into main branch. This will trigger the
+   main build which also updates the test-against branch.  Once test-against
    branch is updated any subsequent test runs will use both your updated tests
    and your updated application code on deployed-to-production.
 

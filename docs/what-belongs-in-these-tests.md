@@ -42,4 +42,4 @@ for more testing insights.
 [testing-ice-cream-cone]: http://saeedgatson.com/the-software-testing-ice-cream-cone/
 [contract-tested]: https://martinfowler.com/articles/consumerDrivenContracts.html
 [pact]: https://docs.pact.io/
-[whitehall-testing-guide]: https://github.com/alphagov/whitehall/blob/master/docs/testing_guide.md
+[whitehall-testing-guide]: https://github.com/alphagov/whitehall/blob/099f53e35cdd0ea63a2349be3766c98e65521ce3/docs/testing.md
