@@ -47,7 +47,8 @@ services:
     image: memcached:alpine
 
   mysql:
-    image: mysql:5.5.58
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
     healthcheck:
