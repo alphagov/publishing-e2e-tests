@@ -35,7 +35,7 @@ GEM
     httparty (0.18.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.8.10)
+    i18n (1.9.1)
       concurrent-ruby (~> 1.0)
     launchy (2.5.0)
       addressable (~> 2.7)
