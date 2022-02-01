@@ -492,6 +492,7 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: collections
       VIRTUAL_HOST: collections.dev.gov.uk
+      PORT: 3070
     links:
       - nginx-proxy:search-api.dev.gov.uk
       - nginx-proxy:content-store.dev.gov.uk
