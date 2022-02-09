@@ -912,6 +912,8 @@ services:
       VIRTUAL_HOST: asset-manager.dev.gov.uk
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
+      MONGODB_URI: mongodb://mongo/asset-manager
+      PORT: 3037
     healthcheck:
       << : *default-healthcheck
     ports:
@@ -923,7 +925,7 @@ services:
 
   asset-manager-worker:
     << : *asset-manager
-    command: foreman run worker
+    command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
       - diet-error-handler
       - redis
@@ -934,6 +936,8 @@ services:
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
+      MONGODB_URI: mongodb://mongo/asset-manager
+      PORT: 3037
     healthcheck:
       disable: true
     ports: []
