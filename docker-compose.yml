@@ -341,7 +341,7 @@ services:
 
   publishing-api-worker:
     << : *publishing-api
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - postgres
       - redis
@@ -424,7 +424,7 @@ services:
 
   travel-advice-publisher-worker:
     << : *travel-advice-publisher
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - publishing-api
       - redis
@@ -466,7 +466,7 @@ services:
 
   collections-publisher-worker:
     << : *collections-publisher
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - publishing-api
       - diet-error-handler
@@ -715,7 +715,7 @@ services:
 
   manuals-publisher-worker:
     << : *manuals-publisher
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - publishing-api
       - redis
@@ -968,7 +968,7 @@ services:
 
   email-alert-api-worker:
     << : *email-alert-api
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
       - diet-error-handler
       - redis
