@@ -37,7 +37,7 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true, gove
     click_link("Edit document")
 
     fill_in("Body", with: new_body)
-    choose("Update type major")
+    choose("Major")
     fill_in("Change note", with: change_note)
 
     click_button("Save as draft")
