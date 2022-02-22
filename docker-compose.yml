@@ -741,6 +741,7 @@ services:
       ASSET_HOST: manuals-frontend.dev.gov.uk
       SENTRY_CURRENT_ENV: manuals-frontend
       VIRTUAL_HOST: manuals-frontend.dev.gov.uk
+      PORT: 3072
     links:
       - nginx-proxy:content-store.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
