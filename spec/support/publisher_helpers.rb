@@ -23,9 +23,9 @@ module PublisherHelpers
   end
 
   def fill_in_schedule_downtime_form(date)
-    select(date.day, from: "downtime_start_time_3i")
-    select(Date::MONTHNAMES[Date.today.month], from: "downtime_start_time_2i")
-    select(date.year, from: "downtime_start_time_1i")
+    select(date.day, from: "date_start_time_3i")
+    select(Date::MONTHNAMES[Date.today.month], from: "date_start_time_2i")
+    select(date.year, from: "date_start_time_1i")
   end
 
   def publish_artefact
