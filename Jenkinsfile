@@ -24,6 +24,7 @@ def apps = [
   [constantPrefix: "ROUTER", app: "router", name: "Router"],
   [constantPrefix: "ROUTER_API", app: "router-api", name: "Router API"],
   [constantPrefix: "SEARCH_API", app: "search-api", name: "Search API"],
+  [constantPrefix: "SERVICE_MANUAL_FRONTEND", app: "service-manual-frontend", name: "Service Manual Frontend"],
   [constantPrefix: "SPECIALIST_PUBLISHER", app: "specialist-publisher", name: "Specialist Publisher"],
   [constantPrefix: "STATIC", app: "static", name: "Static"],
   [constantPrefix: "TRAVEL_ADVICE_PUBLISHER", app: "travel-advice-publisher", name: "Travel Advice Publisher"],
