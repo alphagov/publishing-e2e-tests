@@ -1064,6 +1064,29 @@ services:
     ports:
       - "3190"
 
+  service-manual-frontend:
+    image: govuk/service-manual-frontend:${SERVICE_MANUAL_FRONTEND_COMMITISH:-deployed-to-production}
+    build:
+      context: apps/service-manual-frontend
+    depends_on:
+      - router
+      - content-store
+      - static
+    environment:
+      << : *govuk-app
+      ASSET_HOST: service-manual-frontend.dev.gov.uk
+      SENTRY_CURRENT_ENV: service-manual-frontend
+      VIRTUAL_HOST: service-manual-frontend.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
+    links:
+      - nginx-proxy:content-store.dev.gov.uk
+      - nginx-proxy:static.dev.gov.uk
+      - nginx-proxy:www.dev.gov.uk
+    ports:
+      - "3122"
+    volumes:
+      - ./apps/service-manual-frontend/log:/app/log
   publishing-e2e-tests:
     shm_size: 2G
     build: .
@@ -1094,6 +1117,7 @@ services:
       - nginx-proxy:frontend.dev.gov.uk
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:manuals-frontend.dev.gov.uk
+      - nginx-proxy:service-manual-frontend.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
       - nginx-proxy:www.dev.gov.uk
