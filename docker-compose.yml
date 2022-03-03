@@ -614,7 +614,6 @@ services:
       - apps/govuk-content-schemas/:/govuk-content-schemas/
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
-      - nginx-proxy:frontend.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:www.dev.gov.uk
     ports:
