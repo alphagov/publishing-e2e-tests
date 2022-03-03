@@ -590,7 +590,6 @@ services:
       context: apps/publisher
     depends_on:
       - publishing-api
-      - frontend
       - publisher-worker
       - diet-error-handler
       - redis
