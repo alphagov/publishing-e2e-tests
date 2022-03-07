@@ -604,7 +604,7 @@ services:
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
-      MONGODB_URI: mongodb://mongo-3.6/govuk_content_development
+      MONGODB_URI: mongodb://mongo-3.6/publisher
       PORT: 3000
       ASSETS_PREFIX: /assets/publisher
     healthcheck:
@@ -629,7 +629,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
-      MONGODB_URI: mongodb://mongo-3.6/govuk_content_development
+      MONGODB_URI: mongodb://mongo-3.6/publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publisher-worker
     healthcheck:
