@@ -55,7 +55,7 @@ services:
       << : *default-healthcheck
       test: "mysql --user=root --password=root -e 'SELECT 1'"
 
-  mongo:
+  mongo-3.6:
     image: mongo:3.6
     healthcheck:
       << : *default-healthcheck
@@ -367,7 +367,7 @@ services:
     build:
       context: apps/specialist-publisher
     depends_on:
-      - mongo
+      - mongo-3.6
       - redis
       - publishing-api
       - asset-manager
@@ -394,7 +394,7 @@ services:
     build:
       context: apps/travel-advice-publisher
     depends_on:
-      - mongo
+      - mongo-3.6
       - redis
       - publishing-api
       - asset-manager
@@ -591,7 +591,7 @@ services:
       - publisher-worker
       - diet-error-handler
       - redis
-      - mongo
+      - mongo-3.6
       - router
     environment:
       << : *govuk-app
@@ -601,7 +601,7 @@ services:
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
-      MONGODB_URI: mongodb://mongo/govuk_content_development
+      MONGODB_URI: mongodb://mongo-3.6/govuk_content_development
       PORT: 3000
       ASSETS_PREFIX: /assets/publisher
     healthcheck:
@@ -687,7 +687,7 @@ services:
       - collections
       - diet-error-handler
       - manuals-publisher-worker
-      - mongo
+      - mongo-3.6
       - publishing-api
       - redis
       - router
@@ -898,7 +898,7 @@ services:
     depends_on:
       - asset-manager-worker
       - diet-error-handler
-      - mongo
+      - mongo-3.6
       - redis
     links:
       - nginx-proxy:error-handler.dev.gov.uk
@@ -910,7 +910,7 @@ services:
       VIRTUAL_HOST: asset-manager.dev.gov.uk
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
-      MONGODB_URI: mongodb://mongo/asset-manager
+      MONGODB_URI: mongodb://mongo-3.6/asset-manager
       PORT: 3037
     healthcheck:
       << : *default-healthcheck
@@ -934,7 +934,7 @@ services:
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
-      MONGODB_URI: mongodb://mongo/asset-manager
+      MONGODB_URI: mongodb://mongo-3.6/asset-manager
       PORT: 3037
     healthcheck:
       disable: true
