@@ -426,6 +426,7 @@ services:
     << : *travel-advice-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - publishing-api
       - redis
       - diet-error-handler
@@ -624,6 +625,7 @@ services:
     << : *publisher
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - redis
       - publishing-api
       - diet-error-handler
@@ -719,6 +721,7 @@ services:
     << : *manuals-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - publishing-api
       - redis
       - diet-error-handler
@@ -931,6 +934,7 @@ services:
     << : *asset-manager
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - diet-error-handler
       - redis
     environment:
