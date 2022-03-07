@@ -273,13 +273,13 @@ services:
     image: govuk/content-store:${CONTENT_STORE_COMMITISH:-deployed-to-production}
     build: apps/content-store
     depends_on:
-      - mongo
+      - mongo-2.6
       - router-api
       - diet-error-handler
     environment:
       << : *govuk-app
       MONGO_WRITE_CONCERN: 1
-      MONGODB_URI: mongodb://mongo/content-store
+      MONGODB_URI: mongodb://mongo-2.6/content-store
       PORT: 3068
       SENTRY_CURRENT_ENV: content-store
       VIRTUAL_HOST: content-store.dev.gov.uk
@@ -295,14 +295,14 @@ services:
   draft-content-store:
     << : *content-store
     depends_on:
-      - mongo
+      - mongo-2.6
       - draft-router-api
       - diet-error-handler
     environment:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-content-store
       MONGO_WRITE_CONCERN: 1
-      MONGODB_URI: mongodb://mongo/draft-content-store
+      MONGODB_URI: mongodb://mongo-2.6/draft-content-store
       PORT: 3100
       SENTRY_CURRENT_ENV: draft-content-store
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
