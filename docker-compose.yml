@@ -375,6 +375,7 @@ services:
     environment:
       << : *govuk-app
       MONGO_WRITE_CONCERN: 1
+      MONGODB_URI: mongodb://mongo-3.6/specialist-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
@@ -404,6 +405,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/travel-advice-publisher
       SENTRY_CURRENT_ENV: travel-advice-publisher
       REDIS_URL: redis://redis
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
@@ -431,6 +433,7 @@ services:
       disable: true
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/travel-advice-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
     ports: []
@@ -626,6 +629,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/govuk_content_development
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publisher-worker
     healthcheck:
@@ -695,6 +699,7 @@ services:
       - whitehall-admin
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/manuals-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
@@ -719,6 +724,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/manuals-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher-worker
     healthcheck:
