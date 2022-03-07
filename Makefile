@@ -120,7 +120,7 @@ wait_for_whitehall_admin:
 contacts_admin_setup:
 	# Because someone made the rather bizarre decision that Whitehall needs to be
 	# running to seed the contacts admin database we have to do this in 2-steps
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:schema:load_if_ruby db:structure:load_if_sql
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:create db:schema:load
 
 contacts_admin_seed: wait_for_whitehall_admin
 	# Contacts Admin seeds from the organisations API, which is rendered by
