@@ -110,6 +110,12 @@ services:
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: search-api
       VIRTUAL_HOST: search-api.dev.gov.uk
+      ELASTICSEARCH_URI: http://elasticsearch6:9200
+      PORT: 3233
+      RABBITMQ_HOSTS: rabbitmq
+      RABBITMQ_VHOST: /
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
     links:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
