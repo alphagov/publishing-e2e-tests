@@ -135,7 +135,7 @@ services:
       - publishing-api
       - diet-error-handler
       - redis
-    command: foreman run worker
+    command: bundle exec sidekiq -C ./config/sidekiq.yml
     environment:
       << : *govuk-app
       << : *search-api-env
@@ -147,7 +147,7 @@ services:
 
   search-api-listener-publishing-queue:
     << : *search-api
-    command: foreman run publishing-queue-listener
+    command: bundle exec rake message_queue:listen_to_publishing_queue
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -160,7 +160,7 @@ services:
 
   search-api-listener-insert-data:
     << : *search-api
-    command: foreman run govuk-index-queue-listener
+    command: bundle exec rake message_queue:insert_data_into_govuk
     depends_on:
       - diet-error-handler
       - rabbitmq
@@ -173,7 +173,7 @@ services:
 
   search-api-listener-bulk-insert-data:
     << : *search-api
-    command: foreman run bulk-reindex-queue-listener
+    command: bundle exec rake message_queue:bulk_insert_data_into_govuk
     depends_on:
       - diet-error-handler
       - rabbitmq
