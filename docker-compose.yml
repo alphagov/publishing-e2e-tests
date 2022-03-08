@@ -26,6 +26,16 @@ x-draft-govuk-app-env: &draft-govuk-app
   LOG_PATH: log/draft.log
   PLEK_HOSTNAME_PREFIX: draft-
 
+x-search-api-env: &search-api-env
+  ELASTICSEARCH_URI: http://elasticsearch6:9200
+  PORT: 3233
+  RABBITMQ_HOSTS: rabbitmq
+  RABBITMQ_VHOST: /
+  RABBITMQ_USER: guest
+  RABBITMQ_PASSWORD: guest
+  RACK_ENV: production
+  REDIS_URL: redis://redis
+
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy:latest
@@ -106,16 +116,9 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
-      RACK_ENV: production
-      REDIS_URL: redis://redis
+      << : *search-api-env
       SENTRY_CURRENT_ENV: search-api
       VIRTUAL_HOST: search-api.dev.gov.uk
-      ELASTICSEARCH_URI: http://elasticsearch6:9200
-      PORT: 3233
-      RABBITMQ_HOSTS: rabbitmq
-      RABBITMQ_VHOST: /
-      RABBITMQ_USER: guest
-      RABBITMQ_PASSWORD: guest
     links:
       - nginx-proxy:error-handler.dev.gov.uk
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -135,8 +138,7 @@ services:
     command: foreman run worker
     environment:
       << : *govuk-app
-      RACK_ENV: production
-      REDIS_URL: redis://redis
+      << : *search-api-env
       SENTRY_CURRENT_ENV: search-api-worker
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
@@ -152,8 +154,7 @@ services:
       - redis
     environment:
       << : *govuk-app
-      RACK_ENV: production
-      REDIS_URL: redis://redis
+      << : *search-api-env
       SENTRY_CURRENT_ENV: search-api-listener-publishing-queue
     ports: []
 
@@ -166,8 +167,7 @@ services:
       - redis
     environment:
       << : *govuk-app
-      RACK_ENV: production
-      REDIS_URL: redis://redis
+      << : *search-api-env
       SENTRY_CURRENT_ENV: search-api-listener-insert-data
     ports: []
 
@@ -180,8 +180,7 @@ services:
       - redis
     environment:
       << : *govuk-app
-      RACK_ENV: production
-      REDIS_URL: redis://redis
+      << : *search-api-env
       SENTRY_CURRENT_ENV: search-api-listener-bulk-insert-data
     ports: []
 
