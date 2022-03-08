@@ -55,8 +55,8 @@ services:
       << : *default-healthcheck
       test: "mysql --user=root --password=root -e 'SELECT 1'"
 
-  mongo:
-    image: mongo:3.4
+  mongo-3.6:
+    image: mongo:3.6
     healthcheck:
       << : *default-healthcheck
       test: "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"
@@ -243,7 +243,6 @@ services:
       SENTRY_CURRENT_ENV: router-api
       VIRTUAL_HOST: router-api.dev.gov.uk
       MONGODB_URI: mongodb://mongo-2.6/router
-      TEST_MONGODB_URI: mongodb://mongo-2.6/router-test
     links:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -264,7 +263,6 @@ services:
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       SENTRY_CURRENT_ENV: draft-router-api
-      TEST_MONGODB_URI: mongodb://mongo-2.6/draft-router-test
       VIRTUAL_HOST: draft-router-api.dev.gov.uk
     links:
       - nginx-proxy:error-handler.dev.gov.uk
@@ -275,13 +273,13 @@ services:
     image: govuk/content-store:${CONTENT_STORE_COMMITISH:-deployed-to-production}
     build: apps/content-store
     depends_on:
-      - mongo
+      - mongo-2.6
       - router-api
       - diet-error-handler
     environment:
       << : *govuk-app
       MONGO_WRITE_CONCERN: 1
-      MONGODB_URI: mongodb://mongo/content-store
+      MONGODB_URI: mongodb://mongo-2.6/content-store
       PORT: 3068
       SENTRY_CURRENT_ENV: content-store
       VIRTUAL_HOST: content-store.dev.gov.uk
@@ -297,14 +295,14 @@ services:
   draft-content-store:
     << : *content-store
     depends_on:
-      - mongo
+      - mongo-2.6
       - draft-router-api
       - diet-error-handler
     environment:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-content-store
       MONGO_WRITE_CONCERN: 1
-      MONGODB_URI: mongodb://mongo/draft-content-store
+      MONGODB_URI: mongodb://mongo-2.6/draft-content-store
       PORT: 3100
       SENTRY_CURRENT_ENV: draft-content-store
       VIRTUAL_HOST: draft-content-store.dev.gov.uk
@@ -369,7 +367,7 @@ services:
     build:
       context: apps/specialist-publisher
     depends_on:
-      - mongo
+      - mongo-3.6
       - redis
       - publishing-api
       - asset-manager
@@ -377,6 +375,7 @@ services:
     environment:
       << : *govuk-app
       MONGO_WRITE_CONCERN: 1
+      MONGODB_URI: mongodb://mongo-3.6/specialist-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
@@ -396,7 +395,7 @@ services:
     build:
       context: apps/travel-advice-publisher
     depends_on:
-      - mongo
+      - mongo-3.6
       - redis
       - publishing-api
       - asset-manager
@@ -406,6 +405,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/travel-advice-publisher
       SENTRY_CURRENT_ENV: travel-advice-publisher
       REDIS_URL: redis://redis
       VIRTUAL_HOST: travel-advice-publisher.dev.gov.uk
@@ -426,6 +426,7 @@ services:
     << : *travel-advice-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - publishing-api
       - redis
       - diet-error-handler
@@ -433,6 +434,7 @@ services:
       disable: true
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/travel-advice-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: travel-advice-publisher-worker
     ports: []
@@ -593,7 +595,7 @@ services:
       - publisher-worker
       - diet-error-handler
       - redis
-      - mongo
+      - mongo-3.6
       - router
     environment:
       << : *govuk-app
@@ -603,8 +605,7 @@ services:
       SENTRY_CURRENT_ENV: publisher
       VIRTUAL_HOST: publisher.dev.gov.uk
       GOVUK_CONTENT_SCHEMAS_PATH: /govuk-content-schemas/
-      MONGODB_URI: mongodb://mongo/govuk_content_development
-      TEST_MONGODB_URI: mongodb://mongo/govuk_content_development-test
+      MONGODB_URI: mongodb://mongo-3.6/publisher
       PORT: 3000
       ASSETS_PREFIX: /assets/publisher
     healthcheck:
@@ -624,11 +625,13 @@ services:
     << : *publisher
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - redis
       - publishing-api
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publisher-worker
     healthcheck:
@@ -690,7 +693,7 @@ services:
       - collections
       - diet-error-handler
       - manuals-publisher-worker
-      - mongo
+      - mongo-3.6
       - publishing-api
       - redis
       - router
@@ -698,6 +701,7 @@ services:
       - whitehall-admin
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/manuals-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher
       VIRTUAL_HOST: manuals-publisher.dev.gov.uk
@@ -717,11 +721,13 @@ services:
     << : *manuals-publisher
     command: bundle exec sidekiq -C ./config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - publishing-api
       - redis
       - diet-error-handler
     environment:
       << : *govuk-app
+      MONGODB_URI: mongodb://mongo-3.6/manuals-publisher
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: manuals-publisher-worker
     healthcheck:
@@ -901,7 +907,7 @@ services:
     depends_on:
       - asset-manager-worker
       - diet-error-handler
-      - mongo
+      - mongo-3.6
       - redis
     links:
       - nginx-proxy:error-handler.dev.gov.uk
@@ -913,7 +919,7 @@ services:
       VIRTUAL_HOST: asset-manager.dev.gov.uk
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
-      MONGODB_URI: mongodb://mongo/asset-manager
+      MONGODB_URI: mongodb://mongo-3.6/asset-manager
       PORT: 3037
     healthcheck:
       << : *default-healthcheck
@@ -928,6 +934,7 @@ services:
     << : *asset-manager
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
+      - mongo-3.6
       - diet-error-handler
       - redis
     environment:
@@ -937,7 +944,7 @@ services:
       SENTRY_CURRENT_ENV: asset-manager-worker
       FAKE_S3_HOST: http://127.0.0.1
       ALLOW_FAKE_S3_IN_PRODUCTION_FOR_PUBLISHING_E2E_TESTS: "true"
-      MONGODB_URI: mongodb://mongo/asset-manager
+      MONGODB_URI: mongodb://mongo-3.6/asset-manager
       PORT: 3037
     healthcheck:
       disable: true

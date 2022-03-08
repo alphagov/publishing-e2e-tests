@@ -3,7 +3,7 @@ require_relative "../docker_service"
 namespace :docker do
   desc "Wait until database containers are indicating they are healthy"
   task :wait_for_dbs do
-    DockerService.wait_for_healthy_services(services: %w[elasticsearch6 mongo mongo-2.6 mysql postgres redis])
+    DockerService.wait_for_healthy_services(services: %w[elasticsearch6 mongo-2.6 mongo-3.6 mysql postgres redis])
   end
 
   desc "Wait for the RabbitMQ container to indicate it is healthy"
