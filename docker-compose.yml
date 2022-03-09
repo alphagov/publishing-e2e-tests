@@ -35,6 +35,7 @@ x-search-api-env: &search-api-env
   RABBITMQ_PASSWORD: guest
   RACK_ENV: production
   REDIS_URL: redis://redis
+  LOG_TO_STDOUT: "false"
 
 services:
   nginx-proxy:
