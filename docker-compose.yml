@@ -248,6 +248,7 @@ services:
       SENTRY_CURRENT_ENV: router-api
       VIRTUAL_HOST: router-api.dev.gov.uk
       MONGODB_URI: mongodb://mongo-2.6/router
+      TEST_MONGODB_URI: mongodb://mongo/router-test
     links:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
@@ -265,6 +266,7 @@ services:
       << : *draft-govuk-app
       GOVUK_APP_NAME: draft-router-api
       MONGODB_URI: mongodb://mongo-2.6/draft-router
+      TEST_MONGODB_URI: mongodb://mongo/router-test
       PORT: 3156
       ROUTER_NODES: "draft-router:3155"
       SENTRY_CURRENT_ENV: draft-router-api
