@@ -249,6 +249,7 @@ services:
       VIRTUAL_HOST: router-api.dev.gov.uk
       MONGODB_URI: mongodb://mongo-2.6/router
       TEST_MONGODB_URI: mongodb://mongo/router-test
+      PORT: 3056
     links:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
