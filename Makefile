@@ -60,7 +60,12 @@ setup_dependencies:
 
 setup_apps:
 	bundle exec rake docker:wait_for_publishing_api
-	$(MAKE) contacts_admin_seed
+	bundle exec rake docker:wait_for_whitehall_admin
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake search:index:organisations
+	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
+	bundle exec rake docker:wait_for_collections
+	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
 	$(MAKE) publish_routes
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
@@ -121,16 +126,6 @@ contacts_admin_setup:
 	# Because someone made the rather bizarre decision that Whitehall needs to be
 	# running to seed the contacts admin database we have to do this in 2-steps
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:create db:schema:load
-
-contacts_admin_seed: wait_for_whitehall_admin
-	# Contacts Admin seeds from the organisations API, which is rendered by
-	# Collections, which gets its data from Search API, which gets indexed by
-	# Whitehall.
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake search:index:organisations
-	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
-
-	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
 
 finder_frontend_seed:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps finder-frontend bundle exec rake registries:cache_warm
