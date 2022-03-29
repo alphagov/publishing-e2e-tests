@@ -1,24 +1,16 @@
 require_relative "../docker_service"
 
 namespace :docker do
+  desc "Wait for services to be healthy"
+  task :wait_for, [:services, :reload_seconds] do |_task, args|
+    args.with_defaults(reload_seconds: 60)
+    services = args[:services].split(" ")
+    DockerService.wait_for_healthy_services(services: services, reload_seconds: args[:reload_seconds].to_i)
+  end
+
   desc "Wait until database containers are indicating they are healthy"
   task :wait_for_dbs do
     DockerService.wait_for_healthy_services(services: %w[elasticsearch6 mongo-2.6 mongo-3.6 mysql postgres redis])
-  end
-
-  desc "Wait for the RabbitMQ container to indicate it is healthy"
-  task :wait_for_rabbitmq do
-    DockerService.wait_for_healthy_services(services: %w[rabbitmq])
-  end
-
-  desc "Wait for the Publishing API container to indicate it is healthy"
-  task :wait_for_publishing_api do
-    DockerService.wait_for_healthy_services(services: %w[publishing-api])
-  end
-
-  desc "Wait for the Whitheall Admin container to indicate it is healthy"
-  task :wait_for_whitehall_admin do
-    DockerService.wait_for_healthy_services(services: %w[whitehall-admin], reload_seconds: 180)
   end
 
   desc "Wait for all apps to indicate they are healthy"

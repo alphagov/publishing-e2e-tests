@@ -55,11 +55,11 @@ setup_dependencies:
 	$(DOCKER_COMPOSE_CMD) up -d elasticsearch6 memcached mongo-2.6 mongo-3.6 mysql postgres rabbitmq redis
 	bundle exec rake docker:wait_for_dbs
 	$(MAKE) setup_dbs
-	bundle exec rake docker:wait_for_rabbitmq
+	bundle exec rake docker:wait_for[rabbitmq]
 	$(MAKE) setup_queues
 
 setup_apps:
-	bundle exec rake docker:wait_for_publishing_api
+	bundle exec rake docker:wait_for[publishing-api]
 	$(MAKE) contacts_admin_seed
 	$(MAKE) publish_routes
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
@@ -115,10 +115,10 @@ email_alert_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:reset
 
 wait_for_whitehall_admin:
-	bundle exec rake docker:wait_for_whitehall_admin
+	bundle exec rake docker:wait_for[whitehall-admin, 180]
 
 contacts_admin_setup:
-	# Because someone made the rather bizarre decision that Whitehall needs to be
+	# Because someone made the rather bizarre decision that Whitehall/Collections needs to be
 	# running to seed the contacts admin database we have to do this in 2-steps
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:create db:schema:load
 
