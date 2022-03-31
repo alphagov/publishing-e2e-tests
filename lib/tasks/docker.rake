@@ -16,11 +16,6 @@ namespace :docker do
     DockerService.wait_for_healthy_services(services: %w[publishing-api])
   end
 
-  desc "Wait for the Whitheall Admin container to indicate it is healthy"
-  task :wait_for_whitehall_admin do
-    DockerService.wait_for_healthy_services(services: %w[whitehall-admin], reload_seconds: 180)
-  end
-
   desc "Wait for all apps to indicate they are healthy"
   task :wait_for_apps do
     DockerService.wait_for_healthy_services(except: %w[publishing-e2e-tests])
