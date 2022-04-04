@@ -60,7 +60,6 @@ setup_dependencies:
 
 setup_apps:
 	bundle exec rake docker:wait_for_publishing_api
-	$(MAKE) contacts_admin_seed
 	$(MAKE) publish_routes
 	$(MAKE) populate_end_to_end_test_data_from_whitehall
 	$(DOCKER_COMPOSE_CMD) run --rm publishing-e2e-tests bundle exec rake govuk:wait_for_router
@@ -114,23 +113,8 @@ search_api_setup:
 email_alert_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps email-alert-api bundle exec rake db:reset
 
-wait_for_whitehall_admin:
-	bundle exec rake docker:wait_for_whitehall_admin
-
 contacts_admin_setup:
-	# Because someone made the rather bizarre decision that Whitehall needs to be
-	# running to seed the contacts admin database we have to do this in 2-steps
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:drop db:create db:schema:load
-
-contacts_admin_seed: wait_for_whitehall_admin
-	# Contacts Admin seeds from the organisations API, which is rendered by
-	# Collections, which gets its data from Search API, which gets indexed by
-	# Whitehall.
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake search:index:organisations
-	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
-
-	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake db:seed
+	$(DOCKER_COMPOSE_CMD) run --rm --no-deps contacts-admin bundle exec rake db:reset
 
 finder_frontend_seed:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps finder-frontend bundle exec rake registries:cache_warm
@@ -164,6 +148,7 @@ publish_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
 
 populate_end_to_end_test_data_from_whitehall:
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake taxonomy:populate_end_to_end_test_data
 
 clean_apps:
@@ -240,6 +225,6 @@ stop: kill
 	specialist_publisher_setup publisher_setup collections_publisher_setup \
 	search_api_setup publish_search_api publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
-	wait_for_whitehall_admin contacts_admin_setup contact_admin_seed pull \
+	contacts_admin_setup contact_admin_seed pull \
 	clean_apps clean_docker clean_tmp clean setup_apps setup_dependencies \
 	finder_frontend_seed

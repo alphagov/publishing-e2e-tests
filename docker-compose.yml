@@ -337,6 +337,9 @@ services:
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
+    healthcheck:
+      << : *default-healthcheck
+      test: "curl --silent --fail localhost:3093/healthcheck/live || exit 1"
     links:
       - nginx-proxy:error-handler.dev.gov.uk
     ports:
