@@ -28,9 +28,9 @@ private
 
   def and_i_archive_it
     click_link("Archive")
-    select2(parent_title, from: "Choose a specialist sector to redirect to")
+    select parent_title, from: "Choose a specialist sector to redirect to"
     click_button "Archive and redirect to a specialist sector"
-    expect(page).to have_text("archived")
+    expect(page).to have_text(/archived/i)
   end
 
   def then_when_i_visit_the_child_on_gov_uk_i_am_redirected_to_the_parent
@@ -69,8 +69,8 @@ private
   end
 
   def publish_topic
-    click_link("Publish")
-    expect(page).to have_text("published")
+    click_on("Publish")
+    expect(page).to have_text(/published/i)
   end
 
   def wait_for_the_child_to_redirect

@@ -48,21 +48,23 @@ private
   end
 
   def and_i_publish_it
-    click_link("Publish")
-    expect(page).to have_text("published")
+    click_on("Publish")
+    expect(page).to have_text(/published/i)
   end
 
   def then_i_can_view_both_on_gov_uk
     url = find_link(link)[:href]
     reload_url_until_status_code(url, 200)
 
-    click_link(link)
-    expect_rendering_application("collections")
-    expect_url_matches_live_gov_uk
-    expect(page).to have_content(child_title)
+    window = window_opened_by { click_link(link) }
+    within_window(window) do
+      expect_rendering_application("collections")
+      expect_url_matches_live_gov_uk
+      expect(page).to have_content(child_title)
 
-    first(:link, parent_title).click
-    expect_url_matches_live_gov_uk
-    expect(current_url).to end_with(parent_slug)
+      first(:link, parent_title).click
+      expect_url_matches_live_gov_uk
+      expect(current_url).to end_with(parent_slug)
+    end
   end
 end
