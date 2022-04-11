@@ -82,8 +82,14 @@ $ make clean_docker
 $ make pull
 ```
 
-See [docs/docker.md](docs/docker.md) for more information
-configuring/troubleshooting docker.
+## Further documentation
+
+- [Docker configuration and troubleshooting](docs/docker.md)
+- [Getting a breaking app change through Jenkins](docs/jenkins-breaking-changes.md)
+- [Debugging Jenkins failures](docs/jenkins-debugging-failures.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [What belongs in publishing-e2e-tests](docs/what-belongs-in-these-tests.md)
+- [Writing tests](docs/writing-tests.md)
 
 ## Licence
 
