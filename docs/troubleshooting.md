@@ -18,6 +18,13 @@ A key aim of these tests is to be as reliable as possible, however this can be
 difficult - particularly early in a test's introduction - therefore we have a
 [strategy](./writing-tests.md#dealing-with-flaky-tests) to deal with flaky tests.
 
+## Manually running containers
+
+- Run programs within containers using `docker-compose`:
+  `docker-compose run publishing-e2e-tests bundle exec rspec`
+- Get shell access to a given container: `docker-compose run specialist-frontend bash`
+- Kill the containers and move on with your life: `docker-compose down`
+
 ## Gotchas
 
 ### WEBrick server seems to stop responding

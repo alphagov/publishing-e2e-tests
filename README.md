@@ -50,7 +50,6 @@ $ make pull build start test-specialist-publisher stop
 
 ## Further documentation
 
-- [Docker configuration](docs/docker.md)
 - [Getting a breaking app change through Jenkins](docs/jenkins-breaking-changes.md)
 - [Debugging Jenkins failures](docs/jenkins-debugging-failures.md)
 - [Troubleshooting](docs/troubleshooting.md)
