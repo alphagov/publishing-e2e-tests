@@ -8,12 +8,13 @@ are browser tests (written in [RSpec](http://rspec.info/), using
 [Capybara](https://github.com/teamcapybara/capybara)) that mimic the behaviour
 of content editors.
 
-Tests are written against a variety of publishing applications to see which
-apps are tested check the contents of the [spec](./spec) directory. To view
-the details of all the apps involved check
-[docker-compose.yml](./docker-compose.yml).
+## Technical documentation
 
-## How to run the tests
+To see which apps are tested check the contents of the [spec](./spec) directory.
+
+To view the details of all the apps involved check [docker-compose.yml](./docker-compose.yml).
+
+### Before running the tests
 
 If this is your first time running the E2E project make sure you have [installed Docker][install-docker] and run:
 
@@ -21,18 +22,10 @@ If this is your first time running the E2E project make sure you have [installed
 $ bundle install
 ```
 
-Build and run the test suite with:
-
-```bash
-$ make -j4
-```
-
-If it has been some time since you last worked on the E2E project it is recommended
-to instead run:
+If it has been some time since you last worked on the E2E project it is recommended to run:
 
 ```bash
 $ make clean
-$ make -j4
 ```
 
 This will remove all your local apps, clone them, check them out to the latest
@@ -40,8 +33,18 @@ deployed-to-production branch. This has been a problem in the past due to stale
 branches being checked out and either being unbuildable or causing false test
 failures.
 
-Running this command executes the following targets in order, which you can
-choose to run separately to speed up development: `clean`, `clone`, `pull`, `build`,
+### Running the test suite
+
+Build and run the test suite with:
+
+```bash
+$ make -j4
+```
+
+### Running a single test
+
+Running `make` executes the following targets in order, which you can
+choose to run separately to speed up development: `clone`, `pull`, `build`,
 `start`, `test` and `stop`.
 
 For example, to run only the tests for the specialist publisher, you need only
@@ -51,6 +54,8 @@ do:
 $ make -j4 clone
 $ make pull build start test-specialist-publisher stop
 ```
+
+### Testing with a branch
 
 If you need to run the tests against a branch of an application other than
 deployed-to-production you need to explicitly build it as below:
