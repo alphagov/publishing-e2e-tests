@@ -1,12 +1,6 @@
 # GOV.UK Publishing End-to-end Tests
 
-A suite of end-to-end publishing tests that allow us to test functionality
-across applications and services. The idea is that we test the sequence of
-actions and movement of data throughout the system in a 'real world' context,
-rather than stubbing services and making assumptions about responses. The tests
-are browser tests (written in [RSpec](http://rspec.info/), using
-[Capybara](https://github.com/teamcapybara/capybara)) that mimic the behaviour
-of content editors.
+A suite of end-to-end tests for publisher user journeys. The tests are written in [RSpec](http://rspec.info/) / [Capybara](https://github.com/teamcapybara/capybara) and mimic the behaviour of content editors in a web browser, using [headless Chrome](https://github.com/alphagov/publishing-e2e-tests/blob/2044d7eb3c00194d9fd6d1452849b7afc77b3608/spec/spec_helper.rb#L119).
 
 ## Technical documentation
 
