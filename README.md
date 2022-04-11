@@ -24,10 +24,7 @@ If it has been some time since you last worked on the E2E project it is recommen
 $ make clean
 ```
 
-This will remove all your local apps, clone them, check them out to the latest
-deployed-to-production branch. This has been a problem in the past due to stale
-branches being checked out and either being unbuildable or causing false test
-failures.
+This will remove all your local apps, clone them, check them out to the latest deployed-to-production branch (in case one of the apps is on and old branch).
 
 ### Running the test suite
 
