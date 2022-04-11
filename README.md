@@ -15,8 +15,6 @@ the details of all the apps involved check
 
 ## How to run the tests
 
-### With Docker
-
 If this is your first time running the E2E project make sure you have [installed Docker][install-docker] and run:
 
 ```bash
@@ -82,15 +80,6 @@ $ make pull
 See [docs/docker.md](docs/docker.md) for more information
 configuring/troubleshooting docker.
 
-### Without Docker
-
-It is possible the run this suite without Docker however you will have to
-set-up and configure each application in the stack and have them available
-on `*.dev.gov.uk`. The tests can then be run with:
-
-```
-bundle exec rspec
-```
 ## Failing Jenkins builds
 
 We have detailed guidance to help with [debugging the reason][debugging-fails]
