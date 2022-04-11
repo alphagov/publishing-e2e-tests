@@ -1,4 +1,4 @@
-# Publishing end-to-end tests contribution guide
+# Writing tests
 
 This guide covers the basics for contributing to this project.
 
@@ -119,14 +119,14 @@ To run against specific revisions of the applications (such as commits and branc
 you'll need to add an entry for the application being tested to the apps array in
 the Jenkinsfile.
 
-Once you have merged your tests into this repository and removed the `new: true` 
+Once you have merged your tests into this repository and removed the `new: true`
 tag, because you are confident in them, you'll want to enable the tests to be
-run on every commit to the applications repositories.  The Jenkinsfile for 
-most applications uses the `buildProject` which  has a `publishingE2ETests` 
+run on every commit to the applications repositories.  The Jenkinsfile for
+most applications uses the `buildProject` which  has a `publishingE2ETests`
 parameter that enables this functionality. The Publisher Jenkinsfile has an
-[example of enabling][publishing-jenkinsfile] the E2E tests, 
+[example of enabling][publishing-jenkinsfile] the E2E tests,
 and using the `PUBLISHING_E2E_TESTS_COMMAND` variable to only run
 `publisher: true` tagged specs.
 
 [docker compose]: https://docs.docker.com/compose/
-[publishing-jenkinsfile]: https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3 
+[publishing-jenkinsfile]: https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3
