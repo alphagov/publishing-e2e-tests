@@ -16,6 +16,8 @@ If this is your first time running the E2E project make sure you have [installed
 $ bundle install
 ```
 
+_We recommend that you configure Docker to use at least 4 CPUs with 6 GB of memory, otherwise you may find the apps struggle to run well enough to pass the tests._
+
 If it has been some time since you last worked on the E2E project it is recommended to run:
 
 ```bash
