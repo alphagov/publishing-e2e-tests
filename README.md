@@ -105,12 +105,12 @@ bundle exec rspec
 We have detailed guidance to help with [debugging the reason][debugging-fails]
 for a Jenkins failure inside the docs folder.
 
-Additionally, if you are making a change to an E2E tested application which 
+Additionally, if you are making a change to an E2E tested application which
 requires a change one of these tests, we have
 [detailed guidance][breaking-app-change] on how to achieve that.
 
-[debugging-fails]: ./docs/debugging-failures.md
-[breaking-app-change]: ./docs/breaking-app-change.md
+[debugging-fails]: ./docs/jenkins-debugging-failures.md
+[breaking-app-change]: ./docs/jenkins-breaking-changes.md
 
 ## Dealing with a flaky test
 
