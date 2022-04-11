@@ -1,4 +1,4 @@
-# Docker configuration and troubleshooting
+# Docker configuration
 
 ## Usage
 
@@ -23,23 +23,3 @@ directory into `./apps`. For example:
 rm -rf apps/publishing-api
 ln -s path/to/publishing-api apps/publishing-api
 ```
-
-## Quirks
-
-Docker limits the amount of disk space it uses. This sometimes results in
-rather opaque errors when you try and run tasks - generally related to
-errors installing Mongo or Postres. One example is
-`Moped::Errors::ConnectionFailure: Could not connect to a primary node for
-replica set`.
-
-The most reliable way to fix this is to find and remove unnecessary Docker
-containers and images.
-
-```
-docker rmi $(docker images -f dangling=true -q)
-docker volume rm $(docker volume ls -q -f dangling=true)
-```
-
-Docker for Mac will start comsuming vast amounts of CPU when it isn't given
-enough RAM.   If you find the apps aren't booting within the 60 second timeout
-then I'd recommend increasing the memory limit by at least 1GB.
