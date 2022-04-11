@@ -13,15 +13,6 @@ apps are tested check the contents of the [spec](./spec) directory. To view
 the details of all the apps involved check
 [docker-compose.yml](./docker-compose.yml).
 
-## Contents
-
-- [How to run the tests](#how-to-run-the-tests)
-- [Failing Jenkins builds](#failing-jenkins-builds)
-- [Dealing with a flaky test](#dealing-with-a-flaky-test)
-- [Contributing](#contributing)
-- [Gotchas](#gotchas)
-- [License](#license)
-
 ## How to run the tests
 
 ### With Docker
