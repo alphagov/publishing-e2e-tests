@@ -7,13 +7,6 @@
 - Get shell access to a given container: `docker-compose run specialist-frontend bash`
 - Kill the containers and move on with your life: `docker-compose down`
 
-## Adding containers
-
-- Create a `Dockerfile` in the repository of the app you want to add.
-- Edit `Makefile` to include the repository for the app.
-- Define the service and its relationship to other services in
-  `docker-compose.yml`
-
 ## Local apps
 
 If you want to use a local version of an application, symlink your

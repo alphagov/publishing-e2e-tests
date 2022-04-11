@@ -103,12 +103,12 @@ If a flaky test cannot be fixed it should be removed from the suite.
 
 ## Testing new applications
 
-To test new applications you will need to follow the
-[process for adding containers](docs/docker.md#adding-containers)
-to the [docker compose][].
+- Create a `Dockerfile` in the repository of the app you want to add.
+- Edit `Makefile` to include the repository for the app.
+- Define the service and its relationship to other services in
+  `docker-compose.yml`
 
-Once these are running inside of docker you should follow the
-[adding new tests](#adding-new-tests) process.
+Now follow the [adding new tests](#adding-new-tests) process.
 
 When adding a new app you should add a RSpec tag to associate tests with that
 app, and a step in the Makefile to run those tests. E.g. if you were adding
