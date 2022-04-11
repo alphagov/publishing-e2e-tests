@@ -13,7 +13,7 @@ We recommend that you configure Docker to use at least 4 CPUs with 6 GB of
 memory, otherwise you may find the apps struggle to run well enough to pass the
 tests.
 
-<img src="docker-configuration.png" width="300" />
+<img src="docker/docker-configuration.png" width="300" />
 
 ## Adding containers
 
