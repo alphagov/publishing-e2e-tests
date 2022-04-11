@@ -6,13 +6,3 @@
   `docker-compose run publishing-e2e-tests bundle exec rspec`
 - Get shell access to a given container: `docker-compose run specialist-frontend bash`
 - Kill the containers and move on with your life: `docker-compose down`
-
-## Local apps
-
-If you want to use a local version of an application, symlink your
-directory into `./apps`. For example:
-
-```
-rm -rf apps/publishing-api
-ln -s path/to/publishing-api apps/publishing-api
-```

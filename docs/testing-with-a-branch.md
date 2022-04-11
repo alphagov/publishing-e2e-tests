@@ -1,5 +1,7 @@
 # Testing with a branch
 
+## Using a remote branch
+
 If you need to run the tests against a branch of an application other than
 deployed-to-production you need to explicitly build it as below:
 
@@ -23,4 +25,14 @@ you can re-pull.  The `clean_docker` make recipe will untag all locally built im
 ```bash
 $ make clean_docker
 $ make pull
+```
+
+## Using a local branch
+
+If you want to use a local version of an application, symlink your
+directory into `./apps`. For example:
+
+```
+rm -rf apps/publishing-api
+ln -s path/to/publishing-api apps/publishing-api
 ```
