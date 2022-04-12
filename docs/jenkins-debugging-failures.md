@@ -6,7 +6,7 @@ The easiest way to get an overview of test output is to view the Test Result
 file created after the tests are complete - there are links to it on the build
 summary.
 
-![Test results](jenkins_test_results.png)
+![Test results](jenkins-debugging-failures/jenkins_test_results.png)
 
 ### Screenshots
 
@@ -14,7 +14,7 @@ For each test failure there will be a corresponding screenshot of what PhantomJS
 was seeing at the time the test failed.  This can be a useful resource when
 Poltergeist complains about being unable to see or click on a link.
 
-![Jenkins build artifacts](jenkins_build_artifacts.png)
+![Jenkins build artifacts](jenkins-debugging-failures/jenkins_build_artifacts.png)
 
 ## Using the pipeline steps view
 
@@ -22,12 +22,12 @@ If there aren’t test results available, then the error will likely have occurr
 during the setup before the apps have run.  The “Pipeline Steps” give a more
 detailed breakdown of which steps failed.
 
-![Jenkins pipeline steps link](jenkins_pipeline_steps_link.png)
+![Jenkins pipeline steps link](jenkins-debugging-failures/jenkins_pipeline_steps_link.png)
 
 From there, click on the console button to the left of any red error step to
 view related console output at that time which will explain the error.
 
-![Jenkins pipeline steps](jenkins_pipeline_steps.png)
+![Jenkins pipeline steps](jenkins-debugging-failures/jenkins_pipeline_steps.png)
 
 ## Using the errors log
 
