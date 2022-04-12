@@ -27,15 +27,6 @@ difficult - particularly early in a test's introduction - therefore we have a
 
 ## Gotchas
 
-### WEBrick server seems to stop responding
-
-We had a nasty bug with Router API where the web server seemed to stop
-responding to any requests. This issue was experienced once the application
-was upgraded to Rails 5.1 and Mongoid 6.1. The symptom was that any requests
-to the server seemed to hang and never respond. The way this was resolved was
-to switch from using WEBrick on Router API and instead
-[use unicorn server][use-unicorn-pr].
-
 ### Page caching issue
 
 We encountered an issue with Poltergeist caching a page that was used in two
@@ -47,7 +38,6 @@ This issue could still potentially arise if a test visited the same page
 multiple times in the same test and would likely need a similar solution
 to be included as part of the test.
 
-[use-unicorn-pr]: https://github.com/alphagov/router-api/pull/113
 [clear-page-cache-pr]: https://github.com/alphagov/publishing-e2e-tests/pull/204
 
 ### Docker disk space
