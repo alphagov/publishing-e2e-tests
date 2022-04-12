@@ -23,6 +23,7 @@ feature "Creating a draft on Travel Advice Publisher", feature: true, travel_adv
 
   def when_i_create_a_draft_of_chad
     signin_to_signon if use_signon?
+    remove_preview_design_system_permission
     visit_travel_advice_publisher("/admin")
     click_link(country)
 

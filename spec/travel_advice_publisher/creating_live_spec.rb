@@ -18,6 +18,7 @@ feature "Creating a live edition on Travel Advice Publisher", feature: true, tra
 
   def when_i_create_a_live_edition_of_malta
     signin_to_signon if use_signon?
+    remove_preview_design_system_permission
     visit_travel_advice_publisher("/admin")
     click_link(country)
 

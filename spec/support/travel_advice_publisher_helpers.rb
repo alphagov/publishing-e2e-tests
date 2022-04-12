@@ -72,4 +72,10 @@ module TravelAdvicePublisherHelpers
     reload_url_until_status_code(url, 200)
     reload_url_until_match(url, :has_text?, ignore_quotes_regex(summary))
   end
+
+  def remove_preview_design_system_permission
+    # TODO: remove method when Travel Advice is fully ported over to the design
+    # system.
+    current_user.permissions.reject! { |permission| permission == "Preview Design System" }
+  end
 end
