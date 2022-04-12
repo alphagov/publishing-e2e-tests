@@ -27,19 +27,6 @@ difficult - particularly early in a test's introduction - therefore we have a
 
 ## Gotchas
 
-### Page caching issue
-
-We encountered an issue with Poltergeist caching a page that was used in two
-different tests. This would result in whichever test ran second failing as
-the excpected text would not show. We resolved this by clearing the
-[Poltergeist page cache before each test][clear-page-cache-pr].
-
-This issue could still potentially arise if a test visited the same page
-multiple times in the same test and would likely need a similar solution
-to be included as part of the test.
-
-[clear-page-cache-pr]: https://github.com/alphagov/publishing-e2e-tests/pull/204
-
 ### Docker disk space
 
 Docker limits the amount of disk space it uses. This sometimes results in
