@@ -1010,6 +1010,7 @@ services:
     environment:
       << : *govuk-app
       ASSET_HOST: static.dev.gov.uk
+      PORT: 3013
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: static
       VIRTUAL_HOST: static.dev.gov.uk
