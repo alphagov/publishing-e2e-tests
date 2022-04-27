@@ -1,17 +1,17 @@
-feature "Archiving a child topic on Collections Publisher", collections: true, collections_publisher: true do
+feature "Archiving a Specialist subtopic on Collections Publisher", collections: true, collections_publisher: true do
   include CollectionsPublisherHelpers
 
   let(:parent_title) { unique_title }
   let(:parent_slug) { "archiving-collections-publisher-parent-#{SecureRandom.uuid}" }
 
-  let(:child_title) { unique_title }
-  let(:child_slug) { "archiving-collections-publisher-child-#{SecureRandom.uuid}" }
-  let(:link) { ["/topic", parent_slug, child_slug].join("/") }
+  let(:subtopic_title) { unique_title }
+  let(:subtopic_slug) { "archiving-collections-publisher-subtopic-#{SecureRandom.uuid}" }
+  let(:link) { ["/topic", parent_slug, subtopic_slug].join("/") }
 
-  scenario "Archiving a child specialist topic" do
-    given_there_is_a_published_child_topic
+  scenario "Archiving a Specialist subtopic" do
+    given_there_is_a_published_subtopic
     and_i_archive_it
-    then_when_i_visit_the_child_on_gov_uk_i_am_redirected_to_the_parent
+    then_when_i_visit_the_subtopic_on_gov_uk_i_am_redirected_to_the_parent
   end
 
 private
@@ -20,10 +20,10 @@ private
     signin_with_next_user("Collections Publisher" => ["GDS Editor"])
   end
 
-  def given_there_is_a_published_child_topic
+  def given_there_is_a_published_subtopic
     signin_to_signon if use_signon?
-    create_and_publish_parent_topic
-    create_and_publish_child_topic
+    create_and_publish_parent_specialist_topic
+    create_and_publish_subtopic
   end
 
   def and_i_archive_it
@@ -33,8 +33,8 @@ private
     expect(page).to have_text(/archived/i)
   end
 
-  def then_when_i_visit_the_child_on_gov_uk_i_am_redirected_to_the_parent
-    wait_for_the_child_to_redirect
+  def then_when_i_visit_the_subtopic_on_gov_uk_i_am_redirected_to_the_parent
+    wait_for_the_subtopic_to_redirect
 
     window = window_opened_by { click_link(link) }
     within_window(window) do
@@ -45,36 +45,36 @@ private
     end
   end
 
-  def visit_create_topic
+  def visit_create_specialist_topic
     visit_collections_publisher("/specialist-sector-pages/new")
   end
 
-  def create_and_publish_parent_topic
-    visit_create_topic
+  def create_and_publish_parent_specialist_topic
+    visit_create_specialist_topic
 
     fill_in_topic_form(slug: parent_slug, title: parent_title)
     click_button "Create"
     expect(page).to have_text(parent_title)
     @published_parent_url = find_link(parent_slug)[:href]
-    publish_topic
+    publish_specialist_topic
   end
 
-  def create_and_publish_child_topic
-    visit_create_topic
+  def create_and_publish_subtopic
+    visit_create_specialist_topic
 
-    fill_in_topic_form(slug: child_slug, title: child_title, parent: parent_title)
+    fill_in_topic_form(slug: subtopic_slug, title: subtopic_title, parent: parent_title)
     click_button "Create"
-    expect(page).to have_text(child_title)
-    publish_topic
+    expect(page).to have_text(subtopic_title)
+    publish_specialist_topic
   end
 
-  def publish_topic
+  def publish_specialist_topic
     click_on("Publish")
     expect(page).to have_text(/published/i)
   end
 
-  def wait_for_the_child_to_redirect
-    click_link(child_title)
+  def wait_for_the_subtopic_to_redirect
+    click_link(subtopic_title)
     url = find_link(link)[:href]
     reload_url_until_status_code(url, 301, keep_retrying_while: [200, 404])
   end
