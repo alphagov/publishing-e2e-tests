@@ -1,7 +1,7 @@
 require "docker"
 
 class DockerService
-  def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 60, interval_seconds: 10)
+  def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 120, interval_seconds: 10)
     container_ids = service_container_ids(only: services, except: except)
     unhealthy_containers = []
 

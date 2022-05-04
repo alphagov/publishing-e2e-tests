@@ -8,7 +8,7 @@ feature "Publishing a parent and child topic on Collections Publisher", collecti
   let(:child_title) { unique_title }
   let(:child_slug) { "publishing-collections-publisher-child-#{SecureRandom.uuid}" }
 
-  scenario "Publishing a parent and child topic" do
+  scenario "Publishing a parent and child topic SOME MORE WORDS" do
     given_i_have_a_published_topic
     when_i_add_a_child_topic
     and_i_publish_it
@@ -56,15 +56,43 @@ private
     url = find_link(link)[:href]
     reload_url_until_status_code(url, 200)
 
-    window = window_opened_by { click_link(link) }
-    within_window(window) do
-      expect_rendering_application("collections")
-      expect_url_matches_live_gov_uk
-      expect(page).to have_content(child_title)
+    # require 'pry'
+    # binding.pry
+    # puts page.body
+    # save_and_open_page
 
-      first(:link, parent_title).click
-      expect_url_matches_live_gov_uk
-      expect(current_url).to end_with(parent_slug)
-    end
+    # window = window_opened_by(wait: 5) do
+    #   click_link(link)
+    # end
+    #
+    # within_window window do
+    #   expect_rendering_application("collections")
+    #   expect_url_matches_live_gov_uk
+    #   expect(page).to have_content(child_title)
+    #
+    #   first(:link, parent_title).click
+    #   expect_url_matches_live_gov_uk
+    #   expect(current_url).to end_with(parent_slug)
+    # end
+
+    # switch_to_window(window_opened_by { click_link(link) })
+    #
+    # expect_rendering_application("collections")
+    # expect_url_matches_live_gov_uk
+    # expect(page).to have_content(child_title)
+    #
+    # first(:link, parent_title).click
+    # expect_url_matches_live_gov_uk
+    # expect(current_url).to end_with(parent_slug)
+
+    click_link(link)
+
+    expect_rendering_application("collections")
+    expect_url_matches_live_gov_uk
+    expect(page).to have_content(child_title)
+
+    first(:link, parent_title).click
+    expect_url_matches_live_gov_uk
+    expect(current_url).to end_with(parent_slug)
   end
 end
