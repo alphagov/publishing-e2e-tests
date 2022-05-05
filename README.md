@@ -56,6 +56,7 @@ $ make pull build start test-specialist-publisher stop
 - [What belongs in publishing-e2e-tests](docs/what-belongs-in-these-tests.md)
 - [Writing tests](docs/writing-tests.md)
 - [Testing with a branch](docs/testing-with-a-branch.md)
+- [Adding new apps](docs/adding-new-apps.md)
 
 ## Licence
 

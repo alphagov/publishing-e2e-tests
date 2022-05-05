@@ -4,7 +4,6 @@ This guide covers the basics for contributing to this project.
 
 - [Coding style](#coding-style)
 - [Adding new tests](#adding-new-tests)
-- [Adding new applications](#adding-new-applications)
 
 ## Coding style
 
@@ -38,12 +37,3 @@ Use `new: true` when adding a new test, until it has been run for a sufficiently
 [rspec tags]: https://relishapp.com/rspec/rspec-core/v/3-7/docs/command-line/tag-option
 [docker_rake]: ./lib/tasks/docker.rake
 [fb24c2]: https://github.com/alphagov/publishing-e2e-tests/commit/fb24c281c728424656410fb2e6c7d173e75ff2c3
-
-## Adding new applications
-
-1. Create a `Dockerfile` in the repository of the app you want to add.
-1. Edit the `Makefile` to include the repository for the app.
-1. Define the service and its relationship to other services in `docker-compose.yml`.
-1. Create a `test-<app>` step in the Makefile to run tests tagged with `<app>: true`.
-1. Add the app to the [Jenkinsfile](https://github.com/alphagov/publishing-e2e-tests/blob/main/Jenkinsfile) to support building with specific commits.
-1. Add Publishing E2E tests as a required check on the app repo ([example](https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3)).
