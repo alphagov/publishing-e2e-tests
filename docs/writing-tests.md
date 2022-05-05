@@ -89,18 +89,6 @@ test can erode this trust.
     that would help when understanding why it was failing. E.g. was the test
     the first to run?
 
-### Fixing a flaky test
-
-The challenge with fixing a flaky test is to be confident that what you have
-done has resolved the issue, and that you can convince someone reviewing the
-fix that your changes resolve this. It can be valuable to point to a number of successful test runs on the flaky stage.
-
-It is therefore useful to use the commit message as a place to explain exactly
-what the cause of the flaky result is and how the changes introduced resolve
-that.
-
-If a flaky test cannot be fixed it should be removed from the suite.
-
 ## Testing new applications
 
 - Create a `Dockerfile` in the repository of the app you want to add.
