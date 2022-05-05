@@ -385,6 +385,7 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
       MONGO_WRITE_CONCERN: 1
       MONGODB_URI: mongodb://mongo-3.6/specialist-publisher
       REDIS_URL: redis://redis
