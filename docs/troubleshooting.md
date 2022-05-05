@@ -26,6 +26,11 @@ scenario "Change note on a Countryside Stewardship Grant", flaky: true do
 end
 ```
 
+Use [RetryHelpers][retry-helpers] to cope with pages that are slow to update, and [page-specific assertions][fb24c2] to ensure the assertions that follow are checking the page you expect.
+
+[retry-helpers]: ./spec/support/retry_helpers.rb
+[fb24c2]: https://github.com/alphagov/publishing-e2e-tests/commit/fb24c281c728424656410fb2e6c7d173e75ff2c3
+
 ## Manually running containers
 
 - Run programs within containers using `docker-compose`:
