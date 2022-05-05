@@ -14,9 +14,17 @@ requires a change one of these tests, we have
 
 ## Dealing with a flaky test
 
-A key aim of these tests is to be as reliable as possible, however this can be
-difficult - particularly early in a test's introduction - therefore we have a
-[strategy](./writing-tests.md#dealing-with-flaky-tests) to deal with flaky tests.
+As this is a testing library, whose value correlates to the level of trust in
+it, it is important to keep these tests as trustworthy as possible. A flaky
+test can erode this trust.
+
+Once you are confident a test is flakey, you can stop it failing the build while you investigate a potential fix. Use the `flaky: true` flag for this e.g.
+
+```ruby
+scenario "Change note on a Countryside Stewardship Grant", flaky: true do
+  ...
+end
+```
 
 ## Manually running containers
 

@@ -4,7 +4,6 @@ This guide covers the basics for contributing to this project.
 
 - [Coding style](#coding-style)
 - [Adding new tests](#adding-new-tests)
-- [Dealing with flaky tests](#dealing-with-flaky-tests)
 - [Testing new applications](#testing-new-applications)
 
 ## Coding style
@@ -39,20 +38,6 @@ Use `new: true` when adding a new test, until it has been run for a sufficiently
 [rspec tags]: https://relishapp.com/rspec/rspec-core/v/3-7/docs/command-line/tag-option
 [docker_rake]: ./lib/tasks/docker.rake
 [fb24c2]: https://github.com/alphagov/publishing-e2e-tests/commit/fb24c281c728424656410fb2e6c7d173e75ff2c3
-
-## Dealing with flaky tests
-
-As this is a testing library, whose value correlates to the level of trust in
-it, it is important to keep these tests as trustworthy as possible. A flaky
-test can erode this trust.
-
-Once you are confident a test is flakey, you can stop it failing the build while you investigate a potential fix. Use the `flaky: true` flag for this e.g.
-
-```ruby
-scenario "Change note on a Countryside Stewardship Grant", flaky: true do
-  ...
-end
-```
 
 ## Testing new applications
 
