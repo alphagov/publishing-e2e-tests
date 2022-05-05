@@ -20,40 +20,20 @@ New tests that are added should be providing coverage of flows that touch more
 than 2 applications in the GOV.UK stack. Further guidance can be found in
 [what-belongs-in-these-tests.md](docs/what-belongs-in-these-tests.md).
 
-When adding a new scenario it has previously been valuable to consult with the
-team responsible for maintaining the Publisher application that will be
-affected.
+Tips for writing tests:
 
-It is easy to accidentally introduce [flaky tests][] to this project given the
-nature of end-to-end testing. It's expected that new tests being added will
-have been run a number of times and that the developer will monitor them after
-introduction so they're
-[ready to act on a flaky test](#dealing-with-flaky-tests).
-
-Common reasons for a flaky tests can include:
-
-  - Applications not in a suitable state to be tested - Adding a Docker
-    [healthcheck][docker-healthcheck] can alieviate this because it is syncronised
-    on as part of the [wait_for_apps][docker_rake] rake task run during
-    `make setup`
-  - Checking conditions on pages that haven't yet been updated -
-    [RetryHelpers][retry-helpers] can be used for this
-  - Not waiting for a unique element to appear when moving between web pages.
-    An example of this can be found in [fb24c2][fb24c2]
+  - Add a Docker [healthcheck][docker-healthcheck] to check the app is in a suitable state to be tested. The [wait_for_apps][docker_rake] stage of the build will block until the healthcheck comes back as OK.
+  - Use [RetryHelpers][retry-helpers] to cope with pages that are slow to update, and [page-specific assertions][fb24c2] to ensure the assertions that follow are checking the page you expect.
 
 Tests should be tagged to the publishing and rendering applications they are
 testing using [rspec tags][] to only run tests that concern that application.
-This is because the tests are slow and doing this can limit the impact of
-a flaky test.
 
-When adding a new test into the project it can also be tagged with `new: true`, tests that are tagged with `new` or `flaky` are executed in the new/flaky stage. This stage runs separately from the existing tests and will not fail the overall build. If this stage fails a notification is posted to the `#end-to-end-tests` slack channel to provide easy monitoring.
-This allows for a chance to build confidence in new tests without impacting the current suite should there be any flakiness as they run at a much higher volume than when being developed originally.
+Use `new: true` when adding a new test, until it has been run for a sufficiently long period for you to be confident it is not flakey. Tests that are tagged with `new` will not fail the overall build.
 
 ### Tips
 - Starting up the docker containers is _slow_. Use `binding.pry` to pry into your test and use the console to debug and write your test. Additionally, `save_screenshot('filename.png')` will help you see what is going on.
 - If you are relying on code in a repo, ensure that the code is in the `deployed-to-production` branch. If not, see main README for guidance on running the tests against a different branch.
 
-[flaky tests]: https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html
 [docker-healthcheck]: https://docs.docker.com/engine/reference/builder/#healthcheck
 [retry-helpers]: ./spec/support/retry_helpers.rb
 [rspec tags]: https://relishapp.com/rspec/rspec-core/v/3-7/docs/command-line/tag-option
