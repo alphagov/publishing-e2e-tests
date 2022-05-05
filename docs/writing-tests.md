@@ -4,7 +4,7 @@ This guide covers the basics for contributing to this project.
 
 - [Coding style](#coding-style)
 - [Adding new tests](#adding-new-tests)
-- [Testing new applications](#testing-new-applications)
+- [Adding new applications](#adding-new-applications)
 
 ## Coding style
 
@@ -39,32 +39,11 @@ Use `new: true` when adding a new test, until it has been run for a sufficiently
 [docker_rake]: ./lib/tasks/docker.rake
 [fb24c2]: https://github.com/alphagov/publishing-e2e-tests/commit/fb24c281c728424656410fb2e6c7d173e75ff2c3
 
-## Testing new applications
+## Adding new applications
 
-- Create a `Dockerfile` in the repository of the app you want to add.
-- Edit `Makefile` to include the repository for the app.
-- Define the service and its relationship to other services in
-  `docker-compose.yml`
-
-Now follow the [adding new tests](#adding-new-tests) process.
-
-When adding a new app you should add a RSpec tag to associate tests with that
-app, and a step in the Makefile to run those tests. E.g. if you were adding
-whitehall as an app you would tag the tests with `whitehall: true` and create a
-step in the make file called `test-whitehall`.
-
-To run against specific revisions of the applications (such as commits and branches),
-you'll need to add an entry for the application being tested to the apps array in
-the Jenkinsfile.
-
-Once you have merged your tests into this repository and removed the `new: true`
-tag, because you are confident in them, you'll want to enable the tests to be
-run on every commit to the applications repositories.  The Jenkinsfile for
-most applications uses the `buildProject` which  has a `publishingE2ETests`
-parameter that enables this functionality. The Publisher Jenkinsfile has an
-[example of enabling][publishing-jenkinsfile] the E2E tests,
-and using the `PUBLISHING_E2E_TESTS_COMMAND` variable to only run
-`publisher: true` tagged specs.
-
-[docker compose]: https://docs.docker.com/compose/
-[publishing-jenkinsfile]: https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3
+1. Create a `Dockerfile` in the repository of the app you want to add.
+1. Edit the `Makefile` to include the repository for the app.
+1. Define the service and its relationship to other services in `docker-compose.yml`.
+1. Create a `test-<app>` step in the Makefile to run tests tagged with `<app>: true`.
+1. Add the app to the [Jenkinsfile](https://github.com/alphagov/publishing-e2e-tests/blob/main/Jenkinsfile) to support building with specific commits.
+1. Add Publishing E2E tests as a required check on the app repo ([example](https://github.com/alphagov/publisher/commit/712563d5d3e72685b1848bb61ea6cfc28b3449c3)).
