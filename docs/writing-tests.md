@@ -13,6 +13,12 @@ Tests should be tagged to the publishing and rendering applications they are tes
 
 Use `new: true` when adding a new test, until it has been run for a sufficiently long period for you to be confident it is not flakey. Tests that are tagged with `new` will not fail the overall build.
 
+Rules to follow for new tests:
+
+- Aim for one scenario per file.
+- Test what _should_ happen, not what shouldn't.
+- Test critical functionality, not superficial behaviour e.g. flash messages.
+
 Some tips for writing tests:
 
 - Starting up the docker containers is _slow_. Use `binding.pry` to pry into your test and use the console to debug and write your test. Additionally, `save_screenshot('filename.png')` will help you see what is going on.

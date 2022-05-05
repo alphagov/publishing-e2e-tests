@@ -22,24 +22,7 @@ involves the following apps: Specialist Publisher, Publishing API,
 Content Store, Router, and Specialist Frontend. Which could not be tested under
 other means.
 
-The approach to writing tests for here is:
-
-- Follow the conventions of existing tests here
-- Aim for one scenario per file
-- Only test the "happy path" behaviour, not exceptional behaviour.
-- Only describe things that should *happen*, not things that shouldn't.
-- Write steps to be independent, not relying on the user being on a certain
-  page.
-- Avoid testing negatives; these are better tested in functional/unit tests.
-- Avoid testing incidental behaviour (e.g. flash messages); these are better
-  tested in functional/unit tests.
-
-This list has been adapted from
-[whitehall testing guide][whitehall-testing-guide] which is worth reading
-for more testing insights.
-
 [testing-pyramid]: https://martinfowler.com/bliki/TestPyramid.html
 [testing-ice-cream-cone]: http://saeedgatson.com/the-software-testing-ice-cream-cone/
 [contract-tested]: https://martinfowler.com/articles/consumerDrivenContracts.html
 [pact]: https://docs.pact.io/
-[whitehall-testing-guide]: https://github.com/alphagov/whitehall/blob/099f53e35cdd0ea63a2349be3766c98e65521ce3/docs/testing.md
