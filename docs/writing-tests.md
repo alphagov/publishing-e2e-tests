@@ -62,32 +62,17 @@ This allows for a chance to build confidence in new tests without impacting the 
 
 ## Dealing with flaky tests
 
-Sometimes these tests have been found to be sensitive to race hazards and other
-timing issues that are not surfaced until they are run at scale. Even with
-care, some of these race hazards will only become apparent once the tests have
-been run 10s - or even 100s - of times.
-
 As this is a testing library, whose value correlates to the level of trust in
 it, it is important to keep these tests as trustworthy as possible. A flaky
 test can erode this trust.
 
-### Think a test might be flaky?
+Once you are confident a test is flakey, you can stop it failing the build while you investigate a potential fix. Use the `flaky: true` flag for this e.g.
 
-- First step is to be able to confidently say that test is flaky:
-  - For a flaky test it should be passing and failing given the same
-    environment
-  - If the test is failing consistently it might be a sign that something
-    different in the stack is broken
-- Next we want to stop the test failing for users of the suite:
-  - Create a PR which marks the test as flaky in this repository e.g.
-    ```ruby
-    scenario "Change note on a Countryside Stewardship Grant", flaky: true do
-      ...
-    end
-    ```
-  - In the commit outline the full failure message with any other information
-    that would help when understanding why it was failing. E.g. was the test
-    the first to run?
+```ruby
+scenario "Change note on a Countryside Stewardship Grant", flaky: true do
+  ...
+end
+```
 
 ## Testing new applications
 
