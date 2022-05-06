@@ -1,5 +1,7 @@
 # Adding new apps
 
+> **Warning: this repo is DEPRECATED as of [RFC 128 (Continuous Deployment)](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-128-continuous-deployment.md#delete-publishing-e2e-tests)**. The tests are slow and brittle and do not run in a realistic GOV.UK environment. Do not add any new apps to this repo.
+
 1. Create a `Dockerfile` in the repository of the app you want to add.
 1. Edit the `Makefile` to include the repository for the app.
 1. Define the service and its relationship to other services in `docker-compose.yml`.

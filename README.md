@@ -2,6 +2,8 @@
 
 A suite of end-to-end tests for publisher user journeys. The tests are written in [RSpec](http://rspec.info/) / [Capybara](https://github.com/teamcapybara/capybara) and mimic the behaviour of content editors in a web browser, using [headless Chrome](https://github.com/alphagov/publishing-e2e-tests/blob/2044d7eb3c00194d9fd6d1452849b7afc77b3608/spec/spec_helper.rb#L119).
 
+> **Warning: this repo is DEPRECATED as of [RFC 128 (Continuous Deployment)](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-128-continuous-deployment.md#delete-publishing-e2e-tests)**. The tests are slow and brittle and do not run in a realistic GOV.UK environment. Do not add any new tests to this repo.
+
 ## Technical documentation
 
 To see which apps are tested check the contents of the [spec](./spec) directory.
@@ -53,7 +55,6 @@ $ make pull build start test-specialist-publisher stop
 - [Getting a breaking app change through Jenkins](docs/jenkins-breaking-changes.md)
 - [Debugging Jenkins failures](docs/jenkins-debugging-failures.md)
 - [Troubleshooting](docs/troubleshooting.md)
-- [What belongs in publishing-e2e-tests](docs/what-belongs-in-these-tests.md)
 - [Writing tests](docs/writing-tests.md)
 - [Testing with a branch](docs/testing-with-a-branch.md)
 - [Adding new apps](docs/adding-new-apps.md)

@@ -1,8 +1,20 @@
 # Writing tests
 
-New tests that are added should be providing coverage of flows that touch more
-than 2 applications in the GOV.UK stack. Further guidance can be found in
-[what-belongs-in-these-tests.md](docs/what-belongs-in-these-tests.md).
+> **Warning: this repo is DEPRECATED as of [RFC 128 (Continuous Deployment)](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-128-continuous-deployment.md#delete-publishing-e2e-tests)**. The tests are slow and brittle and do not run in a realistic GOV.UK environment. Do not add any new tests to this repo.
+>
+> Instead of adding a test here, you can add a [smoke test](https://github.com/alphagov/smokey) for the publishing action in real GOV.UK environments. See the Smokey docs for guidance about writing this kind of "mutating state" test.
+
+## What belongs here
+
+This repo contains tests for critical publishing actions and their impact on the draft or live site. For example, publishing a document and checking it's visible on GOV.UK.
+
+Do not add tests that can be implemented in other ways. We want this to be the tip of of the [testing pyramid][testing-pyramid], not a [testing ice cream cone][testing-ice-cream-cone]. Instead of adding a test here, you can:
+
+- Add [contract tests](https://docs.publishing.service.gov.uk/manual/pact-broker.html) to cover the chain of APIs in a publishing action. For example, publishing a document involves Publishing API, Email Alert API, Content Store and Router.
+
+- Add unit or integration tests to cover in-app behaviour. For example, the way each document format is rendered can be tested in the frontend app that does the rendering.
+
+In contrast, the tests in this repo provide coverage at a higher level. They check that the chain of state changes in a publishing action culminate in a change on the draft or live site.
 
 ## Adding new tests
 
@@ -27,3 +39,5 @@ Some tips for writing tests:
 
 [rspec tags]: https://relishapp.com/rspec/rspec-core/v/3-7/docs/command-line/tag-option
 [readable-feature-tests]: https://about.futurelearn.com/blog/how-we-write-readable-feature-tests-with-rspec
+[testing-pyramid]: https://martinfowler.com/bliki/TestPyramid.html
+[testing-ice-cream-cone]: http://saeedgatson.com/the-software-testing-ice-cream-cone/
