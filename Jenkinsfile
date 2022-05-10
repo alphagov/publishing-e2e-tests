@@ -326,10 +326,4 @@ def alertTestOutcome(params, testStatus) {
     message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
     slackSend(color: "#ffff94", channel: channel, message: message)
   }
-
-  if (testStatus.mainFailed) {
-    def guideUrl = "https://github.com/alphagov/publishing-e2e-tests/blob/main/CONTRIBUTING.md#dealing-with-flaky-tests"
-    currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
-                               "<p>We have <a href=\"${guideUrl}\">flaky test advice available</a> to help.</p>"
-  }
 }
