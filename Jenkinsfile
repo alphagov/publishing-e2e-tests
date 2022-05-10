@@ -82,8 +82,6 @@ timestamps {
         throw e
       } finally {
         makeLogsAvailable()
-        alertTestOutcome(params, testStatus)
-
         stopDocker()
 
         // Docker leaves these owned by root which makes it difficult for
@@ -305,31 +303,5 @@ def makeLogsAvailable() {
 def stopDocker() {
   stage("Stop Docker") {
     sh("make stop")
-  }
-}
-
-def alertTestOutcome(params, testStatus) {
-  def channel = "#govuk-e2e-tests"
-  // post to slack just when it's an important branch
-  if (env.BRANCH_NAME == "main" && (testStatus.mainFailed || testStatus.startUpFailed)) {
-    def message = "Publishing end-to-end tests <${BUILD_URL}|failed> for main branch, changes not pushed to test-against"
-    slackSend(color: "#d40100", channel: channel, message: message)
-  } else if (env.BRANCH_NAME == "test-against" && testStatus.startUpFailed) {
-    def message = "Publishing end-to-end tests start up <${BUILD_URL}|failed> for $NODE_NAME"
-    slackSend(color: "#d40100", channel: channel, message: message)
-  } else if (env.BRANCH_NAME == "test-against" && testStatus.mainFailed) {
-    def message = "Publishing end-to-end tests <${BUILD_URL}|failed>"
-    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-    slackSend(color: "#d40100", channel: channel, message: message)
-  } else if (env.BRANCH_NAME == "test-against" && testStatus.flakyNewFailed) {
-    def message = "Publishing end-to-end flaky/new tests <${BUILD_URL}|failed>"
-    message += (params.ORIGIN_REPO) ? " for ${params.ORIGIN_REPO}" : ""
-    slackSend(color: "#ffff94", channel: channel, message: message)
-  }
-
-  if (testStatus.mainFailed) {
-    def guideUrl = "https://github.com/alphagov/publishing-e2e-tests/blob/main/CONTRIBUTING.md#dealing-with-flaky-tests"
-    currentBuild.description = "<p style=\"color: red\">Is the failure unrelated to your change?</p>" +
-                               "<p>We have <a href=\"${guideUrl}\">flaky test advice available</a> to help.</p>"
   }
 }
