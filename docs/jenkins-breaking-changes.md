@@ -34,8 +34,12 @@ against your change.
    E2E tests is compatible with the old version of your application, don’t
    merge your change to E2E tests at this stage.
 
-4. Deploy your application change to production as you would normally,
-   waiting for deployed-to-production to be updated.
+4. Deploy your application change to production
+      - for manually deployed apps, as you would normally do;
+      - for continuously deployed apps, repeat step 2. ii. by selecting the
+      previous build and clicking “Rebuild”
+      
+   Wait for deployed-to-production to be updated.
 
 5. Merge your E2E tests change into main branch. This will trigger the
    main build which also updates the test-against branch.  Once test-against
@@ -49,4 +53,3 @@ treat the test as though it were new and attach the new tag as per the
 [how-to-run-tests]: ./README.md#how-to-run-the-tests
 [jenkins-job]: https://ci.integration.publishing.service.gov.uk/job/publishing-e2e-tests/
 [adding-new-tests-guidance]: ./CONTRIBUTING.md#adding-new-tests
-
