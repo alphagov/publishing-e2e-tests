@@ -8,6 +8,7 @@ x-govuk-app-env: &govuk-app
   GOVUK_APP_DOMAIN_EXTERNAL: dev.gov.uk
   GOVUK_ASSET_ROOT: http://assets-origin.dev.gov.uk
   GOVUK_WEBSITE_ROOT: http://www.dev.gov.uk
+  GOVUK_PROMETHEUS_EXPORTER: "false"
   JWT_AUTH_SECRET: fakejwtsecret
   LOG_PATH: log/live.log
   PLEK_SERVICE_SEARCH_URI: http://search-api.dev.gov.uk
