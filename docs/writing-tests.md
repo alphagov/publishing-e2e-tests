@@ -10,6 +10,8 @@ This repo contains tests for critical publishing actions and their impact on the
 
 Do not add tests that can be implemented in other ways. We want this to be the tip of of the [testing pyramid][testing-pyramid], not a [testing ice cream cone][testing-ice-cream-cone]. Instead of adding a test here, you can:
 
+- Add or extend [health checks for application infrastructure](https://github.com/alphagov/govuk_app_config/blob/main/docs/healthchecks.md). For example, drafting a document in a publishing app involves connecting to infrastructure like a database or AWS S3.
+
 - Add [contract tests](https://docs.publishing.service.gov.uk/manual/pact-broker.html) to cover the chain of APIs in a publishing action. For example, publishing a document involves Publishing API, Email Alert API, Content Store and Router.
 
 - Add unit or integration tests to cover in-app behaviour. For example, the way each document format is rendered can be tested in the frontend app that does the rendering.
