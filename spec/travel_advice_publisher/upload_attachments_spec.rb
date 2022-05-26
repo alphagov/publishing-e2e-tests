@@ -40,10 +40,10 @@ feature "Upload attachments on Travel Advice Publisher", feature: true, travel_a
   end
 
   def then_i_can_view_these_files_on_draft_gov_uk
-    url = find_link("Preview saved version")[:href]
+    url = find_link("Preview saved version", match: :first)[:href]
     reload_until_travel_advice_summary_displayed(url, summary)
 
-    window = window_opened_by { click_link("Preview saved version") }
+    window = window_opened_by { click_link("Preview saved version", match: :first) }
     within_window(window) do
       expect_rendering_application("government-frontend")
       expect_url_matches_draft_gov_uk
