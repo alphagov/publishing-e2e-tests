@@ -52,7 +52,7 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
     reload_url_until_match(section_url, :has_text?, attachment_title)
 
     click_link(section_title)
-    expect_rendering_application("manuals-frontend")
+    expect_rendering_application("government-frontend")
     expect_url_matches_draft_gov_uk
 
     attachment_link = find_link(attachment_title)[:href]
@@ -68,6 +68,6 @@ feature "Uploading an attachment on Manuals Publisher", manuals_publisher: true 
     reload_url_until_status_code(url, 200)
 
     click_link("Preview draft")
-    expect_rendering_application("manuals-frontend")
+    expect_rendering_application("government-frontend")
   end
 end

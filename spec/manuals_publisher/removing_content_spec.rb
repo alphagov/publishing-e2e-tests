@@ -59,7 +59,7 @@ feature "Removing content on Manuals Publisher", manuals_publisher: true do
 
     visit removed_section_url
 
-    expect_rendering_application("manuals-frontend")
+    expect_rendering_application("government-frontend")
     expect(current_url).to eq(url)
     expect(page).to have_content(title)
     expect_url_matches_live_gov_uk

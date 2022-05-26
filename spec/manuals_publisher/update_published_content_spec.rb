@@ -41,7 +41,7 @@ feature "Updating content on Manuals Publisher", manuals_publisher: true do
     reload_url_until_match(url, :has_text?, section_title)
 
     click_link "View on website"
-    expect_rendering_application("manuals-frontend")
+    expect_rendering_application("government-frontend")
     expect(page).to have_content(title)
     expect(page).to have_content(section_title)
     expect_url_matches_live_gov_uk
