@@ -3,7 +3,7 @@ module TravelAdvicePublisherHelpers
     visit_travel_advice_publisher("/admin")
     click_link(country)
     click_link("edit")
-    click_link("Delete")
+    click_button("Delete edition")
   rescue Capybara::ElementNotFound
     nil
   end
@@ -29,10 +29,9 @@ module TravelAdvicePublisherHelpers
   def fill_in_advice_form(options)
     options = populate_form_defaults(options)
 
-    choose("A significant change, for example a new travel restriction (sends an email to all subscribers and adds a change note to the summary page)")
     fill_in("Public change note", with: options[:change_description])
     fill_in("Search title", with: options[:search_title]) if options[:search_title]
-    fill_in("Summary", with: options[:summary])
+    fill_in("Summary (govspeak available)", with: options[:summary])
     options[:parts].each do |part|
       execute_script("window.scrollBy(0, 10000)") # make sure the button isn't obscured by the overlay footer navbar
       click_button("Add new part")
