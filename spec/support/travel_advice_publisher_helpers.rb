@@ -23,7 +23,7 @@ module TravelAdvicePublisherHelpers
 
     title ||= "#{country} travel advice"
 
-    expect(page).to have_text("#{title} updated"), fail_reason
+    expect(page).to have_text("#{title} draft has been saved"), fail_reason
   end
 
   def fill_in_advice_form(options)
