@@ -2,7 +2,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api search-api \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher  \
-	manuals-publisher manuals-frontend whitehall content-tagger \
+	manuals-publisher whitehall content-tagger \
 	contacts-admin finder-frontend email-alert-api
 
 RUBY_VERSION = `cat .ruby-version`
