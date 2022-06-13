@@ -208,7 +208,6 @@ services:
       - nginx-proxy:government-frontend.dev.gov.uk
       - nginx-proxy:collections.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
-      - nginx-proxy:manuals-frontend.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
       - nginx-proxy:finder-frontend.dev.gov.uk
     ports:
@@ -231,7 +230,6 @@ services:
       - nginx-proxy:draft-government-frontend.dev.gov.uk
       - nginx-proxy:draft-collections.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
-      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
       - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
     ports:
       - "3154"
@@ -746,48 +744,6 @@ services:
       disable: true
     ports: []
 
-  manuals-frontend: &manuals-frontend
-    image: govuk/manuals-frontend:${MANUALS_FRONTEND_COMMITISH:-deployed-to-production}
-    build:
-      context: apps/manuals-frontend
-    depends_on:
-      - content-store
-      - static
-      - diet-error-handler
-    environment:
-      << : *govuk-app
-      ASSET_HOST: manuals-frontend.dev.gov.uk
-      SENTRY_CURRENT_ENV: manuals-frontend
-      VIRTUAL_HOST: manuals-frontend.dev.gov.uk
-      PORT: 3072
-    links:
-      - nginx-proxy:content-store.dev.gov.uk
-      - nginx-proxy:static.dev.gov.uk
-      - nginx-proxy:error-handler.dev.gov.uk
-    ports:
-      - "3072"
-    volumes:
-      - ./apps/manuals-frontend/log:/app/log
-
-  draft-manuals-frontend: &draft-manuals-frontend
-    << : *manuals-frontend
-    depends_on:
-      - draft-content-store
-      - draft-static
-      - diet-error-handler
-    environment:
-      << : *draft-govuk-app
-      ASSET_HOST: draft-manuals-frontend.dev.gov.uk
-      SENTRY_CURRENT_ENV: draft-manuals-frontend
-      VIRTUAL_HOST: draft-manuals-frontend.dev.gov.uk
-      PORT: 3172
-    links:
-      - nginx-proxy:draft-content-store.dev.gov.uk
-      - nginx-proxy:draft-static.dev.gov.uk
-      - nginx-proxy:error-handler.dev.gov.uk
-    ports:
-      - "3172"
-
   whitehall-admin: &whitehall
     image: govuk/whitehall:${WHITEHALL_COMMITISH:-deployed-to-production}
     build:
@@ -1104,7 +1060,6 @@ services:
       - nginx-proxy:draft-origin.dev.gov.uk
       - nginx-proxy:draft-frontend.dev.gov.uk
       - nginx-proxy:draft-government-frontend.dev.gov.uk
-      - nginx-proxy:draft-manuals-frontend.dev.gov.uk
       - nginx-proxy:draft-whitehall-frontend.dev.gov.uk
       - nginx-proxy:draft-static.dev.gov.uk
       # Live frontend
@@ -1112,7 +1067,6 @@ services:
       - nginx-proxy:finder-frontend.dev.gov.uk
       - nginx-proxy:frontend.dev.gov.uk
       - nginx-proxy:government-frontend.dev.gov.uk
-      - nginx-proxy:manuals-frontend.dev.gov.uk
       - nginx-proxy:static.dev.gov.uk
       - nginx-proxy:whitehall-frontend.dev.gov.uk
       - nginx-proxy:www.dev.gov.uk
