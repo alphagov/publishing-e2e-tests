@@ -52,10 +52,6 @@ services:
     ports:
       - "33064:3064"
 
-  travel-advice-publisher:
-    ports:
-      - "33035:3035"
-
   collections-publisher:
     ports:
       - "33071:3071"

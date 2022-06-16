@@ -24,7 +24,6 @@ def apps = [
   [constantPrefix: "SEARCH_API", app: "search-api", name: "Search API"],
   [constantPrefix: "SPECIALIST_PUBLISHER", app: "specialist-publisher", name: "Specialist Publisher"],
   [constantPrefix: "STATIC", app: "static", name: "Static"],
-  [constantPrefix: "TRAVEL_ADVICE_PUBLISHER", app: "travel-advice-publisher", name: "Travel Advice Publisher"],
   [constantPrefix: "WHITEHALL", app: "whitehall-admin", name: "Whitehall"],
 ].each { app -> app.defaultCommitish = app.defaultCommitish ?: DEFAULT_COMMITISH }
 
