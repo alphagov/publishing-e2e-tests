@@ -1,8 +1,8 @@
 APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api search-api \
-	specialist-publisher static travel-advice-publisher collections-publisher \
+	specialist-publisher static \
 	collections frontend publisher  \
-	manuals-publisher whitehall content-tagger \
+	whitehall content-tagger \
 	contacts-admin finder-frontend email-alert-api
 
 RUBY_VERSION = `cat .ruby-version`
@@ -67,9 +67,9 @@ setup_apps:
 	bundle exec rake docker:wait_for_apps
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
-	publishing_api_setup travel_advice_setup whitehall_setup \
-	content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
-	publisher_setup collections_publisher_setup search_api_setup \
+	publishing_api_setup whitehall_setup \
+	content_tagger_setup specialist_publisher_setup \
+	publisher_setup search_api_setup \
 	contacts_admin_setup email_alert_api_setup
 
 router_setup:
@@ -86,26 +86,17 @@ asset_manager_setup:
 publishing_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api bundle exec rake db:reset
 
-travel_advice_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps travel-advice-publisher bundle exec rake db:seed
-
 whitehall_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps whitehall-admin bundle exec rake db:reset
 
 content_tagger_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-tagger bundle exec rake db:reset
 
-manuals_publisher_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps manuals-publisher bundle exec rake db:seed
-
 specialist_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps specialist-publisher env RUN_SEEDS_IN_PRODUCTION=true bundle exec rake db:seed
 
 publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publisher bundle exec rake db:reset
-
-collections_publisher_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps collections-publisher bundle exec rake db:reset
 
 search_api_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps search-api env SEARCH_INDEX=all bundle exec rake search:create_all_indices
@@ -124,7 +115,7 @@ setup_queues:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps publishing-api-worker bundle exec rails runner 'Sidekiq::Queue.new.clear'
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps search-api-worker bundle exec rake message_queue:create_queues
 
-publish_routes: publish_search_api publish_specialist publish_frontend publish_contacts_admin publish_whitehall publish_collections_publisher
+publish_routes: publish_search_api publish_specialist publish_frontend publish_contacts_admin publish_whitehall
 
 publish_search_api:
 	$(DOCKER_COMPOSE_CMD) exec -T search-api bundle exec rake publishing_api:publish_special_routes
@@ -136,10 +127,6 @@ publish_specialist:
 publish_frontend:
 	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_special_routes
 	$(DOCKER_COMPOSE_CMD) exec -T frontend bundle exec rake publishing_api:publish_calendars
-
-publish_collections_publisher:
-	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_organisations_api_route
-	$(DOCKER_COMPOSE_CMD) exec -T collections-publisher bundle exec rake publishing_api:publish_special_routes
 
 publish_contacts_admin:
 	$(DOCKER_COMPOSE_CMD) exec -T contacts-admin bundle exec rake finders:publish
@@ -180,17 +167,8 @@ test:
 test-specialist-publisher:
 	EXTRA_TAGS='--tag specialist_publisher' $(MAKE) test
 
-test-travel-advice-publisher:
-	EXTRA_TAGS='--tag travel_advice_publisher' $(MAKE) test
-
-test-collections-publisher:
-	EXTRA_TAGS='--tag collections_publisher' $(MAKE) test
-
 test-publisher:
 	EXTRA_TAGS='--tag publisher' $(MAKE) test
-
-test-manuals-publisher:
-	EXTRA_TAGS='--tag manuals_publisher' $(MAKE) test
 
 test-collections:
 	EXTRA_TAGS='--tag collections' $(MAKE) test
@@ -216,13 +194,13 @@ test-whitehall:
 stop: kill
 
 .PHONY: all $(APPS) clone kill build start up test stop \
-	test-specialist-publisher test-travel-advice-publisher \
-	test-collections-publisher test-publisher test-manuals-publisher \
+	test-specialist-publisher \
+	test-publisher \
 	test-frontend test-content-tagger test-contacts-admin test-finder-frontend \
 	router_setup content_store_setup asset_manager_setup \
-	publishing_api_setup travel_advice_setup whitehall_setup \
-	content_tagger_setup manuals_publisher_setup \
-	specialist_publisher_setup publisher_setup collections_publisher_setup \
+	publishing_api_setup whitehall_setup \
+	content_tagger_setup \
+	specialist_publisher_setup publisher_setup \
 	search_api_setup publish_search_api publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \
 	contacts_admin_setup contact_admin_seed pull \

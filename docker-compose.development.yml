@@ -52,14 +52,6 @@ services:
     ports:
       - "33064:3064"
 
-  travel-advice-publisher:
-    ports:
-      - "33035:3035"
-
-  collections-publisher:
-    ports:
-      - "33071:3071"
-
   collections:
     ports:
       - "33070:3070"
@@ -87,10 +79,6 @@ services:
   draft-frontend:
     ports:
       - "33105:3105"
-
-  manuals-publisher:
-    ports:
-      - "33205:3205"
 
   whitehall-admin:
     ports:

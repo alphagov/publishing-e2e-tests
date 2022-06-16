@@ -8,7 +8,6 @@ DEFAULT_COMMITISH = "deployed-to-production"
 def apps = [
   [constantPrefix: "ASSET_MANAGER", app: "asset-manager", name: "Asset Manager"],
   [constantPrefix: "COLLECTIONS", app: "collections", name: "Collections"],
-  [constantPrefix: "COLLECTIONS_PUBLISHER", app: "collections-publisher", name: "Collections Publisher"],
   [constantPrefix: "CONTACTS_ADMIN", app: "contacts-admin", name: "Contacts Admin"],
   [constantPrefix: "CONTENT_STORE", app: "content-store", name: "Content Store"],
   [constantPrefix: "CONTENT_TAGGER", app: "content-tagger", name: "Content Tagger"],
@@ -17,7 +16,6 @@ def apps = [
   [constantPrefix: "FRONTEND", app: "frontend", name: "Frontend"],
   [constantPrefix: "GOVUK_CONTENT_SCHEMAS", app: "govuk-content-schemas", name: "GOV.UK Content Schemas"],
   [constantPrefix: "GOVERNMENT_FRONTEND", app: "government-frontend", name: "Government Frontend"],
-  [constantPrefix: "MANUALS_PUBLISHER", app: "manuals-publisher", name: "Manuals Publisher"],
   [constantPrefix: "PUBLISHER", app: "publisher", name: "Publisher"],
   [constantPrefix: "PUBLISHING_API", app: "publishing-api", name: "Publishing API"],
   [constantPrefix: "ROUTER", app: "router", name: "Router"],
@@ -25,7 +23,6 @@ def apps = [
   [constantPrefix: "SEARCH_API", app: "search-api", name: "Search API"],
   [constantPrefix: "SPECIALIST_PUBLISHER", app: "specialist-publisher", name: "Specialist Publisher"],
   [constantPrefix: "STATIC", app: "static", name: "Static"],
-  [constantPrefix: "TRAVEL_ADVICE_PUBLISHER", app: "travel-advice-publisher", name: "Travel Advice Publisher"],
   [constantPrefix: "WHITEHALL", app: "whitehall-admin", name: "Whitehall"],
 ].each { app -> app.defaultCommitish = app.defaultCommitish ?: DEFAULT_COMMITISH }
 
