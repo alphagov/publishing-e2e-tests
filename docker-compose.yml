@@ -400,48 +400,6 @@ services:
     volumes:
       - ./apps/specialist-publisher/log:/app/log
 
-  collections-publisher: &collections-publisher
-    image: govuk/collections-publisher:${COLLECTIONS_PUBLISHER_COMMITISH:-deployed-to-production}
-    build:
-      context: apps/collections-publisher
-    depends_on:
-      - publishing-api
-      - mysql
-      - redis
-      - search-api
-      - collections-publisher-worker
-      - diet-error-handler
-    environment:
-      << : *govuk-app
-      REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: collections-publisher
-      VIRTUAL_HOST: collections-publisher.dev.gov.uk
-    healthcheck:
-      << : *default-healthcheck
-    links:
-      - nginx-proxy:search-api.dev.gov.uk
-      - nginx-proxy:publishing-api.dev.gov.uk
-      - nginx-proxy:error-handler.dev.gov.uk
-    ports:
-      - "3071"
-    volumes:
-      - ./apps/collections-publisher/log:/app/log
-
-  collections-publisher-worker:
-    << : *collections-publisher
-    command: bundle exec sidekiq -C ./config/sidekiq.yml
-    depends_on:
-      - publishing-api
-      - diet-error-handler
-      - redis
-    environment:
-      << : *govuk-app
-      REDIS_URL: redis://redis
-      SENTRY_CURRENT_ENV: collections-publisher-worker
-    healthcheck:
-      disable: true
-    ports: []
-
   collections: &collections
     image: govuk/collections:${COLLECTIONS_COMMITISH:-deployed-to-production}
     build:
@@ -948,7 +906,6 @@ services:
       - draft-static
       - router
       - static
-      - collections-publisher
       - contacts-admin
       - content-tagger
       - publisher
@@ -970,7 +927,6 @@ services:
       - nginx-proxy:whitehall-frontend.dev.gov.uk
       - nginx-proxy:www.dev.gov.uk
       # Publishing applications
-      - nginx-proxy:collections-publisher.dev.gov.uk
       - nginx-proxy:contacts-admin.dev.gov.uk
       - nginx-proxy:content-tagger.dev.gov.uk
       - nginx-proxy:publisher.dev.gov.uk

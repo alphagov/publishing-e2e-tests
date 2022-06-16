@@ -8,7 +8,6 @@ DEFAULT_COMMITISH = "deployed-to-production"
 def apps = [
   [constantPrefix: "ASSET_MANAGER", app: "asset-manager", name: "Asset Manager"],
   [constantPrefix: "COLLECTIONS", app: "collections", name: "Collections"],
-  [constantPrefix: "COLLECTIONS_PUBLISHER", app: "collections-publisher", name: "Collections Publisher"],
   [constantPrefix: "CONTACTS_ADMIN", app: "contacts-admin", name: "Contacts Admin"],
   [constantPrefix: "CONTENT_STORE", app: "content-store", name: "Content Store"],
   [constantPrefix: "CONTENT_TAGGER", app: "content-tagger", name: "Content Tagger"],

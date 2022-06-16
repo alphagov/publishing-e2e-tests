@@ -52,10 +52,6 @@ services:
     ports:
       - "33064:3064"
 
-  collections-publisher:
-    ports:
-      - "33071:3071"
-
   collections:
     ports:
       - "33070:3070"
