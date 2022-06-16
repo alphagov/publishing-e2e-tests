@@ -2,7 +2,7 @@ APPS = asset-manager content-store govuk-content-schemas government-frontend \
 	publishing-api router router-api search-api \
 	specialist-publisher static travel-advice-publisher collections-publisher \
 	collections frontend publisher  \
-	manuals-publisher whitehall content-tagger \
+	whitehall content-tagger \
 	contacts-admin finder-frontend email-alert-api
 
 RUBY_VERSION = `cat .ruby-version`
@@ -68,7 +68,7 @@ setup_apps:
 
 setup_dbs: router_setup content_store_setup asset_manager_setup \
 	publishing_api_setup travel_advice_setup whitehall_setup \
-	content_tagger_setup manuals_publisher_setup specialist_publisher_setup \
+	content_tagger_setup specialist_publisher_setup \
 	publisher_setup collections_publisher_setup search_api_setup \
 	contacts_admin_setup email_alert_api_setup
 
@@ -94,9 +94,6 @@ whitehall_setup:
 
 content_tagger_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps content-tagger bundle exec rake db:reset
-
-manuals_publisher_setup:
-	$(DOCKER_COMPOSE_CMD) run --rm --no-deps manuals-publisher bundle exec rake db:seed
 
 specialist_publisher_setup:
 	$(DOCKER_COMPOSE_CMD) run --rm --no-deps specialist-publisher env RUN_SEEDS_IN_PRODUCTION=true bundle exec rake db:seed
@@ -189,9 +186,6 @@ test-collections-publisher:
 test-publisher:
 	EXTRA_TAGS='--tag publisher' $(MAKE) test
 
-test-manuals-publisher:
-	EXTRA_TAGS='--tag manuals_publisher' $(MAKE) test
-
 test-collections:
 	EXTRA_TAGS='--tag collections' $(MAKE) test
 
@@ -217,11 +211,11 @@ stop: kill
 
 .PHONY: all $(APPS) clone kill build start up test stop \
 	test-specialist-publisher test-travel-advice-publisher \
-	test-collections-publisher test-publisher test-manuals-publisher \
+	test-collections-publisher test-publisher \
 	test-frontend test-content-tagger test-contacts-admin test-finder-frontend \
 	router_setup content_store_setup asset_manager_setup \
 	publishing_api_setup travel_advice_setup whitehall_setup \
-	content_tagger_setup manuals_publisher_setup \
+	content_tagger_setup \
 	specialist_publisher_setup publisher_setup collections_publisher_setup \
 	search_api_setup publish_search_api publish_specialist publish_frontend \
 	publish_contacts_admin publish_whitehall setup_dbs setup_queues \

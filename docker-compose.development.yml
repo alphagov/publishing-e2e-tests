@@ -88,10 +88,6 @@ services:
     ports:
       - "33105:3105"
 
-  manuals-publisher:
-    ports:
-      - "33205:3205"
-
   whitehall-admin:
     ports:
       - "33020:3020"

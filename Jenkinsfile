@@ -17,7 +17,6 @@ def apps = [
   [constantPrefix: "FRONTEND", app: "frontend", name: "Frontend"],
   [constantPrefix: "GOVUK_CONTENT_SCHEMAS", app: "govuk-content-schemas", name: "GOV.UK Content Schemas"],
   [constantPrefix: "GOVERNMENT_FRONTEND", app: "government-frontend", name: "Government Frontend"],
-  [constantPrefix: "MANUALS_PUBLISHER", app: "manuals-publisher", name: "Manuals Publisher"],
   [constantPrefix: "PUBLISHER", app: "publisher", name: "Publisher"],
   [constantPrefix: "PUBLISHING_API", app: "publishing-api", name: "Publishing API"],
   [constantPrefix: "ROUTER", app: "router", name: "Router"],
