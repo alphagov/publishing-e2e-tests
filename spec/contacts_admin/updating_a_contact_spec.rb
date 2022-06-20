@@ -53,6 +53,26 @@ private
     reload_url_until_match(contact_finder_url, :has_text?, new_title)
 
     click_link "Contact HM Revenue & Customs"
+
+    # I have used prior art from the Whitehall update spec to ensure this
+    # test isn't flaky. The comment there says
+    # "Session#find waits until an element appears
+    # This seems to make a difference to the outcome of this spec"
+
+    # Currently, it is unclear why this resolves the issue as the page is not
+    # being dynamically rendered, therefore theoretically
+    # waiting for an element to appear should not work.
+
+    # Kevin Dew and I have discussed this and decided that we're going to
+    # merge this despite not understanding why the fix works as it's a core
+    # bit of functionality that is being tested and the bulk of the test behaves
+    # as expected.
+
+    # If this test begins to flake in future we can mark it as flaky as
+    # outlined here https://github.com/alphagov/publishing-e2e-tests/blob/main/docs/troubleshooting.md#dealing-with-a-flaky-test
+
+    find("a", text: new_title)
+
     expect_rendering_application("finder-frontend")
     expect(page).to have_content(new_title)
     expect(page).to have_content(new_description)
