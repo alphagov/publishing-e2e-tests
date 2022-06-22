@@ -68,7 +68,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     check "Applies to all UK nations"
     click_button("Save and continue")
     check "Test taxon"
-    click_button("Save and review legacy tagging")
+    click_button("Save and review specialist topic tagging")
     click_button("Save")
     expect(page).to have_text("The associations have been saved")
   end
