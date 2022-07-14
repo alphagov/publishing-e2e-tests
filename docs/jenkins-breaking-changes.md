@@ -18,14 +18,14 @@ against your change.
    2. Using the “Build with Parameters” option on the left hand bar replace the
       following parameters.
 
-      `${YOUR_APP_NAME}_COMMITTISH` with the commit SHA of your change
+      `${YOUR_APP_NAME}_COMMITISH` with the commit SHA of your change
 
       `ORIGIN_REPO` with your application repo name, e.g. government-frontend
 
       `ORIGIN_COMMIT` with the same commit SHA as above
 
       Publishing E2E tests uses the `ORIGIN_REPO` + `ORIGIN_COMMIT` when pushing
-      the GitHub status, and the `_COMMITTISH` to know which version of each app
+      the GitHub status, and the `_COMMITISH` to know which version of each app
       to test against.
 
    3.  Hit the Build button
