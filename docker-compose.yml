@@ -491,6 +491,7 @@ services:
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: finder-frontend
       VIRTUAL_HOST: finder-frontend.dev.gov.uk
+      PORT: 3062
     healthcheck:
       << : *default-healthcheck
     links:
@@ -865,6 +866,7 @@ services:
       SENTRY_CURRENT_ENV: government-frontend
       VIRTUAL_HOST: government-frontend.dev.gov.uk
       VIRTUAL_PORT: 3090
+      PORT: 3090
     healthcheck:
       << : *default-healthcheck
     links:
