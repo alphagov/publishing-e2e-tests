@@ -37,6 +37,9 @@ x-search-api-env: &search-api-env
   RACK_ENV: production
   REDIS_URL: redis://redis
 
+volumes:
+  whitehall-asset-manager-tmp:
+
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy:latest
@@ -640,7 +643,7 @@ services:
       - "3020"
     volumes:
       - ./apps/whitehall/log:/app/log
-      - ./apps/whitehall/asset-manager-tmp:/app/asset-manager-tmp
+      - whitehall-asset-manager-tmp:/app/asset-manager-tmp
 
   whitehall-frontend:
     << : *whitehall

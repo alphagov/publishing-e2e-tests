@@ -47,6 +47,7 @@ clone: $(APPS)
 kill:
 	$(DOCKER_COMPOSE_CMD) kill
 	$(DOCKER_COMPOSE_CMD) rm -f
+	docker volume ls -q | grep -e ^publishing-e2e-tests_ | xargs -r docker volume rm
 
 build: kill
 	$(DOCKER_COMPOSE_CMD) build --pull diet-error-handler publishing-e2e-tests $(APPS_TO_BUILD)
