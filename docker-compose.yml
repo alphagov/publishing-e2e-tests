@@ -641,6 +641,7 @@ services:
       REDIS_URL: redis://redis
       PORT: 3020
       DATABASE_URL: mysql2://root:root@mysql/whitehall_development
+      GOVUK_UPLOADS_ROOT: /uploads
     healthcheck:
       << : *default-healthcheck
     links:
@@ -654,7 +655,7 @@ services:
       - "3020"
     volumes:
       - ./apps/whitehall/log:/app/log
-      - ./apps/whitehall/asset-manager-tmp:/app/asset-manager-tmp
+      - ./apps/whitehall/uploads:/uploads
 
   whitehall-frontend:
     << : *whitehall
