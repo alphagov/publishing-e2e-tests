@@ -655,7 +655,7 @@ services:
       - "3020"
     volumes:
       - ./apps/whitehall/log:/app/log
-      - ./apps/whitehall/uploads:/uploads
+      - ./tmp:/uploads  # Must be writable by unprivileged user.
 
   whitehall-frontend:
     << : *whitehall
