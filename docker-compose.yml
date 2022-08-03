@@ -39,15 +39,17 @@ x-search-api-env: &search-api-env
 
 services:
   nginx-proxy:
-    image: jwilder/nginx-proxy:latest
+    image: jwilder/nginx-proxy:alpine
     ports:
       - "80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
       - ./docker/nginx.tmpl:/app/nginx.tmpl
+      - ./nginx-certs:/etc/nginx/certs
 
   postgres:
-    image: postgres:13
+    image: postgres:13-alpine
+    command: -B 32MB -S 2MB
     environment:
       POSTGRES_PASSWORD: postgres
     healthcheck:
@@ -55,11 +57,14 @@ services:
       test: "psql --username 'postgres' -c 'SELECT 1'"
 
   memcached:
-    image: memcached:alpine
+    image: memcached:1-alpine
 
   mysql:
     image: mysql:8
-    command: --default-authentication-plugin=mysql_native_password
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --performance-schema=off --innodb_buffer_pool_size=32M
+      --innodb-log-buffer-size=8M --key_buffer_size=4M
     environment:
       MYSQL_ROOT_PASSWORD: root
     healthcheck:
@@ -68,25 +73,32 @@ services:
 
   mongo-3.6:
     image: mongo:3.6
+    hostname: mongo-3.6
     healthcheck:
       << : *default-healthcheck
       test: "echo 'db.stats().ok' | mongo localhost:27017/test --quiet"
 
   mongo-2.6:
     image: mongo:2.6
+    hostname: mongo-2.6
     command: ["--replSet", "mongo-2.6-replica-set"]
     healthcheck:
       << : *default-healthcheck
       test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo localhost:27017/test --quiet) -eq 1
 
   redis:
-    image: redis
+    image: redis:6-alpine
+    command: ["--maxmemory", "32MB"]
     healthcheck:
       << : *default-healthcheck
       test: "redis-cli ping"
 
   rabbitmq:
-    image: rabbitmq
+    # govuk-puppet uses 3.6; 3.8 is the closest we can get here.
+    image: rabbitmq:3.8-alpine
+    environment:
+      # TODO: this env var is going away in Rabbit 3.9.
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=256MB
     healthcheck:
       << : *default-healthcheck
       test: "rabbitmqctl node_health_check"
@@ -96,6 +108,8 @@ services:
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - xpack.security.enabled=false
     healthcheck:
       << : *default-healthcheck
@@ -627,6 +641,7 @@ services:
       REDIS_URL: redis://redis
       PORT: 3020
       DATABASE_URL: mysql2://root:root@mysql/whitehall_development
+      GOVUK_UPLOADS_ROOT: /uploads
     healthcheck:
       << : *default-healthcheck
     links:
@@ -640,7 +655,7 @@ services:
       - "3020"
     volumes:
       - ./apps/whitehall/log:/app/log
-      - ./apps/whitehall/asset-manager-tmp:/app/asset-manager-tmp
+      - ./tmp:/uploads  # Must be writable by unprivileged user.
 
   whitehall-frontend:
     << : *whitehall
