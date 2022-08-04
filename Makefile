@@ -135,7 +135,7 @@ publish_whitehall:
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:publish_special_routes
 
 populate_end_to_end_test_data_from_whitehall:
-	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:republish:all_organisations
+	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake publishing_api:bulk_republish:document_type[Organisation]
 	$(DOCKER_COMPOSE_CMD) exec -T whitehall-admin bundle exec rake taxonomy:populate_end_to_end_test_data
 
 clean_apps:
