@@ -48,7 +48,7 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
     attachment_url = find(:xpath, "//img[@alt=\"#{attachment_alt_text}\"]")[:src]
 
     # Asset manager returns a 302 to a placeholder image until the asset is available
-    reload_url_until_status_code(attachment_url, 200, keep_retrying_while: 302)
+    reload_url_until_status_code(attachment_url, 200, keep_retrying_while: [302, 404])
     expect_matching_uploaded_file(attachment_url, attachment_file)
   end
 end
