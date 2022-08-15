@@ -64,7 +64,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     click_button "Create new edition to edit"
 
     fill_in "Title", with: updated_title
-    fill_in "Public change note", with: change_note
+    fill_in "Describe the change for users", with: change_note
     check "Applies to all UK nations"
     click_button("Save and continue")
     check "Test taxon"
