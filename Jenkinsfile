@@ -27,7 +27,7 @@ def apps = [
 ].each { app -> app.defaultCommitish = app.defaultCommitish ?: DEFAULT_COMMITISH }
 
 timestamps {
-  node("publishing-e2e-tests") {
+  node("ci-agent-5") {
     initializeParameters(govuk, apps)
 
     originBuildStatus("Running publishing end-to-end tests on Jenkins", "PENDING", params)
