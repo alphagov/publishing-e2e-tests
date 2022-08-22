@@ -474,6 +474,8 @@ services:
       << : *govuk-app
       SENTRY_CURRENT_ENV: contacts-admin
       VIRTUAL_HOST: contacts-admin.dev.gov.uk
+      PORT: 3051
+      DATABASE_URL: mysql2://root:root@mysql/contacts-admin
     healthcheck:
       << : *default-healthcheck
     links:
@@ -505,6 +507,7 @@ services:
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: finder-frontend
       VIRTUAL_HOST: finder-frontend.dev.gov.uk
+      PORT: 3062
     healthcheck:
       << : *default-healthcheck
     links:
