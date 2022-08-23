@@ -509,6 +509,7 @@ services:
       VIRTUAL_HOST: finder-frontend.dev.gov.uk
       PORT: 3062
     healthcheck:
+      test: "curl --silent --fail localhost:3062/healthcheck/ready || exit 1"
       << : *default-healthcheck
     links:
       - nginx-proxy:search-api.dev.gov.uk
