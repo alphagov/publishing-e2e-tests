@@ -18,7 +18,7 @@ feature "Withdraw a document with Whitehall", whitehall: true, government_fronte
 
   def given_i_have_a_published_document
     signin_to_signon if use_signon?
-    create_consultation(title: title)
+    create_consultation(title:)
     force_publish_document
     click_link title
   end

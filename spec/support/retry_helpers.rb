@@ -61,8 +61,8 @@ module RetryHelpers
     keep_retrying_while = Array(keep_retrying_while)
     reload_options = {
       fail_reason: "#{url} was not returning #{status_codes.join(',')}",
-      reload_seconds: reload_seconds,
-      interval_seconds: interval_seconds,
+      reload_seconds:,
+      interval_seconds:,
     }
 
     retry_while_false(reload_options) do
@@ -85,7 +85,7 @@ module RetryHelpers
   def retry_while_false(fail_reason: nil, reload_seconds: nil, interval_seconds: nil, &block)
     reload_seconds ||= RSpec.configuration.reload_page_wait_time
     interval_seconds ||= 0.5
-    success = RetryWhileFalse.call(reload_seconds: reload_seconds, interval_seconds: interval_seconds, &block)
+    success = RetryWhileFalse.call(reload_seconds:, interval_seconds:, &block)
     fail_reason ||= "the expectation was not met"
     raise TimeoutError, "After #{reload_seconds} seconds, #{fail_reason}" unless success
   end
@@ -107,7 +107,7 @@ module RetryHelpers
 
   def retry_helpers_cookies_string(host)
     cookies = (@_retry_helper_cookies || {}).fetch(host, []).map do |cookie|
-      cookie[:name] + "=" + cookie[:value]
+      "#{cookie[:name]}=#{cookie[:value]}"
     end
 
     cookies.join(";")

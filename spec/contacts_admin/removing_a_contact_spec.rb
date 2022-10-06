@@ -20,12 +20,12 @@ private
 
   def given_there_is_a_published_contact
     signin_to_signon if use_signon?
-    publish_contact(title: title)
+    publish_contact(title:)
     @url = find_link(title)[:href]
   end
 
   def when_i_remove_the_contact
-    search_for_contact(title: title)
+    search_for_contact(title:)
     click_link "Edit contact"
     click_link "Delete"
     fill_in "redirect_url", with: "/world"

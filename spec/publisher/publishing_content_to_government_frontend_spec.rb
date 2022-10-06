@@ -21,7 +21,7 @@ private
 
   def given_there_is_a_draft_help_guide
     signin_to_signon if use_signon?
-    create_publisher_artefact(slug: slug, title: title, format: "Help page")
+    create_publisher_artefact(slug:, title:, format: "Help page")
   end
 
   def and_i_publish_it

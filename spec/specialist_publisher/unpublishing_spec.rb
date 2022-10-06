@@ -19,7 +19,7 @@ feature "Unpublishing with Specialist Publisher", specialist_publisher: true, go
     signin_to_signon if use_signon?
     visit_specialist_publisher("/research-for-development-outputs/new")
 
-    fill_in_research_for_development_output_form(title: title)
+    fill_in_research_for_development_output_form(title:)
     click_button("Save as draft")
     expect_created_alert(title)
     expect(page).to have_text(/Created #{Regexp.escape(title)}/), "Failed to create draft of #{title}"

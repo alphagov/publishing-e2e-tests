@@ -17,7 +17,7 @@ feature "Publishing a contact", contacts_admin: true, finder_frontend: true, gov
 
   def when_i_create_a_contact
     signin_to_signon if use_signon?
-    publish_contact(title: title)
+    publish_contact(title:)
   end
 
   def then_i_can_view_it_on_gov_uk

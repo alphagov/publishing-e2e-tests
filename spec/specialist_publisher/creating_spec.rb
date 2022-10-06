@@ -19,7 +19,7 @@ feature "Creating a draft on Specialist Publisher", specialist_publisher: true, 
     signin_to_signon if use_signon?
     visit_specialist_publisher("/business-finance-support-schemes/new")
 
-    fill_in_business_finance_support_scheme_form(title: title)
+    fill_in_business_finance_support_scheme_form(title:)
 
     click_button("Save as draft")
     expect_created_alert(title)

@@ -18,7 +18,7 @@ feature "Creating a draft taxon on Content Tagger", collections: true, content_t
 
   def when_i_create_a_new_taxon
     signin_to_signon if use_signon?
-    create_draft_taxon(base_path: base_path, title: title)
+    create_draft_taxon(base_path:, title:)
   end
 
   def then_i_can_preview_it_on_draft_gov_uk

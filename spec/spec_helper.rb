@@ -143,6 +143,6 @@ end
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :headless_chrome
-  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || (__dir__ + "/../tmp")
+  config.save_path = ENV["CAPYBARA_SAVE_PATH"] || "#{__dir__}/../tmp"
   config.default_max_wait_time = 4
 end

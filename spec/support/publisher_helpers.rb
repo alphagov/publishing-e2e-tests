@@ -10,7 +10,7 @@ module PublisherHelpers
   def create_publisher_artefact(slug:, title:, format: "Transaction")
     visit_publisher("/artefacts/new")
 
-    fill_in_new_artefact_form(title: title, slug: slug, format: format)
+    fill_in_new_artefact_form(title:, slug:, format:)
 
     click_button "Save and go to item"
     expect(page).to have_text(title)

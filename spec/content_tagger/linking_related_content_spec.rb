@@ -2,10 +2,10 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
   include ContentTaggerHelpers
   include PublisherHelpers
 
-  let(:guide_title) { "Transaction with related content " + SecureRandom.uuid }
-  let(:guide_slug) { "transaction-with-related-content-" + SecureRandom.uuid }
-  let(:related_content_title) { "Related transaction " + SecureRandom.uuid }
-  let(:related_content_slug) { "related-transaction-" + SecureRandom.uuid }
+  let(:guide_title) { "Transaction with related content #{SecureRandom.uuid}" }
+  let(:guide_slug) { "transaction-with-related-content-#{SecureRandom.uuid}" }
+  let(:related_content_title) { "Related transaction #{SecureRandom.uuid}" }
+  let(:related_content_slug) { "related-transaction-#{SecureRandom.uuid}" }
 
   scenario "Adding related content to a Publisher guide" do
     given_there_is_a_published_guide
@@ -29,7 +29,7 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
     @related_content_url = create_and_publish_guide(slug: related_content_slug, title: related_content_title)
     visit_tag_external_content_page(slug: guide_slug)
 
-    find("input.new-base-path").set("/" + related_content_slug)
+    find("input.new-base-path").set("/#{related_content_slug}")
     click_button "Add related item"
     expect(page).to have_text(related_content_slug)
     click_button "Update tagging"
@@ -49,7 +49,7 @@ feature "Adding related content to Publisher content", content_tagger: true, fro
   end
 
   def create_and_publish_guide(slug:, title:)
-    create_publisher_artefact(slug: slug, title: title)
+    create_publisher_artefact(slug:, title:)
     publish_artefact
     find_link("View this on the GOV.UK website")[:href]
   end

@@ -20,7 +20,7 @@ feature "Discarding a draft on Specialist Publisher", specialist_publisher: true
     signin_to_signon if use_signon?
     visit_specialist_publisher("/cma-cases/new")
 
-    fill_in_cma_case_form(title: title)
+    fill_in_cma_case_form(title:)
 
     click_button("Save as draft")
     expect_created_alert(title)

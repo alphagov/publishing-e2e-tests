@@ -18,7 +18,7 @@ feature "Publishing a taxon on Content Tagger", collections: true, content_tagge
 
   def given_there_is_a_draft_taxon
     signin_to_signon if use_signon?
-    create_draft_taxon(base_path: base_path, title: title)
+    create_draft_taxon(base_path:, title:)
   end
 
   def when_i_publish_the_taxon

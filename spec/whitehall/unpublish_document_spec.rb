@@ -2,7 +2,7 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
   include WhitehallHelpers
 
   let(:title) { "Unpublishing Whitehall #{SecureRandom.uuid}" }
-  let(:redirection_destination) { Plek.new.website_root + "/help" }
+  let(:redirection_destination) { "#{Plek.new.website_root}/help" }
 
   scenario "Unpublishing a document on Whitehall by consolidating into another page " do
     given_i_have_a_published_document
@@ -18,7 +18,7 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
 
   def given_i_have_a_published_document
     signin_to_signon if use_signon?
-    create_consultation(title: title)
+    create_consultation(title:)
     force_publish_document
     click_link title
     @published_url = find_link("View on website")[:href]

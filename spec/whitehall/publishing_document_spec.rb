@@ -18,7 +18,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
 
   def given_i_have_a_draft_document
     signin_to_signon if use_signon?
-    create_consultation(title: title)
+    create_consultation(title:)
   end
 
   def when_i_publish_it

@@ -20,7 +20,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
 
   def given_i_have_a_published_document
     signin_to_signon if use_signon?
-    create_consultation(title: title)
+    create_consultation(title:)
     force_publish_document
   end
 
