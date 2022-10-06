@@ -27,7 +27,7 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
     image_markdown = "!!1"
     fill_in_consultation_form(title: title, body: "Attached image\n\n#{image_markdown}")
     click_button("Save and continue")
-    check "Test taxon"
+    find(".miller-columns .govuk-checkboxes__item", text: "Test taxon").click
     click_button("Update and review specialist topic tags")
     click_button("Save")
     expect(page).to have_text("The associations have been saved")
