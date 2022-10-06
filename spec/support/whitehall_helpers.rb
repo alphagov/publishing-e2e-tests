@@ -5,7 +5,7 @@ module WhitehallHelpers
     click_button("Save and continue")
     expect(page).to have_text("The document has been saved")
     check "Test taxon", allow_label_click: true
-    click_button("Save and review specialist topic tagging")
+    click_button("Update and review specialist topic tags")
     expect(page).to have_text("The tags have been updated")
     click_button("Save")
     expect(page).to have_text("The associations have been saved")
