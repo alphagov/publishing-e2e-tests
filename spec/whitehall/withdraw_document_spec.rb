@@ -4,7 +4,7 @@ feature "Withdraw a document with Whitehall", whitehall: true, government_fronte
   let(:title) { "Withdraw Whitehall #{SecureRandom.uuid}" }
   let(:withdrawal_explanation) { "Testing withdrawing a document" }
 
-  scenario "Withdrawing a document with Whitehall" do
+  scenario "Withdrawing a document with Whitehall", flaky: true do
     given_i_have_a_published_document
     when_i_withdraw_it
     then_i_can_view_the_withdrawal_notice_on_gov_uk

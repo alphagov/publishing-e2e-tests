@@ -4,7 +4,7 @@ feature "Unpublishing a document by consolidating into another page on Whitehall
   let(:title) { "Unpublishing Whitehall #{SecureRandom.uuid}" }
   let(:redirection_destination) { Plek.new.website_root + "/help" }
 
-  scenario "Unpublishing a document on Whitehall by consolidating into another page " do
+  scenario "Unpublishing a document on Whitehall by consolidating into another page ", flaky: true do
     given_i_have_a_published_document
     when_i_unpublish_it_and_redirect_to_another_page
     then_i_am_redirected_when_i_visit_the_page_on_gov_uk
