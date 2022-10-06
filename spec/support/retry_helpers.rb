@@ -30,7 +30,7 @@ module RetryHelpers
       raise "#{url} returned a status code of #{code}"
     end
 
-    retry_while_false(reload_options) do
+    retry_while_false(**reload_options) do
       session = Capybara::Session.new(Capybara.default_driver)
       if URI(url).host != URI(session.current_url).host
         # You can only set cookies when on the relevant domain, so
@@ -65,7 +65,7 @@ module RetryHelpers
       interval_seconds:,
     }
 
-    retry_while_false(reload_options) do
+    retry_while_false(**reload_options) do
       code = HTTParty.head(
         url,
         follow_redirects: false,
