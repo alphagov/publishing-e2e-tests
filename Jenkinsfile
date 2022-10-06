@@ -289,7 +289,7 @@ def makeLogsAvailable() {
   stage("JUnit") {
     def hasJUnitFiles = sh(script: "ls tmp/rspec*.xml 1> /dev/null 2>&1", returnStatus: true)
     if (hasJUnitFiles == 0) {
-      junit("tmp/rspec*.xml")
+      junit(testResults: "tmp/rspec*.xml", skipMarkingBuildUnstable: true)
     } else {
       echo("No Junit files to log")
     }
