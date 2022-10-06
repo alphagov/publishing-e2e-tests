@@ -4,7 +4,7 @@ module WhitehallHelpers
     fill_in_consultation_form(title: title)
     click_button("Save and continue")
     expect(page).to have_text("The document has been saved")
-    check "Test taxon"
+    check "Test taxon", allow_label_click: true
     click_button("Save and review specialist topic tagging")
     expect(page).to have_text("The tags have been updated")
     click_button("Save")
