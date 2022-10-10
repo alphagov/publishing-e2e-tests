@@ -398,13 +398,18 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
+      # This is not a valid key but it needs to be in the correct format for the ruby client
+      GOVUK_NOTIFY_API_KEY: test-b56ea330-006a-459b-8af3-8015bb51a0e7-77b95465-3c02-4b09-9371-44e33cbdf9c6
       MONGO_WRITE_CONCERN: 1
       MONGODB_URI: mongodb://mongo-3.6/specialist-publisher
+      PORT: 3064
+      REDIS_HOST: redis
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: specialist-publisher
       VIRTUAL_HOST: specialist-publisher.dev.gov.uk
     healthcheck:
       << : *default-healthcheck
+      test: "curl --silent --fail localhost:3064 || exit 1"
     links:
       - nginx-proxy:publishing-api.dev.gov.uk
       - nginx-proxy:asset-manager.dev.gov.uk
@@ -721,8 +726,10 @@ services:
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: content-tagger
       VIRTUAL_HOST: content-tagger.dev.gov.uk
+      PORT: 3116
     healthcheck:
       << : *default-healthcheck
+      test: "curl --silent --fail localhost:3116 || exit 1"
     links:
       - nginx-proxy:email-alert-api.dev.gov.uk
       - nginx-proxy:error-handler.dev.gov.uk
