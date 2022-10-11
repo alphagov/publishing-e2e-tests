@@ -3,7 +3,7 @@ feature "Publishing a document with Whitehall", whitehall: true, government_fron
 
   let(:title) { "Publishing Whitehall #{SecureRandom.uuid}" }
 
-  scenario "Publishing a document with Whitehall", flaky: true do
+  scenario "Publishing a document with Whitehall" do
     given_i_have_a_draft_document
     when_i_publish_it
     then_i_can_view_it_on_gov_uk

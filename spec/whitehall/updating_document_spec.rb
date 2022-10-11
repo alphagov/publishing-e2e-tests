@@ -5,7 +5,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
   let(:updated_title) { "Updating Whitehall After #{SecureRandom.uuid}" }
   let(:change_note) { "Testing update behaviour" }
 
-  scenario "Creating a new edition of a document with Whitehall", flaky: true do
+  scenario "Creating a new edition of a document with Whitehall" do
     given_i_have_a_published_document
     when_i_publish_a_new_edition_of_the_document
     then_i_can_view_the_updated_content_on_gov_uk

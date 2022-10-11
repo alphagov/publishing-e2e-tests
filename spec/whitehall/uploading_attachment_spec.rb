@@ -5,7 +5,7 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
   let(:attachment_file) { File.expand_path("../fixtures/whitehall/public_health.png", __dir__) }
   let(:attachment_alt_text) { "Public Health Attachment" }
 
-  scenario "Uploading an attachment on Whitehall", flaky: true do
+  scenario "Uploading an attachment on Whitehall" do
     given_i_have_a_draft_document_with_attachment
     when_i_view_the_draft_document
     then_i_can_view_the_image
