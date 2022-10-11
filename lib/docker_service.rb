@@ -23,7 +23,7 @@ class DockerService
 
   def self.built_app_images
     # A repo digest is a unique identifier for an image made up of the tag name + hash
-    # e.g. govuk/publishing-api@sha256:a5e459c5e6f855a4ce3684d333312848768676a23651ad1a46cefe7e4c64b11a
+    # e.g. governmentdigitalservice/publishing-api@sha256:a5e459c5e6f855a4ce3684d333312848768676a23651ad1a46cefe7e4c64b11a
     # Images are only assigned digests after being pushed to a registry.
     # If an image doesn't have a digest, it must have been built locally.
     app_images.reject do |image|
@@ -34,7 +34,7 @@ class DockerService
   def self.app_images
     Docker::Image.all.select do |image|
       Array(image.info["RepoTags"]).any? do |tag|
-        tag.start_with?("govuk/")
+        tag.start_with?("governmentdigitalservice/")
       end
     end
   end

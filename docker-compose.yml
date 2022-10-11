@@ -118,7 +118,7 @@ services:
       - ./docker/elasticsearch6.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   search-api: &search-api
-    image: govuk/search-api:${SEARCH_API_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/search-api:${SEARCH_API_COMMITISH:-deployed-to-production}
     build: apps/search-api
     depends_on:
       - redis
@@ -209,7 +209,7 @@ services:
       - ./tmp:/app/tmp
 
   router: &router
-    image: govuk/router:${ROUTER_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/router:${ROUTER_COMMITISH:-deployed-to-production}
     build: apps/router
     depends_on:
       - mongo-2.6
@@ -250,7 +250,7 @@ services:
       - "3155"
 
   router-api: &router-api
-    image: govuk/router-api:${ROUTER_API_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/router-api:${ROUTER_API_COMMITISH:-deployed-to-production}
     build: apps/router-api
     depends_on:
       - mongo-2.6
@@ -291,7 +291,7 @@ services:
       - "3156"
 
   content-store: &content-store
-    image: govuk/content-store:${CONTENT_STORE_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/content-store:${CONTENT_STORE_COMMITISH:-deployed-to-production}
     build: apps/content-store
     depends_on:
       - mongo-2.6
@@ -334,7 +334,7 @@ services:
       - "3100"
 
   publishing-api: &publishing-api
-    image: govuk/publishing-api:${PUBLISHING_API_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/publishing-api:${PUBLISHING_API_COMMITISH:-deployed-to-production}
     build: apps/publishing-api
     depends_on:
       - postgres
@@ -387,7 +387,7 @@ services:
     ports: []
 
   specialist-publisher:
-    image: govuk/specialist-publisher:${SPECIALIST_PUBLISHER_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/specialist-publisher:${SPECIALIST_PUBLISHER_COMMITISH:-deployed-to-production}
     build:
       context: apps/specialist-publisher
     depends_on:
@@ -420,7 +420,7 @@ services:
       - ./apps/specialist-publisher/log:/app/log
 
   collections: &collections
-    image: govuk/collections:${COLLECTIONS_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/collections:${COLLECTIONS_COMMITISH:-deployed-to-production}
     build:
       context: apps/collections
     depends_on:
@@ -464,7 +464,7 @@ services:
       - "3170"
 
   contacts-admin:
-    image: govuk/contacts:${CONTACTS_ADMIN_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/contacts:${CONTACTS_ADMIN_COMMITISH:-deployed-to-production}
     build:
       context: apps/contacts-admin
     depends_on:
@@ -495,7 +495,7 @@ services:
       - ./apps/contacts-admin/log:/app/log
 
   finder-frontend:
-    image: govuk/finder-frontend:${FINDER_FRONTEND_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/finder-frontend:${FINDER_FRONTEND_COMMITISH:-deployed-to-production}
     build:
       context: apps/finder-frontend
     depends_on:
@@ -529,7 +529,7 @@ services:
       - ./apps/finder-frontend/log:/app/log
 
   publisher: &publisher
-    image: govuk/publisher:${PUBLISHER_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/publisher:${PUBLISHER_COMMITISH:-deployed-to-production}
     build:
       context: apps/publisher
     depends_on:
@@ -581,7 +581,7 @@ services:
     ports: []
 
   frontend: &frontend
-    image: govuk/frontend:${FRONTEND_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/frontend:${FRONTEND_COMMITISH:-deployed-to-production}
     build:
       context: apps/frontend
     depends_on:
@@ -627,7 +627,7 @@ services:
       - "3105"
 
   whitehall-admin: &whitehall
-    image: govuk/whitehall:${WHITEHALL_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/whitehall:${WHITEHALL_COMMITISH:-deployed-to-production}
     build:
       context: apps/whitehall
     depends_on:
@@ -709,7 +709,7 @@ services:
     ports: []
 
   content-tagger: &content-tagger
-    image: govuk/content-tagger:${CONTENT_TAGGER_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/content-tagger:${CONTENT_TAGGER_COMMITISH:-deployed-to-production}
     build: apps/content-tagger
     depends_on:
       - content-tagger-worker
@@ -755,7 +755,7 @@ services:
     ports: []
 
   asset-manager: &asset-manager
-    image: govuk/asset-manager:${ASSET_MANAGER_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/asset-manager:${ASSET_MANAGER_COMMITISH:-deployed-to-production}
     build: apps/asset-manager
     depends_on:
       - asset-manager-worker
@@ -804,7 +804,7 @@ services:
     ports: []
 
   email-alert-api: &email-alert-api
-    image: govuk/email-alert-api:${EMAIL_ALERT_API_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/email-alert-api:${EMAIL_ALERT_API_COMMITISH:-deployed-to-production}
     build: apps/email-alert-api
     depends_on:
       - diet-error-handler
@@ -844,7 +844,7 @@ services:
     ports: []
 
   static: &static
-    image: govuk/static:${STATIC_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/static:${STATIC_COMMITISH:-deployed-to-production}
     build: apps/static
     depends_on:
       - diet-error-handler
@@ -877,7 +877,7 @@ services:
       - "3113"
 
   government-frontend: &government-frontend
-    image: govuk/government-frontend:${GOVERNMENT_FRONTEND_COMMITISH:-deployed-to-production}
+    image: governmentdigitalservice/government-frontend:${GOVERNMENT_FRONTEND_COMMITISH:-deployed-to-production}
     build: apps/government-frontend
     depends_on:
       - content-store
