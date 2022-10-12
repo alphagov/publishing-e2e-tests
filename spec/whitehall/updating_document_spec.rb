@@ -5,7 +5,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
   let(:updated_title) { "Updating Whitehall After #{SecureRandom.uuid}" }
   let(:change_note) { "Testing update behaviour" }
 
-  scenario "Creating a new edition of a document with Whitehall", flaky: true do
+  scenario "Creating a new edition of a document with Whitehall" do
     given_i_have_a_published_document
     when_i_publish_a_new_edition_of_the_document
     then_i_can_view_the_updated_content_on_gov_uk
@@ -66,10 +66,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     fill_in "Title", with: updated_title
     fill_in "Describe the change for users", with: change_note
     check "Applies to all UK nations"
-    click_button("Save and continue")
-    check "Test taxon"
-    click_button("Save and review specialist topic tagging")
     click_button("Save")
-    expect(page).to have_text("The associations have been saved")
+    expect(page).to have_text("The document has been saved")
   end
 end
