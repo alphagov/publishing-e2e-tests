@@ -45,7 +45,7 @@ module RetryHelpers
           session.public_send(capybara_method, value, capybara_options)
         end
       else
-        session.public_send(capybara_method, value, capybara_options)
+        session.public_send(capybara_method, value, **capybara_options)
       end
     end
   end
