@@ -25,7 +25,7 @@ feature "Uploading an attachment on Specialist Publisher", specialist_publisher:
     signin_to_signon if use_signon?
     visit_specialist_publisher("/employment-appeal-tribunal-decisions/new")
 
-    fill_in_eat_decision_form(title: title)
+    fill_in_eat_decision_form(title:)
 
     click_button("Save as draft")
     expect_created_alert(title)

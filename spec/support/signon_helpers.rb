@@ -89,7 +89,8 @@ module SignonHelpers
     fill_in("Password", with: user.passphrase)
     click_button("Sign in")
 
-    if current_path == "/users/two_step_verification/prompt"
+    case current_path
+    when "/users/two_step_verification/prompt"
       click_link("Start set up")
 
       # Disable transitions, as this makes the following steps fail
@@ -109,7 +110,7 @@ module SignonHelpers
       )
 
       click_button("submit_code")
-    elsif current_path == "/users/two_step_verification/session/new"
+    when "/users/two_step_verification/session/new"
       fill_in(
         "Your verification code",
         with: user.two_step_verification_code,

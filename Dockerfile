@@ -1,4 +1,4 @@
-FROM ruby:2.7.6
+FROM ruby:3.1.2
 RUN apt-get update -qq && apt-get upgrade -y
 
 # Install Google Chrome

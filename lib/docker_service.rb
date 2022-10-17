@@ -2,10 +2,10 @@ require "docker"
 
 class DockerService
   def self.wait_for_healthy_services(services: [], except: [], reload_seconds: 60, interval_seconds: 10)
-    container_ids = service_container_ids(only: services, except: except)
+    container_ids = service_container_ids(only: services, except:)
     unhealthy_containers = []
 
-    RetryWhileFalse.call(reload_seconds: reload_seconds, interval_seconds: interval_seconds) do
+    RetryWhileFalse.call(reload_seconds:, interval_seconds:) do
       container_ids.reject! { |_, id| container_is_healthy?(id) }
       unhealthy_containers = container_ids.keys
       unhealthy_containers.empty?

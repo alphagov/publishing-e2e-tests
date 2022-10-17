@@ -23,7 +23,7 @@ feature "Change notes on Specialist Publisher", specialist_publisher: true, gove
     signin_to_signon if use_signon?
     visit_specialist_publisher("/countryside-stewardship-grants/new")
 
-    fill_in_countryside_stewardship_grant_form(title: title, body: old_body)
+    fill_in_countryside_stewardship_grant_form(title:, body: old_body)
     click_button("Save as draft")
     expect_created_alert(title)
 

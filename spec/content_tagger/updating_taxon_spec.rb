@@ -1,9 +1,9 @@
 feature "Updating a published taxon on Content Tagger", collections: true, content_tagger: true do
   include ContentTaggerHelpers
 
-  let(:title) { "Updating a taxon" + SecureRandom.uuid }
-  let(:base_path) { "/updating-taxon" + SecureRandom.uuid }
-  let(:updated_content) { "Updated content" + SecureRandom.uuid }
+  let(:title) { "Updating a taxon#{SecureRandom.uuid}" }
+  let(:base_path) { "/updating-taxon#{SecureRandom.uuid}" }
+  let(:updated_content) { "Updated content#{SecureRandom.uuid}" }
 
   scenario "Updating a taxon" do
     given_there_is_a_published_taxon
@@ -22,7 +22,7 @@ private
 
   def given_there_is_a_published_taxon
     signin_to_signon if use_signon?
-    create_draft_taxon(base_path: base_path, title: title)
+    create_draft_taxon(base_path:, title:)
     publish_taxon
 
     url = find_link("View on GOV.UK")[:href]

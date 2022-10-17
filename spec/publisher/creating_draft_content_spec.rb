@@ -20,7 +20,7 @@ private
 
   def when_i_create_a_new_artefact
     signin_to_signon if use_signon?
-    create_publisher_artefact(slug: slug, title: title)
+    create_publisher_artefact(slug:, title:)
   end
 
   def then_i_can_preview_it_on_draft_gov_uk_and_was_rendered_by_frontend

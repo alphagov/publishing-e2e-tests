@@ -22,13 +22,13 @@ private
 
   def given_there_is_a_published_contact
     signin_to_signon if use_signon?
-    publish_contact(title: title)
+    publish_contact(title:)
     url = find_link(title)[:href]
     reload_url_until_status_code(url, 200)
   end
 
   def when_i_update_the_contact
-    search_for_contact(title: title)
+    search_for_contact(title:)
 
     click_link "Edit contact"
     fill_in "contact_title", with: new_title

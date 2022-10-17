@@ -2,10 +2,10 @@ feature "Adding a taxon to external content", collections: true, content_tagger:
   include ContentTaggerHelpers
   include PublisherHelpers
 
-  let(:taxon_title) { "Tagging external content taxon " + SecureRandom.uuid }
-  let(:taxon_base_path) { "/tagging-taxon-" + SecureRandom.uuid }
-  let(:guide_title) { "Tagging external content guide " + SecureRandom.uuid }
-  let(:guide_slug) { "tagging-taxon-guide-" + SecureRandom.uuid }
+  let(:taxon_title) { "Tagging external content taxon #{SecureRandom.uuid}" }
+  let(:taxon_base_path) { "/tagging-taxon-#{SecureRandom.uuid}" }
+  let(:guide_title) { "Tagging external content guide #{SecureRandom.uuid}" }
+  let(:guide_slug) { "tagging-taxon-guide-#{SecureRandom.uuid}" }
 
   scenario "Adding a taxon to a publisher guide" do
     given_there_is_a_published_guide

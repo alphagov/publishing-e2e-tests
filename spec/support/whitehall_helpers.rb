@@ -1,7 +1,7 @@
 module WhitehallHelpers
   def create_consultation(title:)
-    visit(Plek.find("whitehall-admin") + "/government/admin/consultations/new")
-    fill_in_consultation_form(title: title)
+    visit("#{Plek.find('whitehall-admin')}/government/admin/consultations/new")
+    fill_in_consultation_form(title:)
     click_button("Save and continue")
     expect(page).to have_text("The document has been saved")
     find(".miller-columns .govuk-checkboxes__item", text: "Test taxon").click

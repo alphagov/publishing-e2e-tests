@@ -28,7 +28,7 @@ feature "Editing with Specialist Publisher", specialist_publisher: true, governm
   end
 
   def when_i_edit_it
-    visit(Plek.find("specialist-publisher") + "/asylum-support-decisions")
+    visit("#{Plek.find('specialist-publisher')}/asylum-support-decisions")
     click_link(old_title)
     click_link("Edit document")
 

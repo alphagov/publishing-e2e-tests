@@ -17,9 +17,9 @@ feature "Publishing with Specialist Publisher", specialist_publisher: true, gove
 
   def given_there_is_a_draft_aaib_report
     signin_to_signon if use_signon?
-    visit(Plek.find("specialist-publisher") + "/aaib-reports/new")
+    visit("#{Plek.find('specialist-publisher')}/aaib-reports/new")
 
-    fill_in_aaib_report_form(title: title)
+    fill_in_aaib_report_form(title:)
 
     click_button("Save as draft")
     expect_created_alert(title)

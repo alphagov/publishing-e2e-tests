@@ -19,13 +19,13 @@ feature "Uploading an attachment on Whitehall", whitehall: true, government_fron
 
   def given_i_have_a_draft_document_with_attachment
     signin_to_signon if use_signon?
-    visit(Plek.find("whitehall-admin") + "/government/admin/consultations/new")
+    visit("#{Plek.find('whitehall-admin')}/government/admin/consultations/new")
     within(:css, ".file_upload") do
       attach_file("File", attachment_file)
       fill_in "Alt text", with: attachment_alt_text
     end
     image_markdown = "!!1"
-    fill_in_consultation_form(title: title, body: "Attached image\n\n#{image_markdown}")
+    fill_in_consultation_form(title:, body: "Attached image\n\n#{image_markdown}")
     click_button("Save and continue")
     find(".miller-columns .govuk-checkboxes__item", text: "Test taxon").click
     click_button("Update and review specialist topic tags")
