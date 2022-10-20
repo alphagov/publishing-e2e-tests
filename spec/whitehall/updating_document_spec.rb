@@ -66,7 +66,7 @@ feature "Creating a new edition of a document with Whitehall", whitehall: true, 
     fill_in "Title", with: updated_title
     fill_in "Describe the change for users", with: change_note
     check "Applies to all UK nations"
-    click_button("Save")
-    expect(page).to have_text("The document has been saved")
+    click_button "Save and continue"
+    click_button "Update tags"
   end
 end
