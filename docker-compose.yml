@@ -346,8 +346,9 @@ services:
       - diet-error-handler
     environment:
       << : *govuk-app
-      DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
+      DATABASE_URL: &publishing-api-db postgresql://postgres:postgres@postgres/publishing-api
       MEMCACHE_SERVERS: memcached
+      RABBITMQ_URL: &publishing-api-rabbitmq amqp://guest:guest@rabbitmq:5672
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publishing-api
       VIRTUAL_HOST: publishing-api.dev.gov.uk
@@ -375,7 +376,8 @@ services:
       - rabbitmq
     environment:
       << : *govuk-app
-      DATABASE_URL: postgresql://postgres:postgres@postgres/publishing-api
+      DATABASE_URL: *publishing-api-db
+      RABBITMQ_URL: *publishing-api-rabbitmq
       REDIS_URL: redis://redis
       MEMCACHE_SERVERS: memcached
       SENTRY_CURRENT_ENV: publishing-api-worker
