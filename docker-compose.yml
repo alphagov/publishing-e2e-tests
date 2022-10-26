@@ -817,6 +817,7 @@ services:
       << : *govuk-app
       DATABASE_URL: postgresql://postgres:postgres@postgres/email-alert-api
       EMAIL_ALERT_AUTH_TOKEN: 9d3e07ca727cd08cc503191f233919877160bfc57eaaa33541761c2d1ffd951ae205263be5832f26ba2670b142d7c593ec0f6bdd11a84cf325a32dbdd889ff44
+      PORT: 3088
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: email-alert-api
       VIRTUAL_HOST: email-alert-api.dev.gov.uk
