@@ -348,6 +348,7 @@ services:
       << : *govuk-app
       DATABASE_URL: &publishing-api-db postgresql://postgres:postgres@postgres/publishing-api
       MEMCACHE_SERVERS: memcached
+      PORT: 3093
       RABBITMQ_URL: &publishing-api-rabbitmq amqp://guest:guest@rabbitmq:5672
       REDIS_URL: redis://redis
       SENTRY_CURRENT_ENV: publishing-api
