@@ -11,7 +11,7 @@ x-govuk-app-env: &govuk-app
   GOVUK_PROMETHEUS_EXPORTER: "false"
   JWT_AUTH_SECRET: fakejwtsecret
   LOG_PATH: log/live.log
-  PLEK_SERVICE_SEARCH_URI: http://search-api.dev.gov.uk
+  PLEK_SERVICE_SEARCH_API_URI: http://search-api.dev.gov.uk
   PLEK_UNPREFIXABLE_HOSTS: search-api
   RAILS_ENV: production
   RAILS_SERVE_STATIC_FILES: "true"
