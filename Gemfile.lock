@@ -30,7 +30,7 @@ GEM
       excon (>= 0.47.0)
       multi_json
     excon (0.93.1)
-    faker (2.23.0)
+    faker (3.0.0)
       i18n (>= 1.8.11, < 2)
     httparty (0.20.0)
       mime-types (~> 3.0)
