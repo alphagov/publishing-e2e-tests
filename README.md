@@ -1,10 +1,8 @@
 # GOV.UK Publishing End-to-end Tests
 
-A suite of end-to-end tests for publisher user journeys. The tests are written in [RSpec](http://rspec.info/) / [Capybara](https://github.com/teamcapybara/capybara) and mimic the behaviour of content editors in a web browser, using [headless Chrome](https://github.com/alphagov/publishing-e2e-tests/blob/2044d7eb3c00194d9fd6d1452849b7afc77b3608/spec/spec_helper.rb#L119).
+**The Publishing End-to-end tests have been retired following [RFC 128 (Continuous Deployment)](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-128-continuous-deployment.md#delete-publishing-e2e-tests)**
 
-> **Warning: this repo is DEPRECATED as of [RFC 128 (Continuous Deployment)](https://github.com/alphagov/govuk-rfcs/blob/main/rfc-128-continuous-deployment.md#delete-publishing-e2e-tests)**. The tests are slow and brittle and do not run in a realistic GOV.UK environment. Do not add any new tests to this repo.
->
-> [Read about alternatives to Publishing End-to-end Tests](docs/writing-tests.md#what-belongs-here).
+A suite of end-to-end tests for publisher user journeys. The tests are written in [RSpec](http://rspec.info/) / [Capybara](https://github.com/teamcapybara/capybara) and mimic the behaviour of content editors in a web browser, using [headless Chrome](https://github.com/alphagov/publishing-e2e-tests/blob/2044d7eb3c00194d9fd6d1452849b7afc77b3608/spec/spec_helper.rb#L119).
 
 ## Technical documentation
 
