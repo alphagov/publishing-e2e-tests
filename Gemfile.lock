@@ -26,10 +26,10 @@ GEM
     childprocess (3.0.0)
     concurrent-ruby (1.1.10)
     diff-lcs (1.5.0)
-    docker-api (2.1.0)
+    docker-api (2.2.0)
       excon (>= 0.47.0)
       multi_json
-    excon (0.80.1)
+    excon (0.93.1)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     httparty (0.20.0)
